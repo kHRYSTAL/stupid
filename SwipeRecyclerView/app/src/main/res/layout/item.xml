@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <me.khrystal.widget.swipe.SwipeMenuLayout
+        android:id="@+id/swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:contentViewId="@+id/content_view"
+        app:rightViewId="@+id/right_view">
+
+        <LinearLayout
+            android:id="@id/content_view"
+            android:background="#ffff"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/item_text"
+                android:text="content"
+                android:gravity="center"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@id/right_view"
+            android:background="#f00"
+            android:gravity="center"
+            android:text="del"
+            android:textColor="#fff"
+            android:layout_width="100dp"
+            android:layout_height="match_parent" />
+
+    </me.khrystal.widget.swipe.SwipeMenuLayout>
+</LinearLayout>

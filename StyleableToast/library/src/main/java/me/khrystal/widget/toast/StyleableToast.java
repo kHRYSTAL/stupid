@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StyleRes;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import me.khrystal.widget.R;
 
 import static me.khrystal.widget.toast.Utils.getTypedValueInDP;
 
@@ -305,10 +305,14 @@ public class StyleableToast implements  OnToastFinished {
             String passedFont = strings.getString(0);
 
             if (passedFont != null && !passedFont.isEmpty()) {
-                if (passedFont.contains("fonts")) {
-                    font = Typeface.createFromAsset(context.getAssets(), passedFont);
-                } else {
-                    font = Typeface.create(passedFont, Typeface.NORMAL);
+                try {
+                    if (passedFont.contains("fonts")) {
+                        font = Typeface.createFromAsset(context.getAssets(), passedFont);
+                    } else {
+                        font = Typeface.create(passedFont, Typeface.NORMAL);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "font file not found");
                 }
             }
             if (ints.getInt(0, 0) == 1) {
@@ -368,7 +372,7 @@ public class StyleableToast implements  OnToastFinished {
 
     @Override
     public void onToastFinished() {
-        getAnimation().cancel();;
+        getAnimation().cancel();
         getAnimation().reset();
     }
 

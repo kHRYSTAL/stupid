@@ -1,9 +1,7 @@
 package me.khrystal.widget.calendar;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,10 +137,39 @@ public class CalendarView extends ViewGroup {
         itemHeight = itemWidth;
 
         View view = getChildAt(0);
+        if (view == null) {
+            return;
+        }
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params != null && params.height > 0) {
+            itemHeight = params.height;
+        }
+        setMeasuredDimension(parentWidth, itemHeight * row);
+
+        for (int i = 0; i < getChildCount(); i++) {
+            View childView = getChildAt(i);
+            childView.measure(MeasureSpec.makeMeasureSpec(itemWidth, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(itemHeight, MeasureSpec.EXACTLY));
+        }
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        for (int i = 0; i < getChildCount(); i++) {
+            layoutChild(getChildAt(i), i, l, t, r, b);
+        }
+    }
 
+    private void layoutChild(View view, int position, int l, int t, int r, int b) {
+        int cc = position % column;
+        int cr = position / column;
+
+        int itemWidth = view.getMeasuredWidth();
+        int itemHeight = view.getMeasuredHeight();
+
+        l = cc * itemWidth;
+        t = cr * itemHeight;
+        r = l + itemWidth;
+        b = l + itemHeight;
+        view.layout(l, t, r, b);
     }
 }

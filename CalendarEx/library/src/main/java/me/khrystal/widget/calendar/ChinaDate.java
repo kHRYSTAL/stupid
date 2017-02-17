@@ -407,34 +407,4 @@ public class ChinaDate {
             sToday = null;
         }
     }
-
-    /**
-     * 农历日历工具使用演示
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-    }
-
-
-//    //[0-4]、[5-10]
-//    private static int[] getData(int z) {
-//        //判断区间
-//        int j = z / 5;
-//        int[] arr = map.get(j);
-//        if (arr == null) {
-//            arr = new int[5];
-//            map.put(j, arr);
-//            for (int a = 0, b = j * 5; a < 5; a++, b++) {
-//                arr[a] = b;
-//            }
-//        }else {
-//            System.out.println("arr!=null");
-//        }
-//        return arr;
-//
-//
-//    }
-
-
 }

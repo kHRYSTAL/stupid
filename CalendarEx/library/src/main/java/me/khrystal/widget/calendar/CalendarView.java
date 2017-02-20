@@ -3,6 +3,7 @@ package me.khrystal.widget.calendar;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -124,7 +125,7 @@ public class CalendarView extends ViewGroup {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new int[] {rect.left, rect.top, rect.right, rect.bottom};
+        return new int[] {rect.left, rect.top, rect.right, rect.top};
     }
 
     @Override
@@ -169,7 +170,7 @@ public class CalendarView extends ViewGroup {
         l = cc * itemWidth;
         t = cr * itemHeight;
         r = l + itemWidth;
-        b = l + itemHeight;
+        b = t + itemHeight;
         view.layout(l, t, r, b);
     }
 }

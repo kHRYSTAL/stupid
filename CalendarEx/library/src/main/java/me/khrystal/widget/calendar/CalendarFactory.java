@@ -62,7 +62,7 @@ public class CalendarFactory {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, day);
         year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
+        month = calendar.get(Calendar.MONTH) + 1;
         day = calendar.get(Calendar.DATE);
 
         CalendarBean bean = new CalendarBean(year, month, day);

@@ -49,7 +49,7 @@ public class CalendarUtil {
     public static int[] getYMD(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        return new int[]{calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.MONTH)};
+        return new int[]{calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DATE)};
     }
 
 

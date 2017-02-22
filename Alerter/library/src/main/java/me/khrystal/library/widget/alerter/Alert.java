@@ -75,6 +75,7 @@ public class Alert extends FrameLayout implements View.OnClickListener, Animatio
         flBackground = (FrameLayout) findViewById(R.id.flAlertBackground);
         ivIcon = (ImageView) findViewById(R.id.ivIcon);
         tvTitle = (TextView) findViewById(R.id.tvTitle);
+        tvText = (TextView) findViewById(R.id.tvText);
 
         flBackground.setOnClickListener(this);
         slideInAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.alerter_slide_in_from_top);

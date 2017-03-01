@@ -93,8 +93,24 @@ public class SlidingArcView extends ViewGroup {
             this.view = view;
             this.title = mTitles.get(index);
             if (index == 0) {
-
+                leftView = this;
+            } else if (index == mSrcList.size() - 1) {
+                rightView = this;
             }
+            // is middle
+            if (index == mSrcList.size() / 2) {
+                isChoose = true;
+                chooseView = this;
+            }
+            initView();
+        }
+
+        /**
+         * 计算view的中心点坐标
+         */
+        private void initView() {
+            centerX = (width) / 2 + width * index;
+            centerY = CentY + (int) Math.sqrt(Math.pow(RADIUS, 2) - (int) Math.pow((centerX - CentX), 2));
         }
     }
 }

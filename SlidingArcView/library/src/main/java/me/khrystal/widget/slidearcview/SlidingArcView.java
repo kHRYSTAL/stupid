@@ -3,6 +3,7 @@ package me.khrystal.widget.slidearcview;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -111,6 +112,92 @@ public class SlidingArcView extends ViewGroup {
         private void initView() {
             centerX = (width) / 2 + width * index;
             centerY = CentY + (int) Math.sqrt(Math.pow(RADIUS, 2) - (int) Math.pow((centerX - CentX), 2));
+        }
+
+        public void scroll(int scrollX) {
+            this.centerX += scrollX;
+            centerY = CentY + (int) Math.sqrt(Math.pow(RADIUS, 2) - Math.pow((centerX - CentX), 2));
+        }
+
+        public int getCenterX() {
+            return centerX;
+        }
+
+        public int getCenterY() {
+            return centerY;
+        }
+
+        public View getView() {
+            return view;
+        }
+
+        public void flush() {
+            clean();
+            // 每次计算view的位置
+            view.layout(centerX - size / 2,
+                    centerY - size / 2 - viewTopChange,
+                    centerX + size / 2,
+                    centerX + size / 2 - viewTopChange);
+            // 以是否靠近中心点 来判断是否变大变小
+            if (centerX >= CentX && centerX - CentX <= width) {
+                // 屏幕右半部分移动运动 变小
+                float scale = (float) (centerX - width - width / 2) / (float) width - 1.0f;
+                ViewCompat.setScaleX(view, normalScale + maxScale - maxScale * scale);
+                ViewCompat.setScaleY(view, normalScale + maxScale - maxScale * scale);
+                if (scale >= 0.5f) {
+                    isChoose = false;
+                }
+            } else if (centerX <= CentX && CentX - centerX <= width) {
+                // 屏幕左半部分移动 变大
+                float scale = (float) (centerX - width - width / 2) / (float) width;
+                ViewCompat.setScaleX(view, normalScale + maxScale * scale);
+                ViewCompat.setScaleY(view, normalScale + maxScale * scale);
+                if (scale >= 0.5f) {
+                    isChoose = true;
+                }
+            } else {
+                isChoose = false;
+                ViewCompat.setScaleX(view, normalScale);
+                ViewCompat.setScaleY(view, normalScale);
+            }
+
+            if (isChoose)
+                chooseView = this;
+        }
+
+        /**
+         * 无限循环的判断
+         */
+        private void clean() {
+            if (leftView.noLeftView()) {
+                // 最左边没有view了 把最右边的移到最左边
+                rightView.centerX = leftView.centerX - width;
+                rightView.changeY();
+                leftView = rightView;
+                rightView = views.get(rightView.index == 0 ? views.size() - 1 : rightView.index - 1);
+            }
+            if (rightView.noRightView()) {
+                // 最右边没有view了 把最左边的移到最右边
+                leftView.centerX = rightView.centerX + width;
+                leftView.changeY();
+                rightView = leftView;
+                leftView = views.get(leftView.index == views.size() - 1 ? 0 : leftView.index + 1);
+            }
+        }
+
+        /**
+         * 改变Y点坐标
+         */
+        public void changeY() {
+            centerY = CentY + (int) Math.sqrt(Math.pow(RADIUS, 2));
+        }
+
+        public boolean noLeftView() {
+            return centerX - width / 2 > width / 2;
+        }
+
+        public boolean noRightView() {
+            return centerX + width / 2 + width / 2 < ScreenUtil.getScreenW();
         }
     }
 }

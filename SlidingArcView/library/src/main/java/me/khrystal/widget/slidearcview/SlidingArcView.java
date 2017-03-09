@@ -2,6 +2,8 @@ package me.khrystal.widget.slidearcview;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
@@ -45,33 +47,52 @@ public class SlidingArcView extends ViewGroup {
     private SignView lastChooseView;
     private boolean isClicke = false;
 
-
-
     private List<SignView> views = new ArrayList<>();
+    Bitmap bgBitmap;
+    int mSize;
 
 
 
 
     public SlidingArcView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public SlidingArcView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public SlidingArcView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
+
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public SlidingArcView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    private void init() {
+//        bgBitmap = ((BitmapDrawable) getResources().getDrawable())
+        CentX = ScreenUtil.getScreenW() / 2;
+        RADIUS = ScreenUtil.getScreenW() / 2 + 100;
+        for (int i = 0; i < mSrcList.size(); i++) {
+
+        }
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mSize = Math.min(getMeasuredWidth(), getMeasuredHeight());
+        setMeasuredDimension(mSize, mSize);
     }
 
     private class SignView {

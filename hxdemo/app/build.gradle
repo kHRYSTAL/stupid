@@ -16,9 +16,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    //use legacy for android 6.0
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.hyphenate:hyphenate-sdk:3.3.0'
 }

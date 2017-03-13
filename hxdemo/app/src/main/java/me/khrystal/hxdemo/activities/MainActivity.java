@@ -74,7 +74,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
        EMClient.getInstance().logout(false, new EMCallbackAdapter() {
            @Override
            public void onSuccess() {
-               Toast.makeText(MainActivity.this, "退出成功", Toast.LENGTH_SHORT).show();
+               runOnUiThread(new Runnable() {
+                   @Override
+                   public void run() {
+                       Toast.makeText(MainActivity.this, "退出成功", Toast.LENGTH_SHORT).show();
+                   }
+               });
                finish();
            }
 

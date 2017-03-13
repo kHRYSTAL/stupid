@@ -9,6 +9,7 @@ import com.hyphenate.chat.BuildConfig;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 
+import me.khrystal.hxdemo.msghandler.MessageHandler;
 import me.khrystal.hxdemo.util.AppUtil;
 
 /**
@@ -88,7 +89,17 @@ public class MainApplication extends Application {
         EMClient.getInstance().init(getApplicationContext(), options);
         //在做打包混淆时，关闭debug模式，避免消耗不必要的资源
         EMClient.getInstance().setDebugMode(BuildConfig.DEBUG);
+        // 启动应用时接受消息的监听 当应用处于后台或非当前聊天页面时 弹出通知
+        MessageHandler.registMsgHandler(this);
         isHXInit = true;
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        // 应用进程结束时解除监听 此时所有的消息 应该通过其他推送方式接收
+        // 或者使用进程保活(灰度)
+        MessageHandler.unRegistMsgHandler();
     }
 
     public Context getContext() {

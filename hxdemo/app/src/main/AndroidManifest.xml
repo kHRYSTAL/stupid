@@ -36,8 +36,9 @@
 
         <activity android:name=".activities.LoginActivity"/>
         <activity android:name=".activities.ChatActivity"/>
+        <receiver android:name=".msghandler.NotificationBroadCastReceiver"/>
 
-
+        <!--HX start-->
         <!-- 设置环信应用的AppKey -->
         <meta-data android:name="EASEMOB_APPKEY"  android:value="yyg1990918#nmtest01" />
         <!-- 声明SDK所需的service SDK核心功能-->
@@ -58,6 +59,7 @@
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
+        <!--HX end-->
     </application>
 
 </manifest>

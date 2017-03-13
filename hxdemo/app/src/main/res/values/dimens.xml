@@ -2,4 +2,15 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="common_horizontal_margin">15dp</dimen>
+    <dimen name="common_vertical_margin">10dp</dimen>
+    <dimen name="common_left_margin">@dimen/common_horizontal_margin</dimen>
+    <dimen name="common_right_margin">@dimen/common_horizontal_margin</dimen>
+
+    <dimen name="chat_horizontal_margin">15dp</dimen>
+    <dimen name="chat_horizontal_big_margin">40dp</dimen>
+
+    <!-- input bottom bar -->
+    <dimen name="chat_input_bar_height">55dp</dimen>
 </resources>

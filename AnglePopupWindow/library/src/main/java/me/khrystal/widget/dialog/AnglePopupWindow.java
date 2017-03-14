@@ -29,7 +29,7 @@ import me.khrystal.widget.bubble.BubbleLinearLayout;
  * email: 723526676@qq.com
  */
 
-public class AnglePopupWindow {
+public class AnglePopupWindow<T> {
 
     private static final String TAG = AnglePopupWindow.class.getSimpleName();
 
@@ -44,21 +44,23 @@ public class AnglePopupWindow {
     private final int animDuration = 250;
     // 动画是否在执行
     private boolean isAniming;
+    private T data;
 
-
+    private OnMenuItemClickListener<T> menuItemClickListener;
 
     public AnglePopupWindow(Activity activity, List<String> contentList,
-                            List<View.OnClickListener> clickListeners) {
+                            OnMenuItemClickListener menuItemClickListener, T data) {
+        this.data = data;
         this.mActivity = activity;
         this.windowManager = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
-        initLayout(contentList, clickListeners);
+        initLayout(contentList, menuItemClickListener);
     }
 
     /**
      * @param contentList 点击item内容的文字
-     * @param clickListeners 点击item的事件
+     * @param onMenuItemClickListener 点击item的事件
      */
-    private void initLayout(List<String> contentList, List<View.OnClickListener> clickListeners) {
+    private void initLayout(List<String> contentList, final OnMenuItemClickListener onMenuItemClickListener) {
         // 根布局
         rootView = (ViewGroup) View.inflate(mActivity, R.layout.angle_popup_layout, null);
         mBubbleLayout = (BubbleLinearLayout) rootView.findViewById(R.id.linearLayout);
@@ -77,9 +79,16 @@ public class AnglePopupWindow {
                 divider.setVisibility(View.VISIBLE);
             }
         }
-        if (clickListeners != null) {
+        if (onMenuItemClickListener != null) {
             for (int i = 0; i < list.size(); i++) {
-                list.get(i).setOnClickListener(clickListeners.get(i));
+                final int position = i;
+                list.get(i).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onMenuItemClickListener.onMenuItemClick(v, position, data);
+                        AnglePopupWindow.this.dismissPopupWindow();
+                    }
+                });
             }
         }
 
@@ -131,11 +140,9 @@ public class AnglePopupWindow {
 
                 if ((screenH * 2 / 3) < arr[1]) {
                     y = arr[1] - locationView.getHeight() - mBubbleLayout.getMeasuredHeight();
-                    // TODO: 17/3/14  设置pop背景图片角标向下
                     mBubbleLayout.setBubbleParams(BubbleLinearLayout.BubbleLegOrientation.BOTTOM, arr[0]);
                 } else {
                     y = arr[1] - frame.top + locationView.getHeight();
-                    // TODO: 17/3/14
                     mBubbleLayout.setBubbleParams(BubbleLinearLayout.BubbleLegOrientation.TOP, arr[0]);
                 }
                 Log.e(TAG, "screen Y:" + screenH);
@@ -240,7 +247,7 @@ public class AnglePopupWindow {
         va.start();
     }
 
-    public interface OnMenuItemClickListener {
-        public void onMenuItemClick(View view);
+    public interface OnMenuItemClickListener<T> {
+        public void onMenuItemClick(View view, int menuPosition, T data);
     }
 }

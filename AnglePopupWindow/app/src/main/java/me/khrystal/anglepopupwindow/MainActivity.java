@@ -4,20 +4,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import me.khrystal.widget.dialog.AnglePopupWindow;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AnglePopupWindow.OnMenuItemClickListener<String> {
 
     RecyclerView recyclerView;
     ArrayList<String> list;
+    private ArrayList<String> arrayList;
+    private AnglePopupWindow<String> popupWindow;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,12 +48,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(VH holder, int position) {
+        public void onBindViewHolder(VH holder, final int position) {
             holder.content.setText(list.get(position));
             holder.pop.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showPopup(v);
+                    showPopup(v, list.get(position));
                 }
 
 
@@ -61,12 +66,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showPopup(View view) {
-        ArrayList<String> list = new ArrayList<>();
-        list.add("一");
-        list.add("二");
-        list.add("三");
-        AnglePopupWindow popupWindow = new AnglePopupWindow(this, list, null);
+    private void showPopup(View view, String data) {
+        arrayList = new ArrayList<>();
+        arrayList.add("一");
+        arrayList.add("二");
+        arrayList.add("三");
+        popupWindow = new AnglePopupWindow(this, arrayList, this, data);
         popupWindow.showPopupWindow(view);
     }
 
@@ -79,5 +84,11 @@ public class MainActivity extends AppCompatActivity {
             content = (TextView) itemView.findViewById(R.id.item_content);
             pop = (TextView) itemView.findViewById(R.id.item_pop);
         }
+    }
+
+    @Override
+    public void onMenuItemClick(View view, int menuPosition, String data) {
+        Log.e("MainActivity", data);
+        Toast.makeText(MainActivity.this, arrayList.get(menuPosition), Toast.LENGTH_SHORT).show();
     }
 }

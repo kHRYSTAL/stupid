@@ -15,6 +15,7 @@
         <TextView
             android:id="@+id/item_pop"
             android:layout_margin="20dp"
+            android:gravity="center"
             android:layout_alignParentRight="true"
             android:textSize="18sp"
             android:text=">"

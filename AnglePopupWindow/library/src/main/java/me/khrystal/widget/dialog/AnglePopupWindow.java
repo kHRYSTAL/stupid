@@ -18,6 +18,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.khrystal.widget.bubble.BubbleLinearLayout;
+
 /**
  * usage: 带弹出动画与尖角指向的popupwindow
  *        用于在列表item上显示popupwindow
@@ -36,12 +38,14 @@ public class AnglePopupWindow {
     private boolean isShow;
     private WindowManager windowManager;
     private ViewGroup rootView;
-    private ViewGroup linearLayout;
+    private BubbleLinearLayout mBubbleLayout;
 
     // 动画执行时间
     private final int animDuration = 250;
     // 动画是否在执行
     private boolean isAniming;
+
+
 
     public AnglePopupWindow(Activity activity, List<String> contentList,
                             List<View.OnClickListener> clickListeners) {
@@ -57,7 +61,7 @@ public class AnglePopupWindow {
     private void initLayout(List<String> contentList, List<View.OnClickListener> clickListeners) {
         // 根布局
         rootView = (ViewGroup) View.inflate(mActivity, R.layout.angle_popup_layout, null);
-        linearLayout = (ViewGroup) rootView.findViewById(R.id.linearLayout);
+        mBubbleLayout = (BubbleLinearLayout) rootView.findViewById(R.id.linearLayout);
 
         List<View> list = new ArrayList<>();
         for (int i = 0; i < contentList.size(); i++) {
@@ -65,7 +69,7 @@ public class AnglePopupWindow {
             TextView textView = (TextView) view.findViewById(R.id.tv_content);
             View divider = view.findViewById(R.id.v_line);
             textView.setText(contentList.get(i));
-            linearLayout.addView(view);
+            mBubbleLayout.addView(view);
             list.add(view);
             if (i == 0) {
                 divider.setVisibility(View.INVISIBLE);
@@ -112,11 +116,11 @@ public class AnglePopupWindow {
                 // 获取view 相对于屏幕的坐标 (非父布局)
                 int[] arr = new int[2];
                 locationView.getLocationOnScreen(arr);
-                linearLayout.measure(0, 0);
+                mBubbleLayout.measure(0, 0);
                 Rect frame = new Rect();
                 // 获取状态栏高度
                 mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-                float x = arr[0] + locationView.getWidth() - linearLayout.getMeasuredWidth();
+                float x = arr[0] + locationView.getWidth() - mBubbleLayout.getMeasuredWidth();
                 float y = 0f;
                 
                 WindowManager wm = (WindowManager) mActivity
@@ -126,23 +130,25 @@ public class AnglePopupWindow {
 
 
                 if ((screenH * 2 / 3) < arr[1]) {
-                    y = arr[1] - locationView.getHeight() - linearLayout.getMeasuredHeight();
+                    y = arr[1] - locationView.getHeight() - mBubbleLayout.getMeasuredHeight();
                     // TODO: 17/3/14  设置pop背景图片角标向下
+                    mBubbleLayout.setBubbleParams(BubbleLinearLayout.BubbleLegOrientation.BOTTOM, arr[0]);
                 } else {
                     y = arr[1] - frame.top + locationView.getHeight();
-                    // TODO: 17/3/14  
+                    // TODO: 17/3/14
+                    mBubbleLayout.setBubbleParams(BubbleLinearLayout.BubbleLegOrientation.TOP, arr[0]);
                 }
                 Log.e(TAG, "screen Y:" + screenH);
                 Log.e(TAG, "point Y:" + y);
-                linearLayout.setX(x);
-                linearLayout.setY(y);
+                mBubbleLayout.setX(x);
+                mBubbleLayout.setY(y);
 
                 //这里就是使用WindowManager直接将我们处理好的view添加到屏幕最前端
                 windowManager = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
                 windowManager.addView(rootView, params);
 
                 //这一步就是有回弹效果的弹出动画, 我用属性动画写的, 很简单
-                showAnim(linearLayout, 0, 1, animDuration, true);
+                showAnim(mBubbleLayout, 0, 1, animDuration, true);
 
                 //视图被弹出来时得到焦点, 否则就捕获不到Touch事件
                 rootView.setFocusable(true);
@@ -159,7 +165,7 @@ public class AnglePopupWindow {
         if(!isAniming) {
             isAniming = true;
             isShow = false;
-            goneAnim(linearLayout, 0.95f, 1, animDuration / 3, true);
+            goneAnim(mBubbleLayout, 0.95f, 1, animDuration / 3, true);
         }
     }
 
@@ -232,5 +238,9 @@ public class AnglePopupWindow {
             }
         });
         va.start();
+    }
+
+    public interface OnMenuItemClickListener {
+        public void onMenuItemClick(View view);
     }
 }

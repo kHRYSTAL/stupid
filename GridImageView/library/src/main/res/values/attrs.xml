@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="GridImageView">
+        <!--控制单一图片的尺寸-->
+        <attr format="dimension" name="singleImgHeight"/>
+        <attr format="dimension" name="singleImgWidth" />
+        <!--图片之间的间隔-->
+        <attr format="dimension" name="imgGap"/>
+        <!--网格最大数量-->
+        <attr format="integer" name="maxSize"/>
+        <attr format="enum" name="showStyle">
+            <!--网格展示 按九宫格排列 如4张图 第一行3 第二行1-->
+            <enum name="grid" value="0"/>
+            <!--填满父容器 如4张图 第一行2 第二行2-->
+            <enum name="fill" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>

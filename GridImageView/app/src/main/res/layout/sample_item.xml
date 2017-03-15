@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <View
+        android:background="#f00"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+    <me.khrystal.widget.gridimageview.GridImageView
+        android:id="@+id/grid_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </me.khrystal.widget.gridimageview.GridImageView>
+    <View
+        android:background="#0f0"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+</LinearLayout>

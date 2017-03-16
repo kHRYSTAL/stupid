@@ -11,4 +11,5 @@ package me.khrystal.hxdemo.util;
 public class Constants {
     public static final String REFERUID = "refer_uid";
     public static final String CONVERSATION_ID = "conversation_id";
+    public static final String IS_GROUPCHAT = "is_group_chat";
 }

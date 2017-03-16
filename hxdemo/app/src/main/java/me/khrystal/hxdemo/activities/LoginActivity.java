@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         // 加载所有会话到内存
                         EMClient.getInstance().chatManager().loadAllConversations();
                         // 加载所有群组到内存
-//                        EMClient.getInstance().groupManager().loadAllGroups();
+                        EMClient.getInstance().groupManager().loadAllGroups();
                         // 登录成功后跳转至主界面
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);

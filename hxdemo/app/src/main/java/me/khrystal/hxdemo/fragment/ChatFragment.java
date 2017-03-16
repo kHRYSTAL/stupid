@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.adapter.EMAConversation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,8 @@ public class ChatFragment extends Fragment {
     protected EMConversation mConversation;
     // 当前聊天对方的uid
     private String referUid;
+    // 判断是单聊还是群聊
+    private boolean isGroupChat;
 
     protected MultipleItemAdapter itemAdapter;
     protected RecyclerView recyclerView;
@@ -60,7 +63,9 @@ public class ChatFragment extends Fragment {
         referUid = getActivity().getIntent().getStringExtra(Constants.REFERUID);
         if (TextUtils.isEmpty(referUid))
             getActivity().finish();
-
+        isGroupChat = getActivity().getIntent().getBooleanExtra(Constants.IS_GROUPCHAT, false);
+        Log.e(TAG, "getIntent, isGroup:" + isGroupChat);
+        Log.e(TAG, "getIntent, referUid:" + referUid);
         initConversation();
         initView(view);
 
@@ -83,8 +88,10 @@ public class ChatFragment extends Fragment {
      * 初始化会话对象
      */
     private void initConversation() {
-        // 参数: 1.当前会话的目标用户或群组id, 2.会话类型 可以为空 3.如果会话不存在 是否创建会话
-        mConversation = EMClient.getInstance().chatManager().getConversation(referUid, null, true);
+        // 参数: 1.当前会话的目标用户或群组id, 2.会话类型 可以为空(单聊) 3.如果会话不存在 是否创建会话
+        mConversation = EMClient.getInstance().chatManager().getConversation(referUid,
+                (isGroupChat ? EMConversation.EMConversationType.GroupChat : EMConversation.EMConversationType.Chat),
+                true);
         // 设置当前会话的未读数为 0
         mConversation.markAllMessagesAsRead();
 
@@ -174,7 +181,14 @@ public class ChatFragment extends Fragment {
     public void onEvent(InputBottomBarTextEvent textEvent) {
         if (null != mConversation && null != textEvent) {
             if (!TextUtils.isEmpty(textEvent.sendContent) && referUid.equals(textEvent.tag)) {
+                Log.e(TAG, "sendTo:" + referUid);
+                Log.e(TAG, "isGroup:" + isGroupChat);
                 EMMessage message = EMMessage.createTxtSendMessage(textEvent.sendContent, referUid);
+
+                //如果是群聊，设置chatType，默认是单聊
+                if (isGroupChat)
+                    message.setChatType(EMMessage.ChatType.GroupChat);
+
                 itemAdapter.addMessage(message);
                 itemAdapter.notifyDataSetChanged();
                 scrollToBottom();

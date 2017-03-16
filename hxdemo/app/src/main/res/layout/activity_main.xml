@@ -14,7 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
+        <TextView
+            android:textColor="#f00"
+            android:text="单聊相关"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <EditText
             android:id="@+id/ec_edit_chat_id"
             android:layout_width="match_parent"
@@ -32,5 +36,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="退出登录"/>
+
+        <TextView
+            android:layout_marginTop="50dp"
+            android:text="群聊相关"
+            android:textColor="#f00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/ec_edit_group_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="groupId"/>
+
+        <Button
+            android:id="@+id/ec_btn_create_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="创建群组"/>
+        <EditText
+            android:id="@+id/ec_invite_user"
+            android:hint="invite userId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/ec_btn_invite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="邀请"/>
+        <Button
+            android:id="@+id/ec_btn_start_group_chat"
+            android:text="打开群聊"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/ec_btn_fetch_group"
+            android:text="获取我创建的第一个群组"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 </RelativeLayout>

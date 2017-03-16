@@ -76,7 +76,7 @@ public class MainApplication extends Application {
         options.setRequireDeliveryAck(false);
 
         // 设置是否自动接受加群邀请 如果设置为true当收到群邀请会自动同意加入
-        options.setAutoAcceptGroupInvitation(false);
+        options.setAutoAcceptGroupInvitation(true);
 
         // 设置主动或被动退出群组时 是否删除群聊记录
         options.setDeleteMessagesAsExitGroup(true);

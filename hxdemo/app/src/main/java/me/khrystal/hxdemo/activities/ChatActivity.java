@@ -9,7 +9,7 @@ import me.khrystal.hxdemo.fragment.ChatFragment;
 import me.khrystal.hxdemo.util.Constants;
 
 /**
- * usage:
+ * usage: 聊天Activity 支持单聊群聊
  * author: kHRYSTAL
  * create time: 17/3/10
  * update time:

@@ -26,7 +26,7 @@ public class NotificationBroadCastReceiver extends BroadcastReceiver {
         if (!EMClient.getInstance().isLoggedInBefore()) {
             gotoLoginActivity(context);
         } else {
-            gotoSingleChatActivity(context, intent);
+            gotoChatActivity(context, intent);
         }
     }
 
@@ -45,10 +45,11 @@ public class NotificationBroadCastReceiver extends BroadcastReceiver {
      * @param context
      * @param intent
      */
-    private void gotoSingleChatActivity(Context context, Intent intent) {
+    private void gotoChatActivity(Context context, Intent intent) {
         Intent startActivityIntent = new Intent(context, ChatActivity.class);
         startActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivityIntent.putExtra(Constants.REFERUID, intent.getStringExtra(Constants.REFERUID));
+        startActivityIntent.putExtra(Constants.IS_GROUPCHAT, intent.getBooleanExtra(Constants.IS_GROUPCHAT, false));
         context.startActivity(startActivityIntent);
     }
 }

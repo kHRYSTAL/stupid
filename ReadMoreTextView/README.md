@@ -1,0 +1,1 @@
+has bug, watch ExpandableTextView

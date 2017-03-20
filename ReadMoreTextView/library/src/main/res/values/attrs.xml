@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ReadMoreTextView">
+        <attr name="rmtMoreText" format="string"/>
+        <attr name="rmtMoreColor" format="color"/>
+        <attr name="rmtLessText" format="string"/>
+        <attr name="rmtLessColor" format="color"/>
+        <attr name="rmtToggleSize" format="dimension"/>
+        <attr name="rmtEllipsizeEnd" format="boolean"/>
+    </declare-styleable>
+</resources>

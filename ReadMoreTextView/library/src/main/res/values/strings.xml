@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">library</string>
+    <string name="default_more">&#160;全文</string>
+    <string name="default_less">&#160;收起</string>
+</resources>

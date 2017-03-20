@@ -1,0 +1,12 @@
+<resources>
+    <string name="expand">展开全文</string>
+    <string name="shrink">收起全文</string>
+    <string name="tips">This is a custom TextView that can be expanded with a smooth transition animation,you can set the number of lines to expand,change its icon or text and so on\n
+                        This is a custom TextView that can be expanded with a smooth transition animation,you can set the number of lines to expand,change its icon or text and so on\n
+                                        This is a custom TextView that can be expanded with a smooth transition animation,you can set the number of lines to expand,change its icon or text and so on\n
+                                This is a custom TextView that can be expanded with a smooth transition animation,you can set the number of lines to expand,change its icon or text and so on\n
+                                This is a custom TextView that can be expanded with a smooth transition animation,you can set the number of lines to expand,change its icon or text and so on\n
+
+    </string>
+    <string name="tips_short">Hello there,i am a short text for test</string>
+</resources>

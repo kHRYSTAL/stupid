@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CollapsibleTextView">
+        <attr name="ctv_maxLines" format="integer" />
+        <attr name="ctv_textToggleColor" format="color" />
+        <attr name="ctv_textContentColor" format="color" />
+        <attr name="ctv_textContentSize" format="dimension" />
+        <attr name="ctv_animEnable" format="boolean"/>
+        <attr name="ctv_textShrink" format="string" />
+        <attr name="ctv_textExpand" format="string" />
+    </declare-styleable>
+</resources>

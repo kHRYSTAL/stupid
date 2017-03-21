@@ -42,7 +42,7 @@ public class ExpandableTextView extends TextView {
     private static final String ELLIPSIS_HINT = "...";
     private static final String GAP_TO_EXPAND_HINT = " ";
     private static final String GAP_TO_SHRINK_HINT = " ";
-    private static final int MAX_LINES_ON_SHRINK = 2;
+    private static final int MAX_LINES_ON_SHRINK = 4;
     private static final int TO_EXPAND_HINT_COLOR = 0xFF3498DB;
     private static final int TO_SHRINK_HINT_COLOR = 0xFFE74C3C;
     private static final int TO_EXPAND_HINT_COLOR_BG_PRESSED = 0x55999999;
@@ -248,7 +248,7 @@ public class ExpandableTextView extends TextView {
                     return mOrigText;
                 }
                 int start = getValidLayout().getLineStart(mMaxLinesOnShrink - 1);
-                int end = getValidLayout().getLineEnd(mMaxLinesOnShrink - 1) - start;
+                int end = getValidLayout().getLineEnd(mMaxLinesOnShrink - 1);
 
                 CharSequence content = mOrigText.subSequence(start, mOrigText.length());
 
@@ -262,7 +262,6 @@ public class ExpandableTextView extends TextView {
                 }
 
                 len = Math.min(len, end);
-                Log.e(TAG, "len1:" + len + ",end1:" + end);
 
                 int endSpaceWidth = getValidLayout().getWidth() -
                         (int) (mTextPaint.measureText(mOrigText.subSequence(indexStart, indexEnd).toString()) + 0.5);

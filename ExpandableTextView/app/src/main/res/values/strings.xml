@@ -2,9 +2,9 @@
     <string name="app_name">ExpandableTextView</string>
      <string name="tips">aaa\nbbb\nccc\nddd
     </string>
-    <string name="tips_short">Hello there,i am a short text for test\nHello there,i am a short text for test\nHello there,i am a short text for test\nHello there,i am a short text for test
-    Hello there,i am a short text for test\nHello there,i am a short text for testHello there,i am a short text for test\nHello there,i am a short text for testHello there,i am a short text for test\nHello there,i am a short text for test
-    Hello there,i am a short text for test\nHello there,i am a short text for test
-    Hello there,i am a short text for test\nHello there,i am a short text for test
-    Hello there,i am a short text for test\nHello there,i am a short text for test</string>
+    <string name="tips_short">Hello there,\ni am a short text for testHello there,i am a short text for testHello there,i am a short text for testHello there\n,i am a short text for test
+    Hello there,i am a short text \nfor testHello there,i am a short text for testHello there,\ni am a short text for testHello there,i am a short text for testHello there,i am a short text for testHello there,i am a short text for test
+    Hello there,i am a short text for testHello there,i am a short text for test
+    Hello there,i am a short text for testHello there,i am a short text for test
+    Hello there,i am a short text for testHello there,i am a short text for test</string>
 </resources>

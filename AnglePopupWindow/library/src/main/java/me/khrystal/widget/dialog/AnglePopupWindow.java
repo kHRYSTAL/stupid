@@ -129,7 +129,7 @@ public class AnglePopupWindow<T> {
                 Rect frame = new Rect();
                 // 获取状态栏高度
                 mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-                float x = arr[0] + locationView.getWidth() - mBubbleLayout.getMeasuredWidth();
+//                float x = arr[0] + locationView.getWidth() - mBubbleLayout.getMeasuredWidth();
                 float y = 0f;
                 
                 WindowManager wm = (WindowManager) mActivity
@@ -140,14 +140,14 @@ public class AnglePopupWindow<T> {
 
                 if ((screenH * 2 / 3) < arr[1]) {
                     y = arr[1] - locationView.getHeight() - mBubbleLayout.getMeasuredHeight();
-                    mBubbleLayout.setBubbleParams(BubbleLinearLayout.BubbleLegOrientation.BOTTOM, arr[0]);
+                    mBubbleLayout.setBubbleParams(BubbleLinearLayout.BubbleLegOrientation.BOTTOM, arr[0] + locationView.getWidth() / 2);
                 } else {
                     y = arr[1] - frame.top + locationView.getHeight();
-                    mBubbleLayout.setBubbleParams(BubbleLinearLayout.BubbleLegOrientation.TOP, arr[0]);
+                    mBubbleLayout.setBubbleParams(BubbleLinearLayout.BubbleLegOrientation.TOP, arr[0] + locationView.getWidth() / 2);
                 }
                 Log.e(TAG, "screen Y:" + screenH);
                 Log.e(TAG, "point Y:" + y);
-                mBubbleLayout.setX(x);
+                mBubbleLayout.setX(0);
                 mBubbleLayout.setY(y);
 
                 //这里就是使用WindowManager直接将我们处理好的view添加到屏幕最前端

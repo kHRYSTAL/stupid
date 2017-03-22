@@ -122,8 +122,8 @@ public class BubbleLinearLayout extends LinearLayout {
      */
     private void renderBubbleLegPrototype() {
         mBubbleLegPrototype.moveTo(0, 0);
-        mBubbleLegPrototype.lineTo(Padding * 1.5f, -Padding / 1.5f);
-        mBubbleLegPrototype.lineTo(Padding * 1.5f, Padding / 1.5f);
+        mBubbleLegPrototype.lineTo(Padding * 1.2f, -Padding / 1.2f);
+        mBubbleLegPrototype.lineTo(Padding * 1.2f, Padding / 1.2f);
         mBubbleLegPrototype.close();
     }
 

@@ -38,7 +38,7 @@ public class BubbleLinearLayout extends LinearLayout {
     }
 
     public static int Padding = 30;
-    public static int LegHalfBase = 30;
+    public static int LegHalfBase = 0;
     public static float StrokeWidth = 2.0f;
     public static float CornerRadius = 8.0f;
     public static int ShadowColor = Color.argb(100, 0, 0, 0);
@@ -114,7 +114,7 @@ public class BubbleLinearLayout extends LinearLayout {
 
         mPaint.setShadowLayer(2f, 2f, 5f, ShadowColor);
         renderBubbleLegPrototype();
-        setPadding(Padding, Padding, Padding, Padding);
+        setPadding(0, Padding, Padding, Padding);
     }
 
     /**
@@ -173,7 +173,7 @@ public class BubbleLinearLayout extends LinearLayout {
         final float height = canvas.getHeight();
 
         mPath.rewind();
-        mPath.addRoundRect(new RectF(Padding, Padding, width - Padding, height - Padding),
+        mPath.addRoundRect(new RectF(0, Padding, width - Padding, height - Padding),
                 CornerRadius, CornerRadius, Path.Direction.CW);
         mPath.addPath(mBubbleLegPrototype, renderBubbleLegMatrix(width, height));
         canvas.drawPath(mPath, mPaint);

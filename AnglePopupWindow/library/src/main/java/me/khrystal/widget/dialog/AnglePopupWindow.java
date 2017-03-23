@@ -145,9 +145,8 @@ public class AnglePopupWindow<T> {
                     y = arr[1] - frame.top + locationView.getHeight();
                     mBubbleLayout.setBubbleParams(BubbleLinearLayout.BubbleLegOrientation.TOP, arr[0] + locationView.getWidth() / 2);
                 }
-                Log.e(TAG, "screen Y:" + screenH);
-                Log.e(TAG, "point Y:" + y);
-                mBubbleLayout.setX(0);
+
+                mBubbleLayout.setX(BubbleLinearLayout.Padding * -1 / 2);
                 mBubbleLayout.setY(y);
 
                 //这里就是使用WindowManager直接将我们处理好的view添加到屏幕最前端

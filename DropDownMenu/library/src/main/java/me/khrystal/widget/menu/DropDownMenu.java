@@ -75,6 +75,7 @@ public class DropDownMenu extends LinearLayout {
      * @param contentView 弹出菜单之前的内容布局
      */
     public DropDownMenu setDropDownMenu(@NonNull View popView, @Nullable View contentView, @Nullable ViewGroup.LayoutParams popParams) {
+        removeAllViews();
         if (contentView != null)
             containerView.addView(contentView, calculateIndex());
         maskView = new View(getContext());

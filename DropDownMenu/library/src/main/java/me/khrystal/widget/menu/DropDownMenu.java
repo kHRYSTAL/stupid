@@ -23,8 +23,6 @@ public class DropDownMenu extends LinearLayout {
 
     // 底部容器, 包含popupMenuViews, maskView;
     private FrameLayout containerView;
-    // space下分割线
-    private View divider;
     // 弹出菜单父布局
     private FrameLayout popupMenuView;
     // 遮罩半透明View, 点击可关闭DropDownMenu
@@ -56,7 +54,6 @@ public class DropDownMenu extends LinearLayout {
         this.context = context;
         View root = View.inflate(context, R.layout.drop_down_menu_layout, this);
         mSpace = (Space) root.findViewById(R.id.drop_down_space);
-        divider = root.findViewById(R.id.drop_down_divider);
         setOrientation(VERTICAL);
     }
 
@@ -163,15 +160,6 @@ public class DropDownMenu extends LinearLayout {
      */
     public boolean isShowing() {
         return popIsOpen;
-    }
-
-    /**
-     * 设置分割线背景色
-     * @param color
-     */
-    public DropDownMenu setDividerColor(int color) {
-        divider.setBackgroundColor(color);
-        return this;
     }
 
     /**

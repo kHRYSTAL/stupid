@@ -36,6 +36,7 @@ public class DropDownMenu extends LinearLayout {
     private boolean popIsOpen = false;
 
     private OnMenuStateChangeListener mListener;
+    private Context context;
 
     // 遮罩颜色
     private int maskColor = 0x88888888;
@@ -52,13 +53,11 @@ public class DropDownMenu extends LinearLayout {
 
     public DropDownMenu(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.context = context;
         View root = View.inflate(context, R.layout.drop_down_menu_layout, this);
         mSpace = (Space) root.findViewById(R.id.drop_down_space);
         divider = root.findViewById(R.id.drop_down_divider);
         setOrientation(VERTICAL);
-        containerView = new FrameLayout(context);
-        containerView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-        addView(containerView, 1);
     }
 
     public DropDownMenu setDropDownMenu(@NonNull View popView) {
@@ -75,7 +74,13 @@ public class DropDownMenu extends LinearLayout {
      * @param contentView 弹出菜单之前的内容布局
      */
     public DropDownMenu setDropDownMenu(@NonNull View popView, @Nullable View contentView, @Nullable ViewGroup.LayoutParams popParams) {
-        removeAllViews();
+        if (containerView == null) {
+            containerView = new FrameLayout(context);
+            containerView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+            addView(containerView, 1);
+        }
+        // 解决重复set导致的内部容器增多问题
+        containerView.removeAllViews();
         if (contentView != null)
             containerView.addView(contentView, calculateIndex());
         maskView = new View(getContext());

@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <meta name="viewport"
+          content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <style type='text/css'>
+            html { font-family:Helvetica; color:#222; }
+            h1 { color:steelblue; font-size:24px; margin-top:24px; }
+            button { margin:0 3px 10px; font-size:12px; }
+            .logLine { border-bottom:1px solid #ccc; padding:4px 2px; font-family:courier; font-size:11px; }
+            a{padding: 4px 2px; font-size: 16px;text-align: center;background-color: aquamarine;margin: 20px;display: block}
+    </style>
+</head>
+<body>
+<h1>ZHHybrid Navigator Demo11222</h1>
+<div id="log"></div>
+
+<script src=“./zhsdk-0.0.1.js” charset="utf-8"></script>
+<script>
+    var uniqueId = 0;
+    function log(message, data) {
+        var log = document.getElementById('log')
+        var el = document.createElement('div')
+        el.className = 'logLine'
+        el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + JSON.stringify(data)
+        if (log.children.length) { log.insertBefore(el, log.children[0]) }
+        else { log.appendChild(el) }
+    }
+    function test(){
+        zh.setNavigationBarBackgroundColor("#d48ada",function(){
+            log("setNavigationBarColor over");
+        });
+        zh.setNavigationBarColor("#dce47f",function(){
+            log("setNavigationBarColor over");
+        });
+        zh.setNavigationBarFontSize(12,function(){
+            log("setNavigationBarFontSize over");
+        });
+        zh.setNavigationBarBackgroundColor("#cf7034",function(){
+            log("setNavigationBarBackgroundColor over");
+        });
+        zh.setNavigationBar({
+            backgroundColor : "0x00FBEA",
+            text : "navigationBar demo",
+            fontSize : 20,
+            color : "#FF00DD"
+        });
+
+        zh.showRefreshButton();
+
+        var npb = document.createElement("a");
+        npb.innerText = "new page";
+        npb.addEventListener("click", function(){
+            zh.redirectTo({url:"http://khrystal.tunnel.2bdata.com/closePage.html"});
+        }, false);
+        document.body.appendChild(npb);
+
+
+        var ngb = document.createElement("a");
+        ngb.innerText = "new group";
+        ngb.addEventListener("click", function(){
+            zh.navigateTo({url:"http://khrystal.tunnel.2bdata.com/closeGroup.html"});
+        }, false);
+        document.body.appendChild(ngb);
+
+        var cpb = document.createElement("a");
+        cpb.innerText = "close page";
+        cpb.addEventListener("click", function(){
+            zh.redirectBack();
+        }, false);
+        document.body.appendChild(cpb);
+
+        var cgb = document.createElement("a");
+        cgb.innerText = "close group";
+        cgb.addEventListener("click", function(){
+            zh.navigateBack();
+        }, false);
+        document.body.appendChild(cgb);
+
+
+    }
+
+    zh.ready(function(){
+        test();
+    })
+
+</script>
+</body>
+</html>

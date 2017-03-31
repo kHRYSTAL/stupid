@@ -1,0 +1,119 @@
+<!doctype html>
+<html><head>
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <style type='text/css'>
+            html { font-family:Helvetica; color:#222; }
+            h1 { color:steelblue; font-size:24px; margin-top:24px; }
+            button { margin:0 3px 10px; font-size:12px; }
+            .logLine { border-bottom:1px solid #ccc; padding:4px 2px; font-family:courier; font-size:11px; }
+            </style>
+</head><body>
+<h1>ZHHybrid Titlebar Demo</h1>
+<div id='button.titleBar.backgroundColor'></div>
+<div id='button.titleBar.text'></div>
+<div id='button.titleBar.textSize'></div>
+<div id='button.titleBar.textColor'></div>
+<div id='button.titleBar.rightButton'></div>
+<div id='log'></div>
+<script>
+        window.onerror = function(err) {
+            log('window.onerror: ' + err)
+        }
+
+    function setupWebViewJavascriptBridge(callback) {
+        if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+        if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+        window.WVJBCallbacks = [callback];
+        var WVJBIframe = document.createElement('iframe');
+        WVJBIframe.style.display = 'none';
+        WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+        document.documentElement.appendChild(WVJBIframe);
+        setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+    }
+
+    setupWebViewJavascriptBridge(function(bridge) {
+                                 var uniqueId = 1
+                                 function log(message, data) {
+                                 var log = document.getElementById('log')
+                                 var el = document.createElement('div')
+                                 el.className = 'logLine'
+                                 el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + JSON.stringify(data)
+                                 if (log.children.length) { log.insertBefore(el, log.children[0]) }
+                                 else { log.appendChild(el) }
+                                 }
+
+                                 bridge.registerHandler('NativeHybrid', function(data, responseCallback) {
+                                                        log('ObjC called NativeHybrid with', data)
+                                                        var responseData = { 'Javascript Says':'Right back atcha!' }
+                                                        log('JS responding with', responseData)
+                                                        responseCallback(responseData)
+                                                        })
+
+                                 document.body.appendChild(document.createElement('br'))
+
+
+
+
+                                 var callbackButton = document.getElementById('button.titleBar.backgroundColor').appendChild(document.createElement('button'))
+                                 callbackButton.innerHTML = 'titleBar.backgroundColor'
+                                 callbackButton.onclick = function(e) {
+                                 e.preventDefault()
+                                 log('JS calling handler "NativeHybrid"')
+                                 bridge.callHandler('NativeHybrid', {'taskId': 'zhhybrid/titleBar/background/color', 'param' : '0x00FBEA'}, function(response) {
+                                                    log('JS got response', response)
+                                                    })
+                                 }
+
+
+                                 var callbackButton = document.getElementById('button.titleBar.text').appendChild(document.createElement('button'))
+                                 callbackButton.innerHTML = 'titleBar.text'
+                                 callbackButton.onclick = function(e) {
+                                 e.preventDefault()
+                                 log('JS calling handler "NativeHybrid"')
+                                 bridge.callHandler('NativeHybrid', {'taskId': 'zhhybrid/titleBar/title/text', 'param' : '%e5%b2%9b%e9%82%bb%e6%9c%ba%e6%9e%84'}, function(response) {
+                                                    log('JS got response', response)
+                                                    })
+                                 }
+
+
+                                 var callbackButton = document.getElementById('button.titleBar.textSize').appendChild(document.createElement('button'))
+                                 callbackButton.innerHTML = 'titleBar.textSize'
+                                 callbackButton.onclick = function(e) {
+                                 e.preventDefault()
+                                 log('JS calling handler "NativeHybrid"')
+                                 bridge.callHandler('NativeHybrid', {'taskId': 'zhhybrid/titleBar/title/fontSize', 'param' : '20'}, function(response) {
+                                                    log('JS got response', response)
+                                                    })
+                                 }
+
+
+                                 var callbackButton = document.getElementById('button.titleBar.textColor').appendChild(document.createElement('button'))
+                                 callbackButton.innerHTML = 'titleBar.textColor'
+                                 callbackButton.onclick = function(e) {
+                                 e.preventDefault()
+                                 log('JS calling handler "NativeHybrid"')
+                                 bridge.callHandler('NativeHybrid', {'taskId': 'zhhybrid/titleBar/title/textColor', 'param' : '0xFF4400'}, function(response) {
+                                                    log('JS got response', response)
+                                                    })
+                                 }
+
+
+                                 var callbackButton = document.getElementById('button.titleBar.rightButton').appendChild(document.createElement('button'))
+                                 callbackButton.innerHTML = 'titleBar.rightButton'
+                                 callbackButton.onclick = function(e) {
+                                 e.preventDefault()
+                                 log('JS calling handler "NativeHybrid"')
+                                 bridge.callHandler('NativeHybrid', {'taskId': 'zhhybrid/titleBar/button', 'param' : '{"txt":"%e4%bf%9d%e5%ad%98", "handlerName":"onSave"}'}, function(response) {
+                                                    log('JS got response', response)
+                                                    })
+                                 }
+
+                                 bridge.registerHandler('onSave', function(data, responseCallback) {
+                                			log('ObjC|Android called onSave with', data)
+                                			window.alert('web page called onSave ' + data)
+                                			var responseData = { 'Web Says':'onSaveSuccess' }
+                                			responseCallback(responseData)
+                                		})
+                                 })
+        </script>
+</body></html>

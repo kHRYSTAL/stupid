@@ -2,6 +2,7 @@ package me.khrystal.widget.dialog;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -114,6 +115,10 @@ public class WhiteBoardDialog extends DialogFragment {
         container.setBackgroundColor(DEFAULT_COLOR);
 //        lDialog.setCancelable(true);
         return lDialog;
+    }
+
+    public void show(FragmentManager manager) {
+        show(manager, null);
     }
 
     class WhiteAdapter extends RecyclerView.Adapter<VH> {

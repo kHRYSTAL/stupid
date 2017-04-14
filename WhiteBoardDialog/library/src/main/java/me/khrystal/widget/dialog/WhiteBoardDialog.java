@@ -102,9 +102,6 @@ public class WhiteBoardDialog extends DialogFragment {
                     @Override
                     public void onClick(View v) {
                         lDialog.dismiss();
-                        if (mListener != null) {
-                            mListener.onCloseClick(type);
-                        }
                     }
                 });
 
@@ -166,10 +163,6 @@ public class WhiteBoardDialog extends DialogFragment {
     }
 
     public interface WhiteBoardListener {
-        /**
-         * 点击关闭调用
-         */
-        public void onCloseClick(int type);
 
         /**
          * 点击item调用 回传type与position 外部持有list 与position对应

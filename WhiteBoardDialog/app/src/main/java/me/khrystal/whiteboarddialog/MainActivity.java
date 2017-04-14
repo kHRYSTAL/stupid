@@ -35,11 +35,6 @@ public class MainActivity extends AppCompatActivity {
                 .setClipDistance(600)
                 .setWhiteBoardListener(new WhiteBoardDialog.WhiteBoardListener() {
                     @Override
-                    public void onCloseClick(int type) {
-                        Toast.makeText(MainActivity.this, "close", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
                     public void onItemClick(int type, int position) {
                         Toast.makeText(MainActivity.this, dataList.get(position).value, Toast.LENGTH_SHORT).show();
                     }

@@ -9,5 +9,5 @@ package me.khrystal.widget.menu.interfaces;
  */
 
 public interface OnFilterDoneListener {
-    void onFilterDone(int position, String positionTitle, String urlValue);
+    void onFilterDone(int position, String positionTitle, boolean isCheck);
 }

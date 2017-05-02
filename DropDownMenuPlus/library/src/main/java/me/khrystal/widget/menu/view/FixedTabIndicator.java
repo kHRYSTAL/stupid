@@ -183,18 +183,17 @@ public class FixedTabIndicator extends LinearLayout {
             mOnItemClickListener.onItemClick(tv, pos, level == 1);
         }
 
-        if (mLastIndicatorPosition == pos) {
-            // 点击同一个条目时
-            tv.setTextColor(level == 0 ? mTabSelectedColor : mTabDefaultColor);
-            drawable.setLevel(1 - level);
-
-            return;
-        }
+//        if (mLastIndicatorPosition == pos) {
+//            // 点击同一个条目时
+//            tv.setTextColor(level == 0 ? mTabSelectedColor : mTabDefaultColor);
+//            drawable.setLevel(1 - level);
+//            return;
+//        }
 
         mCurrentIndicatorPosition = pos;
-        resetPos(mLastIndicatorPosition);
+//        resetPos(mLastIndicatorPosition);
 
-        //highLightPos(pos);
+        highLightPos(pos);
         tv.setTextColor(mTabSelectedColor);
         tv.getCompoundDrawables()[2].setLevel(1);
 

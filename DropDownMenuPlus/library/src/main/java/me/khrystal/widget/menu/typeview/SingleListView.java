@@ -4,15 +4,18 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
 import me.khrystal.widget.menu.adapter.BaseBaseAdapter;
 import me.khrystal.widget.menu.interfaces.OnFilterItemClickListener;
 import me.khrystal.widget.menu.util.CommonUtil;
+import me.khrystal.widget.menu.view.FilterCheckedTextView;
 
 /**
  * usage: 单列表
@@ -72,9 +75,13 @@ public class SingleListView<DATA> extends ListView implements AdapterView.OnItem
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (CommonUtil.isFastDoubleClick())
             return;
+
         DATA item = mAdapter.getItem(position);
+        FilterCheckedTextView textView = (FilterCheckedTextView) view;
+
         if (mOnItemClickListener != null) {
-            mOnItemClickListener.onItemClick(item);
+            mOnItemClickListener.onItemClick(item, !textView.isChecked());
         }
+        textView.toggle();
     }
 }

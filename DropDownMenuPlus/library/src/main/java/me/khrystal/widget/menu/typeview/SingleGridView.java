@@ -15,6 +15,7 @@ import me.khrystal.widget.menu.adapter.BaseBaseAdapter;
 import me.khrystal.widget.menu.interfaces.OnFilterItemClickListener;
 import me.khrystal.widget.menu.util.CommonUtil;
 import me.khrystal.widget.menu.util.DensityUtil;
+import me.khrystal.widget.menu.view.FilterCheckedTextView;
 
 public class SingleGridView<DATA> extends GridView implements AdapterView.OnItemClickListener {
 
@@ -79,9 +80,11 @@ public class SingleGridView<DATA> extends GridView implements AdapterView.OnItem
         }
 
         DATA item = mAdapter.getItem(position);
-
+        FilterCheckedTextView textView = (FilterCheckedTextView) view;
+        boolean checked = textView.isChecked();
+        textView.setChecked(!checked);
         if (mOnItemClickListener != null) {
-            mOnItemClickListener.onItemClick(item);
+            mOnItemClickListener.onItemClick(item, !checked);
         }
     }
 

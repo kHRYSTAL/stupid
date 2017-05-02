@@ -9,5 +9,5 @@ package me.khrystal.widget.menu.interfaces;
  */
 
 public interface OnFilterItemClickListener<DATA> {
-    void onItemClick(DATA item);
+    void onItemClick(DATA item, boolean isCheck);
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import me.khrystal.widget.menu.util.DensityUtil;
 import me.khrystal.widget.menu.view.FilterCheckedTextView;
 
 /**
- * usage: 筛选器(横向)条目适配器
+ * usage:
  * author: kHRYSTAL
  * create time: 17/4/24
  * update time:
@@ -29,18 +30,18 @@ public abstract class SimpleTextAdapter<T> extends BaseBaseAdapter<T> {
     }
 
     public static class FilterItemHolder {
-        FilterCheckedTextView checkedTextView;
+        TextView checkedTextView;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         FilterItemHolder holder;
+
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.lv_item_filter, parent, false);
             holder = new FilterItemHolder();
             holder.checkedTextView = (FilterCheckedTextView) convertView;
-            holder.checkedTextView.setPadding(0, DensityUtil.dip2px(context, 15),
-                    0, DensityUtil.dip2px(context, 15));
+            holder.checkedTextView.setPadding(0, DensityUtil.dip2px(context, 15), 0, DensityUtil.dip2px(context, 15));
             initCheckedTextView(holder.checkedTextView);
             convertView.setTag(holder);
         } else {
@@ -48,13 +49,16 @@ public abstract class SimpleTextAdapter<T> extends BaseBaseAdapter<T> {
         }
 
         T t = list.get(position);
-        holder.checkedTextView.setTag(provideText(t));
+        holder.checkedTextView.setText(provideText(t));
+
         return convertView;
     }
 
     public abstract String provideText(T t);
 
-    protected void initCheckedTextView(FilterCheckedTextView checkedTextView) {
+    protected void initCheckedTextView(TextView checkedTextView) {
 
     }
+
+
 }

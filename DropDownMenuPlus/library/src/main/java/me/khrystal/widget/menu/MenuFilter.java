@@ -133,7 +133,7 @@ public class MenuFilter extends RelativeLayout implements View.OnClickListener, 
         if (isClosed())
             return;
         frameLayoutContainer.startAnimation(alphaDismissAnimation);
-        fixedTabIndicator.resetCurrentPos();
+//        fixedTabIndicator.resetCurrentPos();
         if (currentView != null) {
             currentView.startAnimation(dismissAnimation);
         }
@@ -142,6 +142,10 @@ public class MenuFilter extends RelativeLayout implements View.OnClickListener, 
     public void setPositionIndicatorText(int position, String text) {
         verifyContainer();
         fixedTabIndicator.setPositionText(position, text);
+    }
+
+    public FixedTabIndicator getFixedTabIndicator() {
+        return fixedTabIndicator;
     }
 
     public void setCurrentIndicatorText(String text) {
@@ -197,7 +201,7 @@ public class MenuFilter extends RelativeLayout implements View.OnClickListener, 
 
     @Override
     public void onItemClick(View v, int position, boolean open) {
-        if (open) {
+        if (isShowing()) {
             close();
         } else {
             currentView = frameLayoutContainer.getChildAt(position);

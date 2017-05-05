@@ -1,17 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="me.khrystal.obliqueimageview.MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <me.khrystal.widget.oblique.ObliqueImageView
+            android:id="@+id/obliqueView"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:scaleType="centerCrop"
+            app:basecolor="#2E3192"
+            app:ending_slant_angle="0"
+            app:starting_slant_angle="15" />
+
+        <me.khrystal.widget.oblique.ObliqueImageView
+            android:id="@+id/obliqueView1"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/obliqueView"
+            android:scaleType="centerCrop"
+            app:basecolor="#D4145A"
+            app:ending_slant_angle="40"
+            app:starting_slant_angle="0" />
+
+        <me.khrystal.widget.oblique.ObliqueImageView
+            android:id="@+id/obliqueView2"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/obliqueView"
+            android:layout_marginTop="100dp"
+
+            android:scaleType="fitXY"
+
+            app:basecolor="#FBB03B"
+            app:ending_slant_angle="180"
+            app:starting_slant_angle="150" />
+
+
+        <me.khrystal.widget.oblique.ObliqueImageView
+            android:id="@+id/obliqueView4"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:scaleType="fitXY"
+            app:basecolor="#009245"
+            app:ending_slant_angle="180"
+            app:starting_slant_angle="140" />
+
+        <me.khrystal.widget.oblique.ObliqueImageView
+            android:id="@+id/obliqueView3"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_alignParentBottom="true"
+            android:scaleType="fitXY"
+            app:basecolor="#00537E"
+            app:ending_slant_angle="25"
+            app:starting_slant_angle="0" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            fontPath="fonts/Roboto-Thin.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp"
+            android:paddingLeft="20dp"
+            android:text="Oblique"
+            android:textColor="#fff"
+            android:textSize="65sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="left"
+            android:padding="25dp"
+            android:text="A slanted edged\nImageview Library"
+            android:textColor="#fff"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/sample"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:drawableTop="@drawable/ic_style_black_24dp"
+            android:gravity="right"
+            android:paddingRight="25dp"
+            android:text="Sample  "
+            android:textColor="#fff"
+            android:textSize="28sp" />
+
+        <TextView
+            android:id="@+id/demonstrator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="20dp"
+            android:drawableTop="@drawable/ic_gesture_black_24dp"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="Oblique\nDemonstrator"
+            android:textColor="#fff"
+            android:textSize="28sp" />
+    </LinearLayout>
 </RelativeLayout>
+

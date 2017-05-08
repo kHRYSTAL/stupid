@@ -1,11 +1,11 @@
 package me.khrystal.randar;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
 
 import me.khrystal.widget.RadarLayout;
-import me.khrystal.widget.RadarView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +20,22 @@ public class MainActivity extends AppCompatActivity {
         radarLayout = (RadarLayout) findViewById(R.id.radarLayout);
         radarLayout.setBackgroundRes(R.mipmap.map1);
         radarLayout.setIcon(R.mipmap.ic_launcher);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         radarLayout.startScan();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        radarLayout.stopScan();
+    }
+
+    public void goRipple(View view) {
+        Intent intent = new Intent(MainActivity.this, RippleActivity.class);
+        startActivity(intent);
     }
 }

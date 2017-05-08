@@ -1,8 +1,6 @@
-package me.khrystal.widget;
+package me.khrystal.widget.radar;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -49,21 +47,23 @@ public class RadarView extends View {
     private Runnable run = new Runnable() {
         @Override
         public void run() {
-            scanAngle = (scanAngle + scanSpeed) % 360;
-            matrix.postRotate(scanSpeed, mWidth / 2, mHeight / 2);
-            invalidate();
-            postDelayed(run, 130);
-            //开始扫描显示标志为true 且 只扫描一圈
-            if (startScan && currentScanningCount <= (360 / scanSpeed)) {
-                if (iScanningListener != null && currentScanningCount % scanSpeed == 0
-                        && currentScanningItem < maxScanItemCount) {
+            if (startScan) {
+                scanAngle = (scanAngle + scanSpeed) % 360;
+                matrix.postRotate(scanSpeed, mWidth / 2, mHeight / 2);
+                invalidate();
+                postDelayed(run, 130);
+                //开始扫描显示标志为true 且 只扫描一圈
+                if (startScan && currentScanningCount <= (360 / scanSpeed)) {
+                    if (iScanningListener != null && currentScanningCount % scanSpeed == 0
+                            && currentScanningItem < maxScanItemCount) {
 
-                    iScanningListener.onScanning(currentScanningItem, scanAngle);
-                    currentScanningItem++;
-                } else if (iScanningListener != null && currentScanningItem == maxScanItemCount) {
-                    iScanningListener.onScanSuccess();
+                        iScanningListener.onScanning(currentScanningItem, scanAngle);
+                        currentScanningItem++;
+                    } else if (iScanningListener != null && currentScanningItem == maxScanItemCount) {
+                        iScanningListener.onScanSuccess();
+                    }
+                    currentScanningCount++;
                 }
-                currentScanningCount++;
             }
         }
     };
@@ -165,6 +165,7 @@ public class RadarView extends View {
      */
     public void startScan() {
         this.startScan = true;
+        post(run);
     }
 
     /**

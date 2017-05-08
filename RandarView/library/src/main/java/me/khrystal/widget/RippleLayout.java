@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import me.khrystal.widget.mask.MaskPierceView;
-import me.khrystal.widget.radar.RadarView;
+import me.khrystal.widget.ripple.RippleView;
 
 /**
  * usage:
@@ -17,24 +17,23 @@ import me.khrystal.widget.radar.RadarView;
  * email: 723526676@qq.com
  */
 
-public class RadarLayout extends RelativeLayout {
+public class RippleLayout extends RelativeLayout {
 
     private ImageView bgImageView;
     private ImageView iconImageView;
     private MaskPierceView maskView;
-    private RadarView radarView;
+    private RippleView rippleView;
 
-    public RadarLayout(Context context) {
+    public RippleLayout(Context context) {
         this(context, null);
     }
 
-    public RadarLayout(Context context, AttributeSet attrs) {
+    public RippleLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
-
     }
 
-    public RadarLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public RippleLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
@@ -53,8 +52,8 @@ public class RadarLayout extends RelativeLayout {
         // 添加雷达
         RelativeLayout.LayoutParams radarParams = new LayoutParams(600, 600);
         radarParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        radarView = new RadarView(context);
-        addView(radarView, radarParams);
+        rippleView = new RippleView(context);
+        addView(rippleView, radarParams);
         // 添加用户头像
         RelativeLayout.LayoutParams iconParams = new LayoutParams(100, 100);
         iconParams.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -73,14 +72,14 @@ public class RadarLayout extends RelativeLayout {
     }
 
     public void startScan() {
-        if (radarView != null) {
-            radarView.startScan();
+        if (rippleView != null) {
+            rippleView.startRipple();
         }
     }
 
     public void stopScan() {
-        if (radarView != null) {
-            radarView.stopScan();
+        if (rippleView != null) {
+            rippleView.stopRipple();
         }
     }
 

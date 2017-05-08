@@ -1,4 +1,4 @@
-package me.khrystal.widget;
+package me.khrystal.widget.mask;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -71,7 +71,7 @@ public class MaskPierceView extends View {
 
         canvas.drawBitmap(mDstCircle, 0, 0, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
-        paint.setAlpha(160);
+        paint.setAlpha(230);
         canvas.drawBitmap(mSrcRect, 0, 0, paint);
         paint.setXfermode(null);
 

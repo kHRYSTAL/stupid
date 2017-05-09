@@ -21,7 +21,7 @@ public class RippleView extends View implements Runnable {
     private Paint mPaintBg;//画圆线需要用到的paint
     private int mMaxRadius;
     private boolean startRipple = false;//只有设置了数据后才会开始扫描
-    private int mInterval = 40;
+    private int mInterval = 80;
     private int count = 0;
     private Paint mRipplePaint;
     private Paint mCirclePaint;
@@ -121,12 +121,13 @@ public class RippleView extends View implements Runnable {
 
     @Override
     public void run() {
-        if (startRipple)
-        //把run对象的引用从队列里拿出来，这样，他就不会执行了，但 run 没有销毁
-        removeCallbacks(this);
-        count += 2;
-        count %= mInterval;
-        invalidate();//重绘
+        if (startRipple) {
+            //把run对象的引用从队列里拿出来，这样，他就不会执行了，但 run 没有销毁
+            removeCallbacks(this);
+            count += 2;
+            count %= mInterval;
+            invalidate();//重绘
+        }
     }
 
     public void startRipple() {

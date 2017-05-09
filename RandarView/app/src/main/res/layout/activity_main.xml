@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/colorAccent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <me.khrystal.widget.RadarLayout
-        android:id="@+id/radarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </me.khrystal.widget.RadarLayout>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <Button
-        android:onClick="goRipple"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp"
-        android:text="goRipple"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</RelativeLayout>
+        android:layout_height="wrap_content"
+        android:onClick="goRadar"
+        android:text="goRadar" />
+
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:onClick="goRipple"
+        android:text="goRipple" />
+</LinearLayout>

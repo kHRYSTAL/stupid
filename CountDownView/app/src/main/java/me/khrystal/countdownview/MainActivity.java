@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import me.khrystal.widget.countdownview.CountdownView;
+import me.khrystal.widget.countdownview.DynamicConfig;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,15 +25,27 @@ public class MainActivity extends AppCompatActivity {
         });
 
         countdownView.setOnCountdownIntervalListener(1000, new CountdownView.OnCountdownIntervalListener() {
+
+            boolean isConfig;
+
             @Override
             public void onInterval(CountdownView cv, long remainTime) {
+                if (remainTime <= 1000 * 60 && !isConfig) {
+                    DynamicConfig config = new DynamicConfig.Builder().setShowDay(false)
+                            .setShowHour(false)
+                            .setShowMinute(false)
+                            .setSuffixSecond("秒").build();
+                    cv.dynamicShow(config);
+                    isConfig = true;
+                }
+
             }
         });
     }
 
     public void onStart(View view) {
         if (countdownView != null)
-            countdownView.start(1000 * 60 * 101);
+            countdownView.start(1000 * 60 * 2);
     }
 
     public void onStop(View view) {

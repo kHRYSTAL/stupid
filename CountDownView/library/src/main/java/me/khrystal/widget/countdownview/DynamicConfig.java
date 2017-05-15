@@ -112,6 +112,10 @@ public class DynamicConfig {
         return mBuilder.isConvertDaysToHours;
     }
 
+    public Boolean isCovertHoursToMinutes() {
+        return mBuilder.isConvertHoursToMinutes;
+    }
+
     public Boolean isShowDay() {
         return mBuilder.isShowDay;
     }
@@ -151,6 +155,7 @@ public class DynamicConfig {
         private Boolean isShowSecond;
         private Boolean isShowMillisecond;
         private boolean isConvertDaysToHours;
+        private boolean isConvertHoursToMinutes;
         private BackgroundInfo backgroundInfo;
         private String suffix, suffixDay, suffixHour, suffixMinute, suffixSecond, suffixMillisecond;
         private Float suffixLRMargin;
@@ -337,6 +342,15 @@ public class DynamicConfig {
          */
         public Builder setConvertDaysToHours(Boolean isConvertDaysToHours) {
             this.isConvertDaysToHours = isConvertDaysToHours;
+            return this;
+        }
+
+        /**
+         * Set convert hours to minutes;
+         * @param isConvertHoursToMinutes
+         */
+        public Builder setConvertHoursToMinutes(Boolean isConvertHoursToMinutes) {
+            this.isConvertHoursToMinutes = isConvertHoursToMinutes;
             return this;
         }
 

@@ -27,25 +27,33 @@ public class MainActivity extends AppCompatActivity {
         countdownView.setOnCountdownIntervalListener(1000, new CountdownView.OnCountdownIntervalListener() {
 
             boolean isConfig;
-
             @Override
             public void onInterval(CountdownView cv, long remainTime) {
-                if (remainTime <= 1000 * 60 && !isConfig) {
+                if (remainTime <= 30 * 1000 && !isConfig) {
+                    isConfig = true;
                     DynamicConfig config = new DynamicConfig.Builder().setShowDay(false)
                             .setShowHour(false)
-                            .setShowMinute(false)
+                            .setShowMinute(true)
+                            .setConvertHoursToMinutes(true)
+                            .setSuffixMinute("分")
                             .setSuffixSecond("秒").build();
                     cv.dynamicShow(config);
-                    isConfig = true;
-                }
+                    cv.start(1000 * 60 * 120);
 
+                }
             }
         });
     }
 
     public void onStart(View view) {
-        if (countdownView != null)
-            countdownView.start(1000 * 60 * 2);
+        if (countdownView != null) {
+            countdownView.start(1000 * 60);
+            DynamicConfig config = new DynamicConfig.Builder().setShowDay(false)
+                    .setShowHour(false)
+                    .setShowMinute(false)
+                    .setSuffixSecond("秒").build();
+            countdownView.dynamicShow(config);
+        }
     }
 
     public void onStop(View view) {

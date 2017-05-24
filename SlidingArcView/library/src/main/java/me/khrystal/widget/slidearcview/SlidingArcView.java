@@ -6,8 +6,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Shader;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -37,13 +40,15 @@ public class SlidingArcView extends ViewGroup {
     Bitmap mBackgroundBitmap;
     Paint mPaint = new Paint();
     int mDiameter;
+    private ScrollListener scrollListener;
+    private OnItemClickListener itemClickListener;
     //endregion
 
     //region 与内部子 view 相关的属性
     private boolean isAnimated = false; // 动画是否在执行
     private int viewTopChange = ScreenUtil.dp2px(80f); // 子view向上偏移的位移
     private VelocityTracker mVelocityTracker; // fling 使用
-    private static final int SPEED = 30;
+    private int speed = 30;
     private SignView leftView; // 屏幕最左边的子view
     private SignView rightView; // 屏幕最右边的子view
     // 外层圆心
@@ -54,14 +59,21 @@ public class SlidingArcView extends ViewGroup {
     private static final int VX = 50; // 第一个view的x坐标
     private SignView chooseView; // 选中的view;
     private SignView lastChooseView;
-    private boolean isClicke = false;
+    private boolean isClick = false;
     //endregion
 
+
+    //region event
     private boolean supportScroll = true;
     private int lastX;
     private int downPointId;
     private int downX;
     private int downY;
+
+    int veSpeed = 0; // 松开后自动滚动速度
+    int autoTime = 0; // 松开自动滚动
+    int autoScrollX = 0; // 回溯位置
+    //endregion
 
 
     public SlidingArcView(Context context) {
@@ -116,6 +128,7 @@ public class SlidingArcView extends ViewGroup {
 
     /**
      * 绘制弧形背景
+     *
      * @param canvas
      */
     private void drawBackground(Canvas canvas) {
@@ -149,16 +162,190 @@ public class SlidingArcView extends ViewGroup {
                 downY = (int) event.getY();
                 return true;
             case MotionEvent.ACTION_MOVE:
+                if (supportScroll) {
+                    flushViews((int) (event.getX() - lastX));
+                    lastX = (int) event.getX();
+                    invalidate();
+                }
                 return true;
             case MotionEvent.ACTION_UP:
+                final int pi = event.findPointerIndex(downPointId);
+                if (isClickable() && (Math.abs((event.getX(pi) - downX)) <= 3)
+                        || (Math.abs((event.getY(pi) - downY)) <= 3)) {
+                    if (isFocusable() && isFocusableInTouchMode() && !isFocused()) {
+                        requestFocus();
+                        performViewClick();
+                        return true;
+                    }
+                }
+                // 判断当ev时间是MotionEvent.ACTION_UP时, 计算速率
+                final VelocityTracker velocityTracker = mVelocityTracker;
+                // 1000 provides pixels per second
+                velocityTracker.computeCurrentVelocity(1, (float) 0.01);
+                velocityTracker.computeCurrentVelocity(1000); // 设置units值为1000, 1s内运动多少像素
+                if (velocityTracker.getXVelocity() > 2000 || velocityTracker.getXVelocity() < -2000) { // 自动滚动
+                    autoTime = (int) (velocityTracker.getXVelocity() / 1000 * 200);
+                    autoTime = autoTime > 1500 ? 1500 : autoTime;
+                    autoTime = autoTime < -1500 ? -1500 : autoTime;
+                    isAnimated = true;
+                    handler.sendEmptyMessageDelayed(1, 10);
+                } else {
+                    isAnimated = false;
+                    resetView();
+                }
                 return true;
 
         }
         return super.onTouchEvent(event);
     }
 
-    public interface SignAble {
+    private void performViewClick() {
+        for (SignView signView : views) {
+            Rect r = new Rect(signView.centerX - signView.size / 2,
+                    signView.centerY - signView.size / 2 - viewTopChange,
+                    signView.centerX + signView.size / 2,
+                    signView.centerY + signView.size / 2 - viewTopChange);
 
+            if (r.contains(downX, downY)) {
+                if (itemClickListener != null && !isAnimated) {
+                    isClick = true;
+                    chooseView = signView;
+                    autoScrollX = ScreenUtil.getScreenW() / 2 - signView.centerX;
+                    handler.sendEmptyMessageDelayed(0, 10);
+                }
+            }
+        }
+    }
+
+    private void flushViews(int scrollX) {
+        for (SignView view : views) {
+            view.scroll(scrollX);
+        }
+    }
+
+    public void resetView() {
+        for (SignView view : views) {
+            // 屏幕右半部分移动运动 变小
+            if (view.centerX > mCenterX && (view.centerX - mCenterX < view.width)) {
+                int dis = view.centerX - mCenterX;
+                if (dis > view.width / 2) {
+                    autoScrollX = view.width - dis;
+                } else {
+                    autoScrollX = dis * -1;
+                }
+                break;
+            }
+        }
+        handler.sendEmptyMessageDelayed(0, 10);
+    }
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    if (autoScrollX != 0) {
+                        if (Math.abs(autoScrollX) > speed) {
+                            speed = Math.abs(speed);
+                            if (autoScrollX > 0) {
+                                autoScrollX -= speed;
+                            } else {
+                                autoScrollX += speed;
+                                speed = speed * (-1);
+                            }
+                            for (SignView view : views) {
+                                view.scroll(speed);
+                            }
+                        } else {
+                            for (SignView view : views) {
+                                view.scroll(autoScrollX);
+                            }
+                            autoScrollX = 0;
+                            isAnimated = false;
+                            if (chooseView != null && scrollListener != null && lastChooseView != chooseView) {
+                                if (!isClick) {
+                                    scrollListener.onSelect(chooseView.view, chooseView.index);
+                                    lastChooseView = chooseView;
+                                } else {
+                                    itemClickListener.onClick(chooseView.view, chooseView.index);
+                                    lastChooseView = chooseView;
+                                    isClick = false;
+                                }
+                            }
+                        }
+                        invalidate();
+                        handler.sendEmptyMessageDelayed(0, 10);
+                    }
+                    break;
+                case 1:
+                    if (autoTime > 0) {
+                        if (autoTime > 1500)
+                            veSpeed = 80;
+                        else if (autoTime > 1000)
+                            veSpeed = 80;
+                        else if (autoTime > 500)
+                            veSpeed = 40;
+                        else if (autoTime > 200)
+                            veSpeed = 20;
+                        else
+                            veSpeed = 10;
+                        for (SignView view : views) {
+                            view.scroll(veSpeed);
+                        }
+                        autoTime -= 20;
+                        if (autoTime < 0) {
+                            isAnimated = false;
+                            autoTime = 0;
+                        }
+                        invalidate();
+                        handler.sendEmptyMessageDelayed(1, 20);
+                    } else if (autoTime < 0) {
+                        if (autoTime < -1500)
+                            veSpeed = -80;
+                        else if (autoTime < -1000)
+                            veSpeed = -60;
+                        else if (autoTime < -500)
+                            veSpeed = -40;
+                        else if (autoTime < -200)
+                            veSpeed = -20;
+                        else
+                            veSpeed = -10;
+
+                        for (SignView view : views) {
+                            view.scroll(veSpeed);
+                        }
+                        autoTime += 20;
+                        if (autoTime > 0) {
+                            isAnimated = false;
+                            autoTime = 0;
+                        }
+                        invalidate();
+                        handler.sendEmptyMessageDelayed(1, 20);
+                    } else {
+                        resetView();
+                        invalidate();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    public interface ScrollListener {
+        void onSelect(View v, int index);
+    }
+
+    public interface OnItemClickListener {
+        void onClick(View v, int index);
+    }
+
+    public void setScrollListener(ScrollListener listener) {
+        this.scrollListener = listener;
+    }
+
+    public void setItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
     }
 
     private class SignView {

@@ -18,6 +18,7 @@ public class MainActivity extends Activity {
     String finish = "https://w.mail.qq.com/cgi-bin/mobile";
 
     String domain1 = "http://mail.qq.com";
+    String domain2 = "http://ptlogin2.qq.com";
     String domain3 = "http://qq.com";
 
 
@@ -85,6 +86,7 @@ public class MainActivity extends Activity {
 
     public void clearCookies() {
         WebViewUtils.deleteCookiesForDomain(this, domain1);
+        WebViewUtils.deleteCookiesForDomain(this, domain2);
         WebViewUtils.deleteCookiesForDomain(this, domain3);
     }
 }

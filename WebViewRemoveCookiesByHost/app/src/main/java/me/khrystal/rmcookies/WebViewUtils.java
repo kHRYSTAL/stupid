@@ -32,11 +32,9 @@ public class WebViewUtils {
                 for (String dm : domainSet) {
                     Log.e(TAG, dm);
                     /* Set an expire time so that this field will be removed after calling sync() */
-                    cookieManager.setCookie(dm, cookieParts[0] + "=; Expires=Wed, 31 Dec 2015 23:59:59 GMT");
+                    cookieManager.setCookie(dm, cookieParts[0] + "=");
                 }
             }
-            cookieManager.removeSessionCookie();
-            cookieManager.removeExpiredCookie();
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 cookieManager.flush();
             } else {

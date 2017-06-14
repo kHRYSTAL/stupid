@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WallPaper</string>
+    <string name="_lease_open_permissions">Please open permissions</string>
+    <string name="choose_wallpaper">Choose wallpaper</string>
+</resources>

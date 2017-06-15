@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.huawei.android.pushagent.api.PushException;
 import com.huawei.android.pushagent.api.PushManager;
 import com.huawei.android.pushagent.api.PushManager.PushFeature;
-import com.huawei.pushtest.R;
 
 
 public class TagReportActivity extends Activity {

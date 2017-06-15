@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.huawei.pushtest.R;
 
 /*
  * 测试Demo主页，图标设置类

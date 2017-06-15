@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.huawei.android.pushagent.api.PushManager;
-import com.huawei.pushtest.R;
 
 public class PustDemoActivity extends Activity {
 

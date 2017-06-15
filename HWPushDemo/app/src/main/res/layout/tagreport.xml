@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:paddingTop="5dip"
+        android:text="@string/tag1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="15sp">
+    </TextView>
+    <EditText
+        android:id="@+id/tag1Key"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/tag_key"
+        android:ems="10" />
+    <EditText
+        android:id="@+id/tag1Value"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/tag_value"
+        android:ems="10" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:paddingTop="5dip"
+        android:text="@string/tag2"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="15sp">
+    </TextView>
+    <EditText
+        android:id="@+id/tag2Key"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/tag_key"
+        android:ems="10" />
+    <EditText
+        android:id="@+id/tag2Value"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/tag_value"
+        android:ems="10" /> 
+
+
+    <Button
+        android:id="@+id/tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/setTag" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <EditText
+        android:id="@+id/delEdit"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/tag_delete_key"
+        android:ems="10" />
+        <Button
+        android:id="@+id/delTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delTag" />
+    </LinearLayout>
+    
+    <Button
+        android:id="@+id/getTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/getTag" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/openLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/openLBS" />
+        <Button
+            android:id="@+id/closeLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/closeLBS" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

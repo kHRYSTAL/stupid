@@ -23,16 +23,17 @@ public class SecondActivity extends AppCompatActivity {
         findViewById(R.id.textView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LayoutInflater inflater = LayoutInflater.from(SecondActivity.this);
-                View view = inflater.inflate(R.layout.lay_toast_txt, null);
-                TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
-                tvContent.setText("我是一个屏蔽通知我也是可以显示的Toast");
-//                Toast toast = new Toast(ZHApplication.APP_CONTEXT);
-                BooheeToast toast = new BooheeToast(SecondActivity.this);
-                toast.setGravity(Gravity.BOTTOM, 0, DensityUtil.dip2px(SecondActivity.this, 70));
-                toast.setDuration(Toast.LENGTH_SHORT);
-                toast.setView(view);
-                toast.show();
+//                LayoutInflater inflater = LayoutInflater.from(SecondActivity.this);
+//                View view = inflater.inflate(R.layout.lay_toast_txt, null);
+//                TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
+//                tvContent.setText("我是一个屏蔽通知我也是可以显示的Toast");
+////                Toast toast = new Toast(ZHApplication.APP_CONTEXT);
+//                BooheeToast toast = new BooheeToast(SecondActivity.this);
+//                toast.setGravity(Gravity.BOTTOM, 0, DensityUtil.dip2px(SecondActivity.this, 70));
+//                toast.setDuration(Toast.LENGTH_SHORT);
+//                toast.setView(view);
+//                toast.show();
+                me.khrystal.widget.toast.Toast.makeText(SecondActivity.this, "我是一个屏蔽通知我也是可以显示的Toast", me.khrystal.widget.toast.Toast.LENGTH_SHORT).show();
             }
         });
         findViewById(R.id.textView3).setOnClickListener(new View.OnClickListener() {

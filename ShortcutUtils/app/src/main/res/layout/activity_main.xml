@@ -14,14 +14,20 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btnDelete"
-        android:text="删除快捷方式"
+        android:id="@+id/btnUpdate"
+        android:text="更新快捷方式"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btnHasShortcut"
         android:text="是否存在快捷方式"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnDelete"
+        android:text="删除快捷方式"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>

@@ -1,5 +1,6 @@
 package me.khrystal.hxdemo.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,11 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.adapter.EMAConversation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,10 @@ import me.khrystal.hxdemo.event.ImTypeMessageResendEvent;
 import me.khrystal.hxdemo.event.InputBottomBarTextEvent;
 import me.khrystal.hxdemo.util.Constants;
 import me.khrystal.hxdemo.util.NotificationUtils;
+import me.khrystal.hxdemo.util.keyboardevent.keyboard.KeyboardUtil;
+import me.khrystal.hxdemo.util.keyboardevent.keyboard.KeyboardVisibilityEvent;
+import me.khrystal.hxdemo.util.keyboardevent.keyboard.KeyboardVisibilityEventListener;
+import me.khrystal.hxdemo.util.keyboardevent.keyboard.Unregistrar;
 import me.khrystal.hxdemo.widget.InputBottomBar;
 
 /**
@@ -56,6 +61,8 @@ public class ChatFragment extends Fragment {
     protected SwipeRefreshLayout refreshLayout;
     protected InputBottomBar inputBottomBar;
 
+    private Unregistrar mKeyboardUnregistrar;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,6 +89,16 @@ public class ChatFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         itemAdapter = new MultipleItemAdapter();
         recyclerView.setAdapter(itemAdapter);
+
+        // 监听软键盘
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        mKeyboardUnregistrar = KeyboardVisibilityEvent.registerEventListener(getActivity(), new KeyboardVisibilityEventListener() {
+            @Override
+            public void onVisibilityChanged(boolean isOpen) {
+                if (isOpen)
+                    scrollToBottom();
+            }
+        });
     }
 
     /**
@@ -171,9 +188,17 @@ public class ChatFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
+
+        if (mKeyboardUnregistrar != null) {
+            if (KeyboardVisibilityEvent.isKeyboardVisible(getActivity())) {
+                KeyboardUtil.hideKeyboard(getActivity());
+            }
+        }
+        mKeyboardUnregistrar.unregister();
     }
 
     // Event bus start
+
     /**
      * 输入事件处理，接收后构造成 AVIMTextMessage 然后发送
      * 因为不排除某些特殊情况会受到其他页面过来的无效消息，所以此处加了 tag 判断

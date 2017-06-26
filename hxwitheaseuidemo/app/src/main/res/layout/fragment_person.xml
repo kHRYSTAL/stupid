@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.hdl.hxdemo.hxdemo.ui.fragment.PersonFragment">
+
+    <include layout="@layout/custom_actionbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="用户名:"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_person_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+
+            android:text="hdl"
+            android:textColor="@android:color/holo_blue_bright"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_person_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/holo_red_dark"
+        android:text="添加好友"
+        android:textColor="#FFF"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_remove_friend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/holo_red_dark"
+        android:text="删除好友"
+        android:textColor="#FFF"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/btn_exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@android:color/holo_red_dark"
+        android:text="退出登录"
+        android:textColor="#FFF"
+        android:textSize="16sp" />
+</LinearLayout>

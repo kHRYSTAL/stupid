@@ -1,21 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
-    android:background="@color/colorPrimary"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
 
     <me.khrystal.widget.textview.OutlineTextView
-        android:textSize="22sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="Hello World!"
-        android:textColor="#f00"
+        android:textColor="@color/colorAccent"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:ot_strokeColor="#fff"
+        app:ot_strokeJoinStyle="miter"
+        app:ot_strokeWidth="0.5dp" />
+
+    <me.khrystal.widget.textview.OutlineTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Hello World!"
+        android:textColor="#000"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:ot_strokeColor="#fff"
         app:ot_strokeJoinStyle="miter"
         app:ot_strokeWidth="0.5dp"
+        app:ot_outerShadowColor="@color/colorAccent"
+        app:ot_outerShadowDy="3dp"
+        app:ot_outerShadowRadius="5dp"
         />
-</RelativeLayout>
+
+    <me.khrystal.widget.textview.OutlineTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Hello World!"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:ot_strokeColor="@android:color/white"
+        app:ot_strokeJoinStyle="miter"
+        app:ot_strokeWidth="0.5dp"
+        app:ot_innerShadowColor="@color/colorAccent"
+        app:ot_innerShadowDx="1dp"
+        app:ot_innerShadowRadius="0.5dp"
+        />
+
+    <me.khrystal.widget.textview.OutlineTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Hello World!"
+        android:textColor="@android:color/black"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:ot_innerShadowDy="2dp"
+        app:ot_innerShadowColor="@android:color/black"
+        app:ot_innerShadowRadius="1dp"
+        app:ot_outerShadowDy="3dp"
+        app:ot_outerShadowColor="@color/colorPrimaryDark"
+        app:ot_outerShadowRadius="10dp"
+        app:ot_strokeColor="@color/colorAccent"
+        app:ot_strokeJoinStyle="miter"
+        app:ot_strokeWidth="5dp"
+        />
+</LinearLayout>

@@ -20,19 +20,25 @@ import java.util.List;
 
 public class UpvoteListLayout extends ViewGroup {
 
+    private static final String TAG = UpvoteListLayout.class.getSimpleName();
+
     private Context mContext;
 
     private List<String> allUrls = new ArrayList<>();
 
-    private boolean LTR = true;
+    private boolean LTR = false;
 
-    private int spWidth = 20;
+    private int spWidth;
+
+    private int itemWidth;
 
     private List<List<View>> mAllViews = new ArrayList<>();
 
     private List<Integer> mLineHeight = new ArrayList<>();
 
     private OnLoadImageListener loadImageListener;
+
+    private int maxSize = -1; // -1 means infinite
 
     public UpvoteListLayout(Context context) {
         super(context);
@@ -153,7 +159,7 @@ public class UpvoteListLayout extends ViewGroup {
                 int bc = tc + child.getMeasuredHeight();
 
                 child.layout(lc, tc, rc, bc);
-                left += child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin - spWidth;
+                left += child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin + spWidth;
             }
 
             left = getPaddingLeft();
@@ -161,41 +167,62 @@ public class UpvoteListLayout extends ViewGroup {
         }
     }
 
-    public void setSpWidth(int spWidth) {
+    public void setBetweenWidth(int spWidth) {
         this.spWidth = spWidth;
     }
 
-    public void setLTR(boolean ltr) {
+    public void isLTR(boolean ltr) {
         this.LTR = ltr;
     }
 
-    public void setUrls(List<String> lisVals) {
-        allUrls.addAll(lisVals);
+    public void append(List<String> urls) {
+        allUrls.addAll(urls);
         setViews();
     }
 
-    public void setOneUrls(String urlVal) {
+    public void append(String urlVal) {
         allUrls.add(urlVal);
         setViews();
     }
 
-    public void cancels(String urlVal) {
+    public void delete(String urlVal) {
         allUrls.remove(urlVal);
+        setViews();
+    }
+
+    public void deleteAll() {
+        allUrls.clear();
         setViews();
     }
 
     private void setViews() {
         removeAllViews();
         for (int i = 0; i < allUrls.size(); i++) {
+            if (maxSize != -1 && i == maxSize) {
+                // if size over maxsize remove the oldest item and append new item
+                allUrls.remove(0);
+                setViews();
+                break;
+            }
             ImageView imageView = new ImageView(mContext);
-            LayoutParams params = new LayoutParams(DensityUtil.dp2px(36, mContext).intValue(),
-                    DensityUtil.dp2px(36, mContext).intValue());
+            if (itemWidth == 0) {
+                itemWidth = DensityUtil.dp2px(36, mContext).intValue();
+            }
+            MarginLayoutParams params = new MarginLayoutParams(itemWidth, itemWidth);
             imageView.setLayoutParams(params);
             if (loadImageListener != null) {
                 loadImageListener.onLoadImage(imageView, allUrls.get(i));
             }
             this.addView(imageView);
         }
+    }
+
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
+    }
+
+    public void setItemWidth(int itemWidth) {
+        this.itemWidth = itemWidth;
     }
 
     @Override

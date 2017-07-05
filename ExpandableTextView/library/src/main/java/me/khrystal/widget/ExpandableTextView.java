@@ -30,24 +30,22 @@ import java.lang.reflect.Field;
  * email: 723526676@qq.com
  */
 
-public class ExpandableTextView extends TextView {
-
-    private static final String TAG = ExpandableTextView.class.getSimpleName();
+public class ExpandableTextView extends TextView{
 
     public static final int STATE_SHRINK = 0;
     public static final int STATE_EXPAND = 1;
 
     private static final String CLASS_NAME_VIEW = "android.view.View";
     private static final String CLASS_NAME_LISTENER_INFO = "android.view.View$ListenerInfo";
-    private static final String ELLIPSIS_HINT = "...";
+    private static final String ELLIPSIS_HINT = "..";
     private static final String GAP_TO_EXPAND_HINT = " ";
     private static final String GAP_TO_SHRINK_HINT = " ";
-    private static final int MAX_LINES_ON_SHRINK = 4;
+    private static final int MAX_LINES_ON_SHRINK = 2;
     private static final int TO_EXPAND_HINT_COLOR = 0xFF3498DB;
     private static final int TO_SHRINK_HINT_COLOR = 0xFFE74C3C;
     private static final int TO_EXPAND_HINT_COLOR_BG_PRESSED = 0x55999999;
     private static final int TO_SHRINK_HINT_COLOR_BG_PRESSED = 0x55999999;
-    private static final boolean TOGGLE_ENABLE = false;
+    private static final boolean TOGGLE_ENABLE = true;
     private static final boolean SHOW_TO_EXPAND_HINT = true;
     private static final boolean SHOW_TO_SHRINK_HINT = true;
 
@@ -62,10 +60,8 @@ public class ExpandableTextView extends TextView {
     private int mMaxLinesOnShrink = MAX_LINES_ON_SHRINK;
     private int mToExpandHintColor = TO_EXPAND_HINT_COLOR;
     private int mToShrinkHintColor = TO_SHRINK_HINT_COLOR;
-
     private int mToExpandHintColorBgPressed = TO_EXPAND_HINT_COLOR_BG_PRESSED;
     private int mToShrinkHintColorBgPressed = TO_SHRINK_HINT_COLOR_BG_PRESSED;
-
     private int mCurrState = STATE_SHRINK;
 
     //  used to add to the tail of modified text, the "shrink" and "expand" text
@@ -84,9 +80,8 @@ public class ExpandableTextView extends TextView {
     //  is specifically for inner toggle
     private ExpandableClickListener mExpandableClickListener;
     private OnExpandListener mOnExpandListener;
-    private boolean isJustSupportOpen;
-
-
+    // this field must control in outside when touch in recyclerView such as write in POJO
+    private boolean isSpanHandle;
 
     public ExpandableTextView(Context context) {
         super(context);
@@ -95,13 +90,13 @@ public class ExpandableTextView extends TextView {
 
     public ExpandableTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initAttr(context, attrs);
+        initAttr(context,attrs);
         init();
     }
 
     public ExpandableTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAttr(context, attrs);
+        initAttr(context,attrs);
         init();
     }
 
@@ -144,8 +139,6 @@ public class ExpandableTextView extends TextView {
                 mGapToExpandHint = a.getString(attr);
             }else if (attr == R.styleable.ExpandableTextView_etv_GapToShrinkHint){
                 mGapToShrinkHint = a.getString(attr);
-            }else if (attr == R.styleable.ExpandableTextView_etv_JustSupportOpen){
-                isJustSupportOpen = a.getBoolean(attr, false);
             }
         }
         a.recycle();
@@ -167,9 +160,6 @@ public class ExpandableTextView extends TextView {
             mExpandableClickListener = new ExpandableClickListener();
             setOnClickListener(mExpandableClickListener);
         }
-        if (isJustSupportOpen) {
-            mToShrinkHint = "";
-        }
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -184,7 +174,16 @@ public class ExpandableTextView extends TextView {
         });
     }
 
-
+    /**
+     * used in ListView or RecyclerView to update ExpandableTextView
+     * @param text
+     *          original text
+     * @param futureTextViewWidth
+     *          the width of ExpandableTextView in px unit,
+     *          used to get max line number of original text by given the width
+     * @param expandState
+     *          expand or shrink
+     */
     public void updateForRecyclerView(CharSequence text, int futureTextViewWidth, int expandState){
         mFutureTextViewWidth = futureTextViewWidth;
         mCurrState = expandState;
@@ -201,14 +200,21 @@ public class ExpandableTextView extends TextView {
         setText(text);
     }
 
+    /**
+     * get the current state of ExpandableTextView
+     * @return
+     *      STATE_SHRINK if in shrink state
+     *      STATE_EXPAND if in expand state
+     */
     public int getExpandState(){
         return mCurrState;
     }
 
-    private Layout getValidLayout(){
-        return mLayout != null ? mLayout : getLayout();
-    }
-
+    /**
+     * refresh and get a will-be-displayed text by current configuration
+     * @return
+     *      get a will-be-displayed text
+     */
     private CharSequence getNewTextByConfig(){
         if(TextUtils.isEmpty(mOrigText)){
             return mOrigText;
@@ -236,6 +242,7 @@ public class ExpandableTextView extends TextView {
         mTextLineCount = -1;
         switch (mCurrState){
             case STATE_SHRINK: {
+//  update by kHRYSTAL fix support '\n'
                 mLayout = new DynamicLayout(mOrigText, mTextPaint, mLayoutWidth, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
                 //计算共有多少行
                 mTextLineCount = mLayout.getLineCount();
@@ -243,7 +250,6 @@ public class ExpandableTextView extends TextView {
                 if (mTextLineCount <= mMaxLinesOnShrink) {
                     return mOrigText;
                 }
-
 
                 if (mOrigText == null || mOrigText.length() == 0) {
                     return mOrigText;
@@ -255,10 +261,6 @@ public class ExpandableTextView extends TextView {
                 int end = getValidLayout().getLineEnd(mMaxLinesOnShrink - 1);
                 // 获取最后一行文字内容
                 CharSequence content = mOrigText.subSequence(start, end);
-
-
-
-
 
                 float moreWidth = getPaint().measureText(mToExpandHint, 0, mToExpandHint.length());
                 float gapWidth = getPaint().measureText(mGapToExpandHint, 0, mGapToExpandHint.length());
@@ -291,6 +293,8 @@ public class ExpandableTextView extends TextView {
                     }
                 }
                 return createShrinkText(mOrigText.subSequence(0, start + len));
+//  update end
+
             }
             case STATE_EXPAND: {
                 if (!mShowToShrinkHint) {
@@ -312,11 +316,6 @@ public class ExpandableTextView extends TextView {
         return mOrigText;
     }
 
-    public void setExpandListener(OnExpandListener listener){
-        mOnExpandListener = listener;
-    }
-
-
     private Spanned createShrinkText(CharSequence limitContent) {
         SpannableStringBuilder ssShrink = new SpannableStringBuilder(limitContent)
                 .append(mEllipsisHint);
@@ -327,7 +326,24 @@ public class ExpandableTextView extends TextView {
         return ssShrink;
     }
 
+    public void setExpandListener(OnExpandListener listener){
+        mOnExpandListener = listener;
+    }
+
+    public boolean isSpanHandle() {
+        return isSpanHandle;
+    }
+
+    public void setIsSpanHandle(boolean isSpanHandle) {
+        this.isSpanHandle = isSpanHandle;
+    }
+
+    private Layout getValidLayout(){
+        return mLayout != null ? mLayout : getLayout();
+    }
+
     private void toggle(){
+        isSpanHandle = false;
         switch (mCurrState){
             case STATE_SHRINK:
                 mCurrState = STATE_EXPAND;
@@ -336,10 +352,6 @@ public class ExpandableTextView extends TextView {
                 }
                 break;
             case STATE_EXPAND:
-                // TODO just support open
-                if (isJustSupportOpen) {
-                    return;
-                }
                 mCurrState = STATE_SHRINK;
                 if(mOnExpandListener != null){
                     mOnExpandListener.onShrink(this);
@@ -348,7 +360,6 @@ public class ExpandableTextView extends TextView {
         }
         setTextInternal(getNewTextByConfig(), mBufferType);
     }
-
 
     @Override
     public void setText(CharSequence text, BufferType type) {
@@ -381,7 +392,8 @@ public class ExpandableTextView extends TextView {
     private class ExpandableClickListener implements View.OnClickListener{
         @Override
         public void onClick(View view) {
-            toggle();
+            if (!isSpanHandle)
+                toggle();
         }
     }
 
@@ -431,7 +443,13 @@ public class ExpandableTextView extends TextView {
     }
 
 
-
+    /**
+     * Copy from:
+     *  http://stackoverflow.com/questions
+     *  /20856105/change-the-text-color-of-a-single-clickablespan-when-pressed-without-affecting-o
+     * By:
+     *  Steven Meliopoulos
+     */
     private class TouchableSpan extends ClickableSpan {
         private boolean mIsPressed;
         public void setPressed(boolean isSelected) {
@@ -440,11 +458,7 @@ public class ExpandableTextView extends TextView {
 
         @Override
         public void onClick(View widget) {
-            if(hasOnClickListeners()
-                    && (getOnClickListener(ExpandableTextView.this) instanceof ExpandableClickListener)) {
-            }else{
-                toggle();
-            }
+            toggle();
         }
 
         @Override
@@ -464,6 +478,13 @@ public class ExpandableTextView extends TextView {
         }
     }
 
+    /**
+     * Copy from:
+     *  http://stackoverflow.com/questions
+     *  /20856105/change-the-text-color-of-a-single-clickablespan-when-pressed-without-affecting-o
+     * By:
+     *  Steven Meliopoulos
+     */
     public class LinkTouchMovementMethod extends LinkMovementMethod {
         private TouchableSpan mPressedSpan;
 
@@ -472,9 +493,12 @@ public class ExpandableTextView extends TextView {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 mPressedSpan = getPressedSpan(textView, spannable, event);
                 if (mPressedSpan != null) {
+                    isSpanHandle = true;
                     mPressedSpan.setPressed(true);
                     Selection.setSelection(spannable, spannable.getSpanStart(mPressedSpan),
                             spannable.getSpanEnd(mPressedSpan));
+                } else {
+                    isSpanHandle = false;
                 }
             } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
                 TouchableSpan touchedSpan = getPressedSpan(textView, spannable, event);
@@ -482,11 +506,17 @@ public class ExpandableTextView extends TextView {
                     mPressedSpan.setPressed(false);
                     mPressedSpan = null;
                     Selection.removeSelection(spannable);
+                    isSpanHandle = true;
+                } else {
+                    isSpanHandle = false;
                 }
             } else {
                 if (mPressedSpan != null) {
                     mPressedSpan.setPressed(false);
                     super.onTouchEvent(textView, spannable, event);
+                    isSpanHandle = true;
+                } else {
+                    isSpanHandle = false;
                 }
                 mPressedSpan = null;
                 Selection.removeSelection(spannable);

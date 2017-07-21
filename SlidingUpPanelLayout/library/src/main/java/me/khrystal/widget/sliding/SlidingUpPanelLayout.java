@@ -10,9 +10,11 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -55,11 +57,11 @@ public class SlidingUpPanelLayout extends ViewGroup {
     private Adapter mAdapter;
 
     public SlidingUpPanelLayout(Context context) {
-        super(context, null);
+        this(context, null);
     }
 
     public SlidingUpPanelLayout(Context context, AttributeSet attrs) {
-        super(context, attrs, 0);
+        this(context, attrs, 0);
     }
 
     public SlidingUpPanelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -74,7 +76,6 @@ public class SlidingUpPanelLayout extends ViewGroup {
             mDragHelper = null;
             return;
         }
-
         mDragHelper = ViewDragHelper.create(this, 1.0f, new DragHelperCallback());
         mDragHelper.setMinVelocity(DEFAULT_MIN_FLING_VELOCITY * getResources().getDisplayMetrics().density);
     }
@@ -162,7 +163,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
                 if (mSlidingUpPanel == null) {
                     mSlidingUpPanel = (ISlidingUpPanel) child;
                 }
-                setTouchedInsetOnTouchedInternalternal(child);
+                setOnTouchedInternal(child);
             }
 
             //always layout the sliding view on the first layout
@@ -250,14 +251,141 @@ public class SlidingUpPanelLayout extends ViewGroup {
     }
 
     public boolean expandPanel() {
-        // TODO: 17/7/20
-        return false;
+        if (mSlidingUpPanel == null)
+            return false;
+        if (isFirstLayout) {
+            mSlidingUpPanel.setSlideState(EXPANDED);
+            return true;
+        } else {
+            return mSlidingUpPanel.getSlideState() == EXPANDED || isFirstLayout || smoothSlideTo(1.0f);
+        }
+    }
+
+    public boolean collapsePanel(@NonNull ISlidingUpPanel panel) {
+        mSlidingUpPanel = panel;
+        return collapsePanel();
+    }
+
+    public boolean collapsePanel() {
+        if (mSlidingUpPanel == null)
+            return false;
+        if (isFirstLayout) {
+            mSlidingUpPanel.setSlideState(COLLAPSED);
+            return false;
+        } else {
+            return mSlidingUpPanel.getSlideState() == COLLAPSED || isFirstLayout || smoothSlideTo(0.0f);
+        }
+    }
+
+    public void setmSlidingUpPanel(@NonNull ISlidingUpPanel slidingUpPanel) {
+        mSlidingUpPanel = slidingUpPanel;
+    }
+
+    public ISlidingUpPanel getSlidingUpPanel() {
+        return mSlidingUpPanel;
+    }
+
+    public void setSlidingEnabled(boolean enabled) {
+        isSlidingEnabled = enabled;
     }
 
     public boolean isSlidingEnabled() {
         return isSlidingEnabled && mSlidingUpPanel != null;
     }
+
+    public float getExpandThreshold() {
+        return mExpandThreshold;
+    }
+
+    public void setExpandThreshold(float expandThreshold) {
+        mExpandThreshold = expandThreshold;
+    }
+
+    public float getCollapseThreshold() {
+        return mCollapseThreshold;
+    }
+
+    public void setCollapsedThreshold(float collapseThreshold) {
+        mCollapseThreshold = collapseThreshold;
+    }
+
+    public void setAdapter(@NonNull Adapter adapter) {
+        mAdapter = adapter;
+        mAdapter.setSlidingUpPanelLayout(this);
+
+        int itemCount = mAdapter.getItemCount();
+        if (itemCount <= 0) {
+            return;
+        }
+        if (getChildCount() > 0) {
+            View view = getChildAt(0);
+            removeAllViews();
+            addView(view);
+        }
+
+        for (int i = 0; i < itemCount; i++) {
+            ISlidingUpPanel panel = mAdapter.onCreateSlidingPanel(i);
+            mAdapter.onBindView(panel, i);
+            addView(panel.getPanelView());
+        }
+
+        isFirstLayout = true;
+        mSlidingUpPanel = null;
+        requestLayout();
+    }
+
+    public void setPanelSlideListener(PanelSlideListener listener) {
+        mPanelSlideListener = listener;
+    }
+
+    public Adapter getAdapter() {
+        return mAdapter;
+    }
     //endregion
+
+
+    @Override
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return new LayoutParams();
+    }
+
+    @Override
+    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
+        return p instanceof MarginLayoutParams ? new LayoutParams((MarginLayoutParams) p)
+                : new LayoutParams(p);
+    }
+
+    @Override
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+        return p instanceof WindowManager.LayoutParams && super.checkLayoutParams(p);
+    }
+
+    @Override
+    public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new LayoutParams(getContext(), attrs);
+    }
+
+    private boolean smoothSlideTo(float slideProgress) {
+        if (!isSlidingEnabled()) {
+            return false;
+        }
+
+        int panelTop = computePanelTopPosition(slideProgress);
+        if (mDragHelper.smoothSlideViewTo(mSlidingUpPanel.getPanelView(), mSlidingUpPanel.getPanelView().getLeft(), panelTop)) {
+            ViewCompat.postInvalidateOnAnimation(this);
+            return true;
+        }
+        return false;
+    }
+
+    private int computePanelTopPosition(float slideProgress) {
+        return (int) ((mSlidingUpPanel.getPanelExpandHeight() - mSlidingUpPanel.getPanelCollapsedHeight()) * (1 - slideProgress));
+    }
+
+    private float computeSlidedProgress(int topPosition) {
+        final int collapsedTop = computePanelTopPosition(0);
+        return (float) (collapsedTop - topPosition) / (mSlidingUpPanel.getPanelExpandHeight() - mSlidingUpPanel.getPanelCollapsedHeight());
+    }
 
     private class DragHelperCallback extends ViewDragHelper.Callback {
 
@@ -301,6 +429,22 @@ public class SlidingUpPanelLayout extends ViewGroup {
 
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
+            isSlidingUp = dy < 0;
+            mSlidingUpPanel.setSlideState(DRAGGING);
+
+            mSlidedProgress = computeSlidedProgress(top);
+            if (mPanelSlideListener != null) {
+                mPanelSlideListener.onPanelSliding(mSlidingUpPanel, mSlidedProgress);
+            }
+
+            for (int i = 1; i < getChildCount(); i++) {
+                ISlidingUpPanel view = (ISlidingUpPanel) getChildAt(i);
+                view.onSliding(mSlidingUpPanel, top, dy, mSlidedProgress);
+            }
+        }
+
+        @Override
+        public void onViewReleased(View releasedChild, float xvel, float yvel) {
             int target;
             if (isSlidingUp) {
                 target = computePanelTopPosition(mSlidedProgress >= mExpandThreshold ? 1.0f : 0.0f);
@@ -308,7 +452,7 @@ public class SlidingUpPanelLayout extends ViewGroup {
                 target = computePanelTopPosition(mSlidedProgress >= mCollapseThreshold ? 1.0f : 0.0f);
             }
             if (mDragHelper != null) {
-                mDragHelper.settleCapturedViewAt(changedView.getLeft() + getPaddingLeft(), target);
+                mDragHelper.settleCapturedViewAt(releasedChild.getLeft() + getPaddingLeft(), target);
                 invalidate();
             }
         }
@@ -421,6 +565,8 @@ public class SlidingUpPanelLayout extends ViewGroup {
 
         @NonNull
         public abstract ISlidingUpPanel onCreateSlidingPanel(int position);
+
+        public abstract void onBindView(ISlidingUpPanel panel, int position);
 
         public ISlidingUpPanel getItem(int position) {
             if (getItemCount() == 0)

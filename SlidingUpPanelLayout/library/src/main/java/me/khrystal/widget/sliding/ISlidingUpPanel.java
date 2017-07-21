@@ -17,6 +17,8 @@ public interface ISlidingUpPanel<T extends View> {
 
     int getPanelExpandHeight();
 
+    int getPanelCollapsedHeight();
+
     @SlidingUpPanelLayout.SlideState
     int getSlideState();
 

@@ -1,17 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<me.khrystal.widget.sliding.SlidingUpPanelLayout
+    android:id="@+id/sliding_up_panel_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="me.khrystal.slidinguppanellayout.MainActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-</RelativeLayout>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/bg_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#616161">
+
+        <TextView
+            android:id="@+id/pick_hint_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="120dp"
+            android:text="Pick a credit card to pay"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/pay_hint_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="260dp"
+            android:alpha="0.0"
+            android:drawablePadding="8dp"
+            android:drawableTop="@mipmap/ic_finger_print"
+            android:text="Pay with Touch ID"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:alpha="1.0"/>
+    </android.support.constraint.ConstraintLayout>
+
+    <me.khrystal.slidinguppanellayout.CardPanelView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cpv_cardCount="4"
+        app:cpv_cardImageRes="@mipmap/pic_card1"
+        app:cpv_cardPosition="0"/>
+
+    <me.khrystal.slidinguppanellayout.CardPanelView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cpv_cardCount="4"
+        app:cpv_cardImageRes="@mipmap/pic_card2"
+        app:cpv_cardPosition="1"/>
+
+    <me.khrystal.slidinguppanellayout.CardPanelView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cpv_cardCount="4"
+        app:cpv_cardImageRes="@mipmap/pic_card3"
+        app:cpv_cardPosition="2"/>
+
+    <me.khrystal.slidinguppanellayout.CardPanelView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cpv_cardCount="4"
+        app:cpv_cardImageRes="@mipmap/pic_card4"
+        app:cpv_cardPosition="3"/>
+</me.khrystal.widget.sliding.SlidingUpPanelLayout>

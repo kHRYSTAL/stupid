@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <me.khrystal.customnestedscrollview.CustomNestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="#f00" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="#0f0" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:background="#00f" />
+        </LinearLayout>
+    </me.khrystal.customnestedscrollview.CustomNestedScrollView>
+</RelativeLayout>

@@ -47,7 +47,7 @@ public class CustomNestedScrollView extends NestedScrollView {
                     Message message = new Message();
                     message.what = touchEventId;
                     message.obj = scroller;
-                    handler.sendMessageDelayed(message, 1);
+                    handler.sendMessageDelayed(message, 50);
                     lastY = scroller.getScrollY();
                 }
             }

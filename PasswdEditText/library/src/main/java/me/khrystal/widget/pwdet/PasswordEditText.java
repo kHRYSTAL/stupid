@@ -25,14 +25,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import me.khrystal.widget.pwdet.imebugfixer.ImeDebugFixedEditText;
 
 /**
  * usage: 网格输入框 常用语支付密码/口令输入
- *          支持常规字母数字显示样式或密码样式 密码默认为"●";
+ * 支持常规字母数字显示样式或密码样式 密码默认为"●";
  * author: kHRYSTAL
  * create time: 17/8/31
  * update time:
@@ -97,7 +94,7 @@ public class PasswordEditText extends LinearLayout implements PasswordView {
         if (mTextColor == null) {
             mTextColor = ColorStateList.valueOf(getResources().getColor(android.R.color.primary_text_light));
         }
-        int testSize = ta.getDimensionPixelSize(R.styleable.PasswordEditText_pedetTextSize, -1) ;
+        int testSize = ta.getDimensionPixelSize(R.styleable.PasswordEditText_pedetTextSize, -1);
         if (testSize != -1) {
             mTextSize = Util.px2sp(context, testSize);
         }
@@ -141,10 +138,10 @@ public class PasswordEditText extends LinearLayout implements PasswordView {
         mInputView.addTextChangedListener(textWatcher);
         mInputView.setDelKeyEventListener(onDelKeyEventListener);
         // 移除空格
-        InputFilter filter=new InputFilter() {
+        InputFilter filter = new InputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if(source.equals(" "))
+                if (source.equals(" "))
                     return "";
                 else
                     return null;
@@ -157,7 +154,7 @@ public class PasswordEditText extends LinearLayout implements PasswordView {
 
         mViewArr[0] = mInputView;
         int index = 1;
-        while(index < mPasswordLength) {
+        while (index < mPasswordLength) {
             View dividerView = inflater.inflate(R.layout.pwd_divider, null);
             LayoutParams dividerParams = new LayoutParams(mLineWidth, LayoutParams.MATCH_PARENT);
             dividerView.setBackgroundDrawable(mLineDrawable);

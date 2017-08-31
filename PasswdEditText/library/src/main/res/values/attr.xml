@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PasswordEditText">
+
+        <attr name="pwdetTextColor" format="color|reference" />
+        <attr name="pedetTextSize" format="dimension" />
+
+        <attr name="pwdetLineColor" format="color" />
+        <attr name="pwdetGridColor" format="color" />
+        <attr name="pwdetLineWidth" format="dimension" />
+
+        <attr name="pwdetPasswordLength" format="integer" />
+        <attr name="pwdetPasswordTransformation" format="string" />
+
+        <attr name="pwdetPasswordType" format="enum">
+            <enum name="numberPassword" value="0" />
+            <enum name="textPassword" value="1" />
+            <enum name="textVisiblePassword" value="2" />
+            <enum name="textWebPassword" value="3" />
+        </attr>
+
+    </declare-styleable>
+</resources>

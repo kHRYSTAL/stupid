@@ -1,7 +1,9 @@
 package me.khrystal.eyepetizer.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
+import android.os.Parcelable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import android.widget.TextView
 import me.khrystal.eyepetizer.R
 import me.khrystal.eyepetizer.mvp.model.bean.HomeBean
 import me.khrystal.eyepetizer.mvp.model.bean.VideoBean
+import me.khrystal.eyepetizer.ui.VideoDetailActivity
 import me.khrystal.eyepetizer.utils.ImageLoadUtils
 import me.khrystal.eyepetizer.utils.ObjectSaveUtils
 import me.khrystal.eyepetizer.utils.SPUtils
@@ -70,7 +73,7 @@ class HomeAdapter(context: Context, list: MutableList<HomeBean.IssueListBean.Ite
 
         holder?.itemView?.setOnClickListener {
             //跳转视频详情页
-//            var intent : Intent = Intent(context,VideoDetailActivity::class.java)
+            var intent : Intent = Intent(context, VideoDetailActivity::class.java)
             var desc = bean?.data?.description
             var duration = bean?.data?.duration
             var playUrl = bean?.data?.playUrl
@@ -92,8 +95,8 @@ class HomeAdapter(context: Context, list: MutableList<HomeBean.IssueListBean.Ite
                 SPUtils.getInstance(context!!, "beans").put(playUrl!!, playUrl)
                 ObjectSaveUtils.saveObject(context!!, "bean$count", videoBean)
             }
-//            intent.putExtra("data",videoBean as Parcelable)
-//            context?.let { context -> context.startActivity(intent) }
+            intent.putExtra("data",videoBean as Parcelable)
+            context?.let { context -> context.startActivity(intent) }
         }
 
     }

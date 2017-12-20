@@ -1,6 +1,7 @@
 package me.khrystal.eyepetizer.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
@@ -14,6 +15,7 @@ import android.widget.Toast
 import io.reactivex.disposables.Disposable
 import me.khrystal.eyepetizer.R
 import me.khrystal.eyepetizer.mvp.model.bean.VideoBean
+import me.khrystal.eyepetizer.ui.VideoDetailActivity
 import me.khrystal.eyepetizer.utils.ImageLoadUtils
 import me.khrystal.eyepetizer.utils.SPUtils
 import zlc.season.rxdownload2.RxDownload
@@ -75,8 +77,7 @@ class DownloadAdapter(context: Context, list: ArrayList<VideoBean>) : RecyclerVi
 
         holder?.itemView?.setOnClickListener {
             //跳转视频详情页
-            //TODO
-//            var intent: Intent = Intent(context, VideoDetailActivity::class.java)
+            var intent: Intent = Intent(context, VideoDetailActivity::class.java)
             var desc = list?.get(position)?.description
             var playUrl = list?.get(position)?.playUrl
             var blurred = list?.get(position)?.blurred

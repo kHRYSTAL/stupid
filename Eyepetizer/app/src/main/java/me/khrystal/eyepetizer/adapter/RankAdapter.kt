@@ -13,6 +13,7 @@ import android.widget.TextView
 import me.khrystal.eyepetizer.R
 import me.khrystal.eyepetizer.mvp.model.bean.HotBean
 import me.khrystal.eyepetizer.mvp.model.bean.VideoBean
+import me.khrystal.eyepetizer.ui.VideoDetailActivity
 import me.khrystal.eyepetizer.utils.ImageLoadUtils
 import me.khrystal.eyepetizer.utils.ObjectSaveUtils
 import me.khrystal.eyepetizer.utils.SPUtils
@@ -69,7 +70,7 @@ class RankAdapter(context: Context, list: ArrayList<HotBean.ItemListBean.DataBea
         holder?.tv_time?.text = "$category / $realMinute'$realSecond''"
         holder?.itemView?.setOnClickListener {
             //跳转视频详情页
-//            var intent : Intent = Intent(context, VideoDetailActivity::class.java)
+            var intent : Intent = Intent(context, VideoDetailActivity::class.java)
             var desc = list?.get(position)?.description
             var playUrl = list?.get(position)?.playUrl
             var blurred = list?.get(position)?.cover?.blurred
@@ -90,8 +91,8 @@ class RankAdapter(context: Context, list: ArrayList<HotBean.ItemListBean.DataBea
                 SPUtils.getInstance(context!!,"beans").put(playUrl!!,playUrl)
                 ObjectSaveUtils.saveObject(context!!,"bean$count",videoBean)
             }
-//            intent.putExtra("data",videoBean as Parcelable)
-//            context?.let { context -> context.startActivity(intent) }
+            intent.putExtra("data",videoBean as Parcelable)
+            context?.let { context -> context.startActivity(intent) }
         }
     }
 

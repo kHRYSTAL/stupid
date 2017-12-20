@@ -9,7 +9,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.ScaleAnimation
 import kotlinx.android.synthetic.main.activity_splash.*
-import me.khrystal.eyepetizer.MainActivity
 import me.khrystal.eyepetizer.R
 import me.khrystal.eyepetizer.utils.newIntent
 

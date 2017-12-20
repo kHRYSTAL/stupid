@@ -28,6 +28,11 @@
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
+    <View
+        android:layout_above="@+id/rg_root"
+        android:background="@color/gray"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"></View>
     <FrameLayout
         android:layout_above="@id/rg_root"
         android:layout_below="@id/toolbar"
@@ -35,11 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </FrameLayout>
-    <View
-        android:layout_above="@+id/rg_root"
-        android:background="@color/gray"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"></View>
+
     <RadioGroup
         android:id="@+id/rg_root"
         android:layout_width="match_parent"

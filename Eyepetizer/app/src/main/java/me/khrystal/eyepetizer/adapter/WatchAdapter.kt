@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import me.khrystal.eyepetizer.R
 import me.khrystal.eyepetizer.mvp.model.bean.VideoBean
+import me.khrystal.eyepetizer.ui.VideoDetailActivity
 import me.khrystal.eyepetizer.utils.ImageLoadUtils
 import me.khrystal.eyepetizer.utils.ObjectSaveUtils
 import me.khrystal.eyepetizer.utils.SPUtils
@@ -72,7 +73,7 @@ class WatchAdapter(context: Context, list: ArrayList<VideoBean>) : RecyclerView.
         holder?.tv_time?.text = "$category / $realMinute'$realSecond'' / $date"
         holder?.itemView?.setOnClickListener {
             //跳转视频详情页
-//            var intent : Intent = Intent(context, VideoDetailActivity::class.java)
+            var intent : Intent = Intent(context, VideoDetailActivity::class.java)
             var desc = list?.get(position)?.description
             var playUrl = list?.get(position)?.playUrl
             var blurred = list?.get(position)?.blurred
@@ -93,8 +94,8 @@ class WatchAdapter(context: Context, list: ArrayList<VideoBean>) : RecyclerView.
                 SPUtils.getInstance(context!!,"beans").put(playUrl!!,playUrl)
                 ObjectSaveUtils.saveObject(context!!,"bean$count",videoBean)
             }
-//            intent.putExtra("data",videoBean as Parcelable)
-//            context?.let { context -> context.startActivity(intent) }
+            intent.putExtra("data",videoBean as Parcelable)
+            context?.let { context -> context.startActivity(intent) }
         }
     }
 

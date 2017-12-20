@@ -41,7 +41,6 @@ class FindFragment : BaseFragment(), FindContract.View {
         gv_find.setOnItemClickListener { parent, view, position, id ->
             var bean = mList?.get(position)
             var name = bean?.name
-            TODO("111")
             var intent : Intent = Intent(context, FindDetailActivity::class.java)
             intent.putExtra("name",name)
             startActivity(intent)

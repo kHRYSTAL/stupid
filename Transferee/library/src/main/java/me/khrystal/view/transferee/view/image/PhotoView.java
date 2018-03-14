@@ -1,5 +1,6 @@
 package me.khrystal.view.transferee.view.image;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
+@SuppressLint("AppCompatCustomView")
 public class PhotoView extends ImageView {
 
     private final static int MIN_ROTATE = 35;

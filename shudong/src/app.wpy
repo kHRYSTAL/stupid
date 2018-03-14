@@ -1,0 +1,52 @@
+<script>
+  import wepy from 'wepy'
+  import 'wepy-async-function'
+
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/index',
+        'pages/new',
+        'pages/detail'
+      ],
+      window: {
+        navigationBarTitleText: '深大的树洞',
+        navigationBarBackgroundColor: '#FA6570',
+        navigationBarTextStyle: 'white',
+        backgroundColor: '#F8F8F8',
+        enablePullDownRefresh: true
+      }
+    }
+
+    constructor() {
+      super()
+      this.use('requestfix')
+      this.use('promisify')
+    }
+  }
+</script>
+<style lang="less">
+  page {
+    background: #EEE;
+    height: 100%;
+  }
+  view,
+  navigator,
+  textarea,
+  input {
+    box-sizing: border-box;
+  }
+  /** 修改默认的 navigator 点击态 **/
+  .navigator-hover {
+    opacity: 1;
+  }
+  /** 自定义其他点击态样式类 **/
+  .other-navigator-hover {
+    opacity: 1;
+  }
+  .container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+</style>

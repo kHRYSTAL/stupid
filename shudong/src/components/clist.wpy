@@ -1,0 +1,441 @@
+<template>
+  <view class="list-container">
+    <!--点击跳转-->
+    <navigator
+      url="/pages/new"
+      open-type="navigate"
+      hover-class="newBtn-hover"
+      hover-stay-time="200"
+      class="newBtn">
+      <image src="../assets/svgs/write.svg" class="newBtn-icon"></image>
+    </navigator>
+    <navigator
+      wx:for="{{list}}"
+      wx:for-item="item"
+      wx:key="{{idx}}"
+      wx:for-index="idx"
+      url="/pages/detail?id={{item.id}}"
+      open-type="navigate"
+      class="list-item">
+      <!--判断是否为置顶 如果为置顶显示置顶-->
+      <view class="list-item-fixed" wx:if="{{ item.isFixed }}">置顶</view>
+      <!--User Info-->
+      <view class="list-user">
+        <view class="list-user-avatar">
+          <image
+            class="avatar"
+            src="{{item.user.avatar === '../../assert/avatar.png' ? '../assets/svgs/avatar/avatar.svg' : item.user.avatar }}">
+          </image>
+        </view>
+
+        <view class="list-user-info">
+          <view class="list-user-nickname">
+            <text class="nickname">{{item.user.nickname}}</text>
+            <image
+              wx:if="{{item.user.isVerified}}"
+              class="verify"
+              src="../assets/svgs/person-v.svg">
+            </image>
+          </view>
+          <text class="time-and-from">{{item.time + ' 来自' + item.device}}</text>
+        </view>
+      </view>
+      <!--Blog Body-->
+      <view class="list-item-body">
+        <text class="list-item-body-content">{{item.text}}</text>
+        <view class="list-item-body-images" wx:if="{{item.images.length !== 0}}">
+          <image
+            wx:for-item="image"
+            wx:for="{{item.images}}"
+            wx:for-index="i"
+            wx:key="{{i}}"
+            @tap.stop="viewPic({{image}},{{item.images}})"
+            src="{{image}}"
+            class="list-item-body-image"
+            mode="aspectFill">
+          </image>
+        </view>
+        <view
+          class="list-item-location"
+          wx:if="{{item.location.locationName}}"
+          @tap.stop="showLocation({{item.location.latitude}}, {{item.location.longitude}})">
+          <image class="location-icon" src="../assets/svgs/location.svg"></image>
+          <text>{{item.location.locationName}}</text>
+        </view>
+      </view>
+      <!--Blog Operations-->
+      <view class="list-item-operations" wx:if="{{!isTest}}">
+        <view
+          @tap.stop="like({{idx}}, {{item.id}})"
+          hover-class="list-item-operation-like-scale"
+          class="list-item-operation-like">
+          <image
+            class="list-item-operation-icon"
+            src="{{ item.like ? '../assets/svgs/like-fill.svg' : '../assets/svgs/like.svg' }}"></image>
+          <text class="number {{ item.like ? 'active' : '' }}" wx:if="{{ item.likeNum !== 0 }}">{{item.likeNum}}</text>
+        </view>
+        <navigator
+          url="/pages/detail?id={{ item.id }}&focusComment=true"
+          open-type="navigate"
+          class="list-item-operation-comment">
+          <image class="list-item-operation-icon" src="../assets/svgs/comment.svg"></image>
+          <text class="number" wx:if="{{ item.commentNum !== 0 }}">{{ item.commentNum }}</text>
+        </navigator>
+        <view
+          @tap.stop="showMore({{ idx }}, {{ item.id }})"
+          class="list-item-operation-more"
+          wx:if="{{ item.user.isAdmin || item.user.isAuthor }}">
+          <image
+            class="list-item-operation-icon"
+            src="../assets/svgs/more.svg"></image>
+        </view>
+      </view>
+    </navigator>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import http from '../utils/request'
+  import {api} from '../config'
+
+  export default class Clist extends wepy.component {
+    props = {
+      list: Object,
+      ads: Object
+    }
+
+    data = {
+      isTest: true
+    }
+
+    methods = {
+      /**
+       * 查看大图
+       * @param {String} cur 当前展示图片
+       * @param {Array}  imageList 展示的图片列表
+       */
+      viewPic(cur, imageList) {
+        wepy.previewImage({
+          current: cur,
+          urls: imageList
+        })
+      },
+
+      /**
+       * 点赞
+       * @param {Number} idx 点赞树洞的索引
+       * @param {Number} id  点赞树洞的 id
+       */
+      async like(idx, id) {
+        const list = this.list
+        list[idx].like = !list[idx].like
+        if (list[idx].like) {
+          list[idx].likeNum++
+        } else {
+          list[idx].likeNum--
+        }
+        // apply change
+        this.$apply()
+        // commit request
+        try {
+          await http({
+            url: api.blog.like.url,
+            method: api.blog.like.method,
+            data: {
+              bid: id
+            }
+          })
+        } catch (e) {
+          // roll back when request failed
+          console.log(e)
+
+          list[idx].like = !list[idx].like
+
+          if (list[idx].like) {
+            list[idx].likeNum++
+          } else {
+            list[idx].likeNum--
+          }
+
+          this.$apply()
+        }
+      },
+
+      /**
+       * 显示更多操作
+       * @param {Number} idx 点赞树洞的索引
+       * @param {Number} id  点赞树洞的 id
+       */
+      async showMore(idx, id) {
+        try {
+          const {tapIndex} = await wepy.showActionSheet({
+            itemList: [
+              '删除'
+            ]
+          })
+
+          if (tapIndex === 0) {
+            const status = await wepy.showModal({
+              title: '删除',
+              content: '确定要删除这条树洞？',
+              cancelText: '不删了',
+              cancelColor: '#666666',
+              confirmText: '删除吧',
+              confirmColor: '#3CC51F'
+            })
+
+            if (status.confirm) {
+              this.list.splice(idx, 1)
+              this.$apply()
+
+              await http({
+                url: api.blog.delete.url,
+                method: api.blog.delete.method,
+                data: {
+                  bid: id
+                }
+              })
+            }
+          }
+        } catch (e) {
+          console.log('User cancel')
+        }
+      },
+
+      /**
+       * 显示地图
+       * @param {Float} latitude  纬度
+       * @param {Float} longitude 经度
+       */
+      showLocation(latitude, longitude) {
+        wepy.openLocation({
+          latitude,
+          longitude,
+          scale: 28
+        })
+      }
+    }
+
+    // onComponentLoad() {
+    //   this.isTest = !Boolean(wepy.getStorageSync(`isInTest-${version}`))
+    //   this.$apply()
+    // }
+  }
+</script>
+
+<style lang="less">
+  .list-container {
+    width: 100%;
+    margin-bottom: 60px;
+
+    /* new btn */
+    .newBtn {
+      position: fixed;
+      right: 20px;
+      bottom: 70px;
+      width: 60px;
+      height: 60px;
+      background: #FA6570;
+      border-radius: 50%;
+      text-align: center;
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
+      transition: all 150ms ease;
+      z-index: 100;
+
+      .newBtn-icon {
+        margin-top: 15px;
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    .newBtn-hover {
+      background: #D75760;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+    }
+
+    .list-item {
+      position: relative;
+      width: 100%;
+      padding: 15px;
+      padding-bottom: 12px;
+      margin-bottom: 10px;
+      background: #FFF;
+      overflow: hidden;
+
+      /* fixed */
+      .list-item-fixed {
+        position: absolute;
+        top: 24px;
+        right: 0;
+        padding: 5px 7px;
+        font-size: 12px;
+        font-weight: bold;
+        color: #FFF;
+        border-radius: 4px 0 0 4px;
+        text-align: center;
+        background: #fa6570;
+      }
+
+      .list-user {
+        width: 100%;
+        overflow: hidden;
+
+        .list-user-avatar {
+          float: left;
+
+          .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 3px;
+          }
+        }
+
+        .list-user-info {
+          float: left;
+          padding-left: 10px;
+
+          .list-user-nickname {
+            overflow: hidden;
+
+            .nickname {
+              float: left;
+              margin-top: 5px;
+              margin-right: 5px;
+              font-size: 16px;
+              font-weight: bold;
+              line-height: 20px;
+              color: #333;
+            }
+
+            .verify {
+              float: left;
+              width: 15px;
+              height: 15px;
+              margin-top: 6px;
+            }
+          }
+
+          .time-and-from {
+            width: 100%;
+            margin-top: 2px;
+            font-size: 12px;
+            color: #777;
+            display: block;
+          }
+        }
+      }
+
+      /* body */
+      .list-item-body {
+        width: 100%;
+        margin-top: 10px;
+        box-sizing: border-box;
+        overflow: hidden;
+
+        .list-item-body-content {
+          float: left;
+          width: 100%;
+          font-size: 16px;
+          line-height: 28px;
+          color: #333;
+          text-align: justify;
+        }
+
+        .list-item-body-images {
+          float: left;
+          width: 100%;
+          margin-top: 10px;
+
+          .list-item-body-image {
+            float: left;
+            width: 30%;
+            margin-right: 5px;
+            margin-top: 5px;
+            height: 110px;
+          }
+        }
+
+        .list-item-location {
+          float: left;
+          margin-top: 10px;
+          width: 250px;
+          height: 24px;
+
+          .location-icon {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+          }
+
+          text {
+            font-size: 14px;
+            line-height: 24px;
+            font-weight: bold;
+            color: #FA6570;
+          }
+        }
+      }
+
+      .list-item-operations {
+        width: 100%;
+        margin-top: 10px;
+        padding-top: 15px;
+        border-top: 1px solid #EEE;
+        overflow: hidden;
+
+        .list-item-operation-like,
+        .list-item-operation-comment,
+        .list-item-operation-more {
+          float: left;
+          width: 70px;
+          position: relative;
+          text-align: center;
+
+          .list-item-operation-icon {
+            margin-right: 5px;
+            width: 20px;
+            height: 20px;
+          }
+
+          .number {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            margin-left: 12px;
+            color: #999;
+            font-size: 14px;
+            line-height: 14px;
+            font-weight: bold;
+          }
+
+          .active {
+            color: #FA6570;
+          }
+        }
+
+        .list-item-operation-like-scale {
+          animation: clickAnimation 300ms ease;
+        }
+
+        .list-item-operation-more {
+          float: right;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  @keyframes clickAnimation {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.5);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+</style>

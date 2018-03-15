@@ -78,6 +78,6 @@ public interface ImageLoader {
 
     interface ThumbnailCallback {
         @UiThread
-        void onFinsih(Drawable drawable);
+        void onFinish(Drawable drawable);
     }
 }

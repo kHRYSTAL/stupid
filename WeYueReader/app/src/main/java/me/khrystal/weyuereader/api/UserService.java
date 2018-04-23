@@ -8,6 +8,7 @@ import io.reactivex.Observable;
 import me.khrystal.weyuereader.db.entity.UserBean;
 import me.khrystal.weyuereader.model.AppUpdateBean;
 import me.khrystal.weyuereader.model.BookBean;
+import me.khrystal.weyuereader.model.DeleteBookBean;
 import okhttp3.MultipartBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -87,15 +88,15 @@ public interface UserService {
     @FormUrlEncoded
     Observable<BaseData<String>> addBookShelf(@Field("bookid") String bookid);
 
-//    /**
-//     * 移除书架
-//     *
-//     * @return
-//     */
-////    @DELETE(ModelPath.USER + "/bookshelf")
-//    @HTTP(method = "DELETE", path = ModelPath.USER + "/bookshelf", hasBody = true)
-////    @FormUrlEncoded
-//    Observable<BaseData<String>> deleteBookShelf(@Body DeleteBookBean bean);
+    /**
+     * 移除书架
+     *
+     * @return
+     */
+//    @DELETE(ModelPath.USER + "/bookshelf")
+    @HTTP(method = "DELETE", path = ModelPath.USER + "/bookshelf", hasBody = true)
+//    @FormUrlEncoded
+    Observable<BaseData<String>> deleteBookShelf(@Body DeleteBookBean bean);
 
     /**
      * 用户反馈

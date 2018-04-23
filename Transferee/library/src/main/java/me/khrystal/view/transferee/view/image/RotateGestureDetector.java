@@ -60,8 +60,10 @@ public class RotateGestureDetector {
         y2 = event.getY(1);
         return (y2 - y1) / (x2 - x1);
     }
+
+    interface OnRotateListener {
+        void onRotate(float degress, float focusX, float focusY);
+    }
 }
 
-interface OnRotateListener {
-    void onRotate(float degress, float focusX, float focusY);
-}
+

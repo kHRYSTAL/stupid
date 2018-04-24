@@ -83,7 +83,7 @@ public class ReadSettingManager {
     }
 
     public int getPageMode(){
-        // TODO: 18/4/24  
+        // TODO: 18/4/24
 //        return sharedPreUtils.getInt(SHARED_READ_PAGE_MODE, PageView.PAGE_MODE_COVER);
         return 0;
     }

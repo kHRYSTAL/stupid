@@ -8,6 +8,8 @@ import io.reactivex.ObservableOnSubscribe;
 import me.khrystal.weyuereader.db.entity.CollBookBean;
 import me.khrystal.weyuereader.db.gen.CollBookBeanDao;
 import me.khrystal.weyuereader.db.gen.DaoSession;
+import me.khrystal.weyuereader.utils.Constant;
+import me.khrystal.weyuereader.utils.FileUtils;
 
 /**
  * usage:
@@ -73,8 +75,8 @@ public class CollBookHelper {
         return Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(ObservableEmitter<String> e) throws Exception {
-                //查看文本中是否存在删除的数据 TODO
-//                FileUtils.deleteFile(Constant.BOOK_CACHE_PATH + collBookBean.get_id());
+                //查看文本中是否存在删除的数据
+                FileUtils.deleteFile(Constant.BOOK_CACHE_PATH + collBookBean.get_id());
                 //删除任务
                 BookDownloadHelper.getsInstance().removeDownloadTask(collBookBean.get_id());
                 //删除目录

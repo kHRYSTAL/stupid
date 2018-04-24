@@ -69,7 +69,7 @@ public class BrightnessUtils {
         float nowBrightnessValue = 0;
         ContentResolver resolver = activity.getContentResolver();
         try {
-            //TODO:获取到的值与实际的亮度有差异
+            // 获取到的值与实际的亮度有差异
             nowBrightnessValue = Settings.System.getFloat(resolver, "screen_auto_brightness_adj");
             Log.d(TAG, "getAutoScreenBrightness: " + nowBrightnessValue);
         } catch (Exception e) {

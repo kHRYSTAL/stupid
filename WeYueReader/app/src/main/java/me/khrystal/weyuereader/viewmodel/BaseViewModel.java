@@ -37,7 +37,7 @@ public class BaseViewModel {
         return map;
     }
 
-    public void onDestory() {
+    public void onDestroy() {
         if (disposables.size() > 0) {
             for (Disposable disposable: disposables) {
                 disposable.dispose();

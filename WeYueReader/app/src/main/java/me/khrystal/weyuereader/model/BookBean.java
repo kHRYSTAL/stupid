@@ -56,6 +56,173 @@ public class BookBean implements Serializable {
     private List<String> tags;
     private List<String> gender;
 
+    public String get_id() {
+        return _id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getLongIntro() {
+        return longIntro;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public String getMajorCate() {
+        return majorCate;
+    }
+
+    public String getMinorCate() {
+        return minorCate;
+    }
+
+    public boolean isHasCopyright() {
+        return hasCopyright;
+    }
+
+    public boolean isCollect() {
+        return isCollect;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public int getLatelyFollower() {
+        return latelyFollower;
+    }
+
+    public int getWordCount() {
+        return wordCount;
+    }
+
+    public int getSerializeWordCount() {
+        return serializeWordCount;
+    }
+
+    public String getRetentionRatio() {
+        return retentionRatio;
+    }
+
+    public String getUpdated() {
+        return updated;
+    }
+
+    public int getChaptersCount() {
+        return chaptersCount;
+    }
+
+    public String getLastChapter() {
+        return lastChapter;
+    }
+
+    public String getCopyright() {
+        return copyright;
+    }
+
+    public RatingBean getRating() {
+        return rating;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public List<String> getGender() {
+        return gender;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setLongIntro(String longIntro) {
+        this.longIntro = longIntro;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public void setMajorCate(String majorCate) {
+        this.majorCate = majorCate;
+    }
+
+    public void setMinorCate(String minorCate) {
+        this.minorCate = minorCate;
+    }
+
+    public void setHasCopyright(boolean hasCopyright) {
+        this.hasCopyright = hasCopyright;
+    }
+
+    public void setCollect(boolean collect) {
+        isCollect = collect;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setLatelyFollower(int latelyFollower) {
+        this.latelyFollower = latelyFollower;
+    }
+
+    public void setWordCount(int wordCount) {
+        this.wordCount = wordCount;
+    }
+
+    public void setSerializeWordCount(int serializeWordCount) {
+        this.serializeWordCount = serializeWordCount;
+    }
+
+    public void setRetentionRatio(String retentionRatio) {
+        this.retentionRatio = retentionRatio;
+    }
+
+    public void setUpdated(String updated) {
+        this.updated = updated;
+    }
+
+    public void setChaptersCount(int chaptersCount) {
+        this.chaptersCount = chaptersCount;
+    }
+
+    public void setLastChapter(String lastChapter) {
+        this.lastChapter = lastChapter;
+    }
+
+    public void setCopyright(String copyright) {
+        this.copyright = copyright;
+    }
+
+    public void setRating(RatingBean rating) {
+        this.rating = rating;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public void setGender(List<String> gender) {
+        this.gender = gender;
+    }
 
     public static class RatingBean implements Serializable {
         /**

@@ -3,6 +3,8 @@ package me.khrystal.weyuereader.model;
 import java.io.Serializable;
 import java.util.List;
 
+import me.khrystal.weyuereader.db.entity.CollBookBean;
+
 /**
  * usage:
  * author: kHRYSTAL
@@ -55,6 +57,16 @@ public class BookBean implements Serializable {
     private RatingBean rating;
     private List<String> tags;
     private List<String> gender;
+
+    public CollBookBean getCollBookBean() {
+        return mCollBookBean;
+    }
+
+    public void setCollBookBean(CollBookBean mCollBookBean) {
+        this.mCollBookBean = mCollBookBean;
+    }
+
+    private CollBookBean mCollBookBean;
 
     public String get_id() {
         return _id;

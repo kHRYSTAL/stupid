@@ -7,7 +7,7 @@ public class BookChaptersBean {
     private String _id;
     private String source;
     private String book;
-    private List<ChatpterBean> chapters;
+    private List<ChapterBean> chapters;
 
     public String get_id() {
         return _id;
@@ -33,15 +33,15 @@ public class BookChaptersBean {
         this.book = book;
     }
 
-    public List<ChatpterBean> getChapters() {
+    public List<ChapterBean> getChapters() {
         return chapters;
     }
 
-    public void setChapters(List<ChatpterBean> chapters) {
+    public void setChapters(List<ChapterBean> chapters) {
         this.chapters = chapters;
     }
 
-    public static class ChatpterBean {
+    public static class ChapterBean {
         private boolean isVip;
         private String link;
         private String title;

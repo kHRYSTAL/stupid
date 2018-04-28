@@ -7,6 +7,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import me.khrystal.weyuereader.db.entity.BookChapterBean;
 import me.khrystal.weyuereader.model.BookBean;
+import me.khrystal.weyuereader.model.BookChaptersBean;
 import me.khrystal.weyuereader.model.BookClassifyBean;
 import me.khrystal.weyuereader.model.ChapterContentBean;
 import retrofit2.http.GET;
@@ -41,7 +42,15 @@ public interface BookService {
      * 获取书籍目录
      */
     @GET(ModelPath.BOOKS + "/{bookId}/chapters")
-    Observable<BaseData<BookChapterBean>> bookChapters(@Path("bookId") String bookId);
+    Observable<BaseData<BookChaptersBean>> bookChapters(@Path("bookId") String bookId);
+
+
+    /**
+     * 获取书籍信息
+     */
+    @GET(ModelPath.BOOKS + "/{bookId}")
+    Observable<BaseData<BookBean>> bookInfo(@Path("bookId") String bookId);
+
 
     /**
      * 根据link获取正文

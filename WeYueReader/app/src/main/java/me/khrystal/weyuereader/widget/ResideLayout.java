@@ -378,7 +378,6 @@ public class ResideLayout extends ViewGroup {
             if (isInEditMode()) {
                 // Don't crash the layout editor. Consume all of the space if specified
                 // or pick a magic number from thin air otherwise.
-                // TODO Better communication with tools of this bogus state.
                 // It will crash on a real device.
                 if (widthMode == MeasureSpec.AT_MOST) {
                     widthMode = MeasureSpec.EXACTLY;
@@ -392,7 +391,6 @@ public class ResideLayout extends ViewGroup {
         } else if (heightMode == MeasureSpec.UNSPECIFIED) {
             if (isInEditMode()) {
                 // Don't crash the layout editor. Pick a magic number from thin air instead.
-                // TODO Better communication with tools of this bogus state.
                 // It will crash on a real device.
                 if (heightMode == MeasureSpec.UNSPECIFIED) {
                     heightMode = MeasureSpec.AT_MOST;
@@ -1109,7 +1107,6 @@ public class ResideLayout extends ViewGroup {
             final int count = group.getChildCount();
             // Count backwards - let topmost views consume scroll distance first.
             for (int i = count - 1; i >= 0; i--) {
-                // TODO: Add versioned support here for transformed views.
                 // This will not work for transformed views in Honeycomb+
                 final View child = group.getChildAt(i);
                 if (x + scrollX >= child.getLeft() && x + scrollX < child.getRight() &&

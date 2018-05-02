@@ -158,7 +158,6 @@ public class BookChapterBeanDao extends AbstractDao<BookChapterBean, Void> {
 
     @Override
     public boolean hasKey(BookChapterBean entity) {
-        // TODO
         return false;
     }
 

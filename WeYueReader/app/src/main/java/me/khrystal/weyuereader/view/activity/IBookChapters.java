@@ -1,6 +1,7 @@
 package me.khrystal.weyuereader.view.activity;
 
 import me.khrystal.weyuereader.db.entity.BookChapterBean;
+import me.khrystal.weyuereader.model.BookChaptersBean;
 import me.khrystal.weyuereader.view.base.IBaseLoadView;
 
 /**
@@ -12,7 +13,7 @@ import me.khrystal.weyuereader.view.base.IBaseLoadView;
  */
 
 public interface IBookChapters extends IBaseLoadView {
-    void bookChapters(BookChapterBean bookChapterBean);
+    void bookChapters(BookChaptersBean bookChaptersBean);
     void finishChapters();
     void errorChapters();
 }

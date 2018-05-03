@@ -17,6 +17,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import me.khrystal.weyuereader.api.BookService;
 import me.khrystal.weyuereader.db.entity.BookChapterBean;
+import me.khrystal.weyuereader.model.BookChaptersBean;
 import me.khrystal.weyuereader.model.ChapterContentBean;
 import me.khrystal.weyuereader.utils.BookManager;
 import me.khrystal.weyuereader.utils.BookSaveUtils;
@@ -50,14 +51,14 @@ public class VMBookContentInfo extends BaseViewModel {
                 .createSApi(BookService.class)
                 .bookChapters(bookId)
                 .compose(Transformer.switchSchedulers())
-                .subscribe(new RxObserver<BookChapterBean>() {
+                .subscribe(new RxObserver<BookChaptersBean>() {
                     @Override
                     protected void onError(String errorMsg) {
 
                     }
 
                     @Override
-                    protected void onSuccess(BookChapterBean data) {
+                    protected void onSuccess(BookChaptersBean data) {
                         if (iBookChapters != null) {
                             iBookChapters.bookChapters(data);
                         }

@@ -30,7 +30,7 @@ import me.khrystal.weyuereader.model.AppUpdateBean;
 
 public class AppUpdateUtils {
     public static AppUpdateUtils mAppUpdateUtils;
-    Disposable mDisaposable;
+    Disposable mDisposable;
 
     public static AppUpdateUtils getInstance() {
         if (mAppUpdateUtils == null) {
@@ -69,8 +69,8 @@ public class AppUpdateUtils {
                 .onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (mDisaposable != null) {
-                            mDisaposable.dispose();
+                        if (mDisposable != null) {
+                            mDisposable.dispose();
                         }
                         ToastUtils.show("取消更新");
                         dialog.dismiss();
@@ -80,8 +80,8 @@ public class AppUpdateUtils {
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
-                if (mDisaposable != null) {
-                    mDisaposable.dispose();
+                if (mDisposable != null) {
+                    mDisposable.dispose();
                 }
                 ToastUtils.show("取消更新");
                 dialogInterface.dismiss();
@@ -94,7 +94,7 @@ public class AppUpdateUtils {
                 .subscribe(new DownloadObserver("WeYue.apk") {
                     @Override
                     protected void getDisposable(Disposable disposable) {
-                        mDisaposable = disposable;
+                        mDisposable = disposable;
                     }
 
                     @Override

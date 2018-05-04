@@ -6,13 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.lianglu.weyue.widget.theme.ColorView
+    <me.khrystal.weyuereader.widget.theme.ColorView
         android:id="@+id/status_bar"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:background="?attr/colorPrimary"/>
 
-    <com.lianglu.weyue.widget.theme.ColorRelativeLayout
+    <me.khrystal.weyuereader.widget.theme.ColorRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="?attr/colorPrimary">
@@ -65,13 +65,13 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="5dp"
                 android:padding="3dp"
-                android:srcCompat="@drawable/ic_close"/>
+                />
+            <!--android:srcCompat="@drawable/ic_close"-->
 
         </RelativeLayout>
 
 
-    </com.lianglu.weyue.widget.theme.ColorRelativeLayout>
-
+    </me.khrystal.weyuereader.widget.theme.ColorRelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_search"

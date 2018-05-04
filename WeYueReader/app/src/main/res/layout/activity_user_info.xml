@@ -147,7 +147,7 @@
                                     android:textColor="@color/black"
                                     android:textSize="14sp"/>
 
-                                <com.lianglu.weyue.widget.MarqueTextView
+                                <me.khrystal.weyuereader.widget.MarqueTextView
                                     android:id="@+id/tv_name"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"

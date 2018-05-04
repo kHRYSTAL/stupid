@@ -54,7 +54,7 @@
             android:textSize="14sp"/>
 
 
-        <com.lianglu.weyue.widget.theme.ColorTextView
+        <me.khrystal.weyuereader.widget.theme.ColorTextView
             android:id="@+id/tv_download_current_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lianglu.weyue.widget.ResideLayout
+<me.khrystal.weyuereader.widget.ResideLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +8,7 @@
     android:layout_height="match_parent">
 
 
-    <com.lianglu.weyue.widget.theme.ColorRelativeLayout
+    <me.khrystal.weyuereader.widget.theme.ColorRelativeLayout
         android:id="@+id/menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_marginTop="35dp"
                 />
 
-            <com.lianglu.weyue.widget.MarqueTextView
+            <me.khrystal.weyuereader.widget.MarqueTextView
                 android:id="@+id/tv_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                 android:textSize="16sp"/>
 
         </LinearLayout>
-    </com.lianglu.weyue.widget.theme.ColorRelativeLayout>
+    </me.khrystal.weyuereader.widget.theme.ColorRelativeLayout>
 
 
     <LinearLayout
@@ -103,4 +103,4 @@
     </LinearLayout>
 
 
-</com.lianglu.weyue.widget.ResideLayout>
+</me.khrystal.weyuereader.widget.ResideLayout>

@@ -49,7 +49,7 @@
         </android.support.design.widget.TextInputLayout>
 
 
-        <com.lianglu.weyue.widget.theme.ColorTextView
+        <me.khrystal.weyuereader.widget.theme.ColorTextView
             android:id="@+id/ctv_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

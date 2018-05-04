@@ -6,7 +6,7 @@
               android:background="@color/color_e3"
               android:orientation="vertical">
 
-    <com.lianglu.weyue.widget.theme.ColorButton
+    <me.khrystal.weyuereader.widget.theme.ColorButton
         android:id="@+id/btn_scan"
         android:layout_width="match_parent"
         android:layout_height="40dp"

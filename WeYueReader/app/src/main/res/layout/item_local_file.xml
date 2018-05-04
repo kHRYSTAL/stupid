@@ -54,7 +54,7 @@
 			android:gravity="center_vertical"
 			android:layout_alignParentBottom="true">
 			
-			<com.lianglu.weyue.widget.theme.ColorTextView
+			<me.khrystal.weyuereader.widget.theme.ColorTextView
 				style="@style/WY.Theme.TextAppearance.File.Tag"
 				android:id="@+id/file_tv_tag"
 				android:layout_toRightOf="@+id/file_fl_icon"

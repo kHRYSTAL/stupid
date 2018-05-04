@@ -68,7 +68,7 @@
                             android:layout_marginTop="6dp"
                             android:orientation="horizontal">
 
-                            <com.lianglu.weyue.widget.theme.ColorTextView
+                            <me.khrystal.weyuereader.widget.theme.ColorTextView
                                 android:id="@+id/ctv_book_author"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
                                 style="@style/book_detail_51.10"
                                 android:text="追书评分"/>
 
-                            <com.lianglu.weyue.widget.theme.ColorTextView
+                            <me.khrystal.weyuereader.widget.theme.ColorTextView
                                 android:id="@+id/ctv_score"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -349,7 +349,7 @@
                     android:gravity="center"
                     android:orientation="horizontal">
 
-                    <com.lianglu.weyue.widget.theme.ColorTextView
+                    <me.khrystal.weyuereader.widget.theme.ColorTextView
                         android:id="@+id/ctv_addbook"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -358,7 +358,7 @@
 
                 </LinearLayout>
 
-                <com.lianglu.weyue.widget.theme.ColorRelativeLayout
+                <me.khrystal.weyuereader.widget.theme.ColorRelativeLayout
                     android:id="@+id/crl_start_read"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -374,7 +374,7 @@
                         android:textColor="@color/white"/>
 
 
-                </com.lianglu.weyue.widget.theme.ColorRelativeLayout>
+                </me.khrystal.weyuereader.widget.theme.ColorRelativeLayout>
 
             </LinearLayout>
         </android.support.v7.widget.CardView>

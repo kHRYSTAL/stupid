@@ -3,7 +3,7 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
-    <com.lianglu.weyue.widget.theme.ColorView
+    <me.khrystal.weyuereader.widget.theme.ColorView
         android:layout_width="3dp"
         android:background="?attr/colorPrimary"
         android:layout_height="14dp"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lianglu.weyue.widget.theme.ColorRelativeLayout
+<me.khrystal.weyuereader.widget.theme.ColorRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary">
 
-    <com.lianglu.weyue.widget.theme.ColorView
+    <me.khrystal.weyuereader.widget.theme.ColorView
         android:id="@+id/status_bar"
         android:layout_width="match_parent"
         android:layout_height="20dp"
@@ -29,7 +29,7 @@
             app:srcCompat="@drawable/ic_arrow_back_white_24dp"
             />
 
-        <com.lianglu.weyue.widget.MarqueTextView
+        <me.khrystal.weyuereader.widget.MarqueTextView
             android:id="@+id/tv_toolbar_title"
             android:layout_toRightOf="@+id/iv_toolbar_back"
             android:layout_width="wrap_content"
@@ -60,4 +60,4 @@
 
     </RelativeLayout>
 
-</com.lianglu.weyue.widget.theme.ColorRelativeLayout>
+</me.khrystal.weyuereader.widget.theme.ColorRelativeLayout>

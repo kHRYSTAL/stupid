@@ -75,7 +75,7 @@
         </android.support.design.widget.AppBarLayout>
 
         <!--阅读页面-->
-        <com.lianglu.weyue.widget.page.PageView
+        <me.khrystal.weyuereader.widget.page.PageView
             android:id="@+id/pv_read_page"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

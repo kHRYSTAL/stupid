@@ -69,7 +69,7 @@
                 android:layout_marginTop="2dp"
                 android:orientation="horizontal">
 
-                <com.lianglu.weyue.widget.theme.ColorTextView
+                <me.khrystal.weyuereader.widget.theme.ColorTextView
                     android:id="@+id/ctv_arrow_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                     android:textColor="@color/color_51"
                     android:textSize="11sp"/>
 
-                <com.lianglu.weyue.widget.theme.ColorTextView
+                <me.khrystal.weyuereader.widget.theme.ColorTextView
                     android:id="@+id/ctv_retention"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

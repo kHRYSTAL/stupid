@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.lianglu.weyue.widget.theme.ColorTextView
+<me.khrystal.weyuereader.widget.theme.ColorTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tv_tag"
     android:layout_width="wrap_content"
@@ -15,4 +15,4 @@
     android:textColor="?attr/colorPrimary"
     android:textSize="14sp">
 
-</com.lianglu.weyue.widget.theme.ColorTextView>
+</me.khrystal.weyuereader.widget.theme.ColorTextView>

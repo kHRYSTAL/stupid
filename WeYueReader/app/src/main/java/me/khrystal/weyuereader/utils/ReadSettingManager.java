@@ -1,5 +1,7 @@
 package me.khrystal.weyuereader.utils;
 
+import me.khrystal.weyuereader.widget.page.PageView;
+
 /**
  * 阅读器配置管理
  */
@@ -83,9 +85,7 @@ public class ReadSettingManager {
     }
 
     public int getPageMode(){
-        // TODO: 18/4/24
-//        return sharedPreUtils.getInt(SHARED_READ_PAGE_MODE, PageView.PAGE_MODE_COVER);
-        return 0;
+        return sharedPreUtils.getInt(SHARED_READ_PAGE_MODE, PageView.PAGE_MODE_COVER);
     }
 
     public int getReadBgTheme(){

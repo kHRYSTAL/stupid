@@ -10,17 +10,21 @@ import com.allen.library.RxHttpUtils;
 import com.ihsanbal.logging.Level;
 import com.ihsanbal.logging.LoggingInterceptor;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.weavey.loading.lib.LoadingLayout;
 
 import java.util.concurrent.TimeUnit;
 
 import me.khrystal.weyuereader.utils.Constant;
 import me.khrystal.weyuereader.utils.ThemeUtils;
+import me.khrystal.weyuereader.widget.CircleHeader;
 import okhttp3.OkHttpClient;
 import okhttp3.internal.platform.Platform;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
- * usage: TODO
+ * usage:
  * author: kHRYSTAL
  * create time: 18/4/23
  * update time:
@@ -71,16 +75,16 @@ public class WYApplication extends Application {
         // 初始化刷新
         initRefresh();
         // 初始化loading布局
-//        initLoadingLayout();
+        initLoadingLayout();
     }
 
     private void initRefresh() {
-//        SmartRefreshLayout.setDefaultRefreshHeaderCreater((context, layout) -> {
-//            CircleHeader header = new CircleHeader(context);
-//            layout.setPrimaryColorsId(ThemeUtils.getThemeColorId(), R.color.white);
-//            return header;
-//        });
-//        SmartRefreshLayout.setDefaultRefreshFooterCreater((context, layout) -> new BallPulseFooter(context).setSpinnerStyle(SpinnerStyle.Translate));
+        SmartRefreshLayout.setDefaultRefreshHeaderCreater((context, layout) -> {
+            CircleHeader header = new CircleHeader(context);
+            layout.setPrimaryColorsId(ThemeUtils.getThemeColorId(), R.color.white);
+            return header;
+        });
+        SmartRefreshLayout.setDefaultRefreshFooterCreater((context, layout) -> new BallPulseFooter(context).setSpinnerStyle(SpinnerStyle.Translate));
 
     }
 
@@ -118,5 +122,21 @@ public class WYApplication extends Application {
                 //全局是否打开请求log日志
                 .setOkClient(client.build())
                 .setLog(true);
+    }
+
+    private void initLoadingLayout() {
+        LoadingLayout.getConfig()
+                .setErrorText("出错啦~请稍后重试！")
+                .setEmptyText("抱歉，暂无数据")
+                .setNoNetworkText("无网络连接，请检查您的网络···")
+                .setErrorImage(R.drawable.ic_error_icon)
+                .setEmptyImage(R.drawable.ic_empty_error)
+                .setNoNetworkImage(R.drawable.ic_net_error)
+                .setAllTipTextColor(R.color.black)
+                .setAllTipTextSize(14)
+                .setReloadButtonText("点我重试哦")
+                .setReloadButtonTextSize(14)
+                .setReloadButtonTextColor(R.color.black)
+                .setReloadButtonWidthAndHeight(150, 40);
     }
 }

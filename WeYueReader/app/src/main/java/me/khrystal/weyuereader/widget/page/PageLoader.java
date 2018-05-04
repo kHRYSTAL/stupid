@@ -894,7 +894,7 @@ public abstract class PageLoader {
 
     // 缓存下一个要显示的页面
     private void cacheNextBitmap() {
-        // TODO: 18/5/3 解决上下滑动卡顿问题
+        // 解决上下滑动卡顿问题
     }
 
     boolean nextChapter() {

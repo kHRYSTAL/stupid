@@ -28,7 +28,7 @@ public abstract class BaseFileFragment extends BaseFragment {
         mAdapter.setCheckdAll(isCheckedAll);
     }
 
-    public void setCkecked(boolean checked) {
+    public void setChecked(boolean checked) {
         isCheckedAll = checked;
     }
 
@@ -44,7 +44,7 @@ public abstract class BaseFileFragment extends BaseFragment {
         return mAdapter.getCheckedCount();
     }
 
-    public List<File> getCkeckedFiles() {
+    public List<File> getCheckedFiles() {
         List<File> files = new ArrayList<>();
         if (mAdapter != null) {
             for (LocalFileBean localFileBean : mAdapter.getCheckedFiles()) {
@@ -78,6 +78,11 @@ public abstract class BaseFileFragment extends BaseFragment {
                 localFileBean.getFile().delete();
             }
         }
+    }
+
+    //设置文件点击监听事件
+    public void setOnFileCheckedListener(OnFileCheckedListener listener) {
+        mListener = listener;
     }
 
 

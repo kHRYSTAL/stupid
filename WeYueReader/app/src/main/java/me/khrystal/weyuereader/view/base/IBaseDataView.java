@@ -10,6 +10,6 @@ package me.khrystal.weyuereader.view.base;
 
 public interface IBaseDataView extends IBaseLoadView {
     void emptyData();
-    void errorData();
+    void errorData(String error);
     void NetWorkError();
 }

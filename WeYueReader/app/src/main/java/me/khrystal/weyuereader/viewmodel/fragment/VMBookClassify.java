@@ -47,7 +47,7 @@ public class VMBookClassify extends BaseViewModel {
                     protected void onError(String errorMsg) {
                         if (iClassifyBook != null) {
                             iClassifyBook.stopLoading();
-                            iClassifyBook.errorData();
+                            iClassifyBook.errorData(errorMsg);
                         }
                     }
 

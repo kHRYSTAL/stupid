@@ -69,7 +69,7 @@ public class VMBookShelf extends BaseViewModel {
     }
 
     /**
-     * 获取用户信息
+     * 从服务器获取书架数据 并删除已收藏 已缓存的数据
      */
     public void getBookShelf(List<CollBookBean> mAllBooks) {
         RxHttpUtils.getSInstance().addHeaders(tokenMap()).createSApi(UserService.class)

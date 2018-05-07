@@ -25,6 +25,21 @@ public class FileStack {
         ++count;
     }
 
+    public FileSnapshot pop() {
+        Node fileNode = node;
+        if (fileNode == null) {
+            return null;
+        }
+        FileSnapshot fileSnapshot = fileNode.fileSnapshot;
+        node = fileNode.next;
+        --count;
+        return fileSnapshot;
+    }
+
+    public int getSize() {
+        return count;
+    }
+
     public class Node {
         FileSnapshot fileSnapshot;
         Node next;

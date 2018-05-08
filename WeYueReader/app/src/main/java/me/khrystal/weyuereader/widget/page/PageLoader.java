@@ -412,6 +412,11 @@ public abstract class PageLoader {
         this.mPageChangeListener = listener;
     }
 
+    //获取当前页的状态
+    public int getPageStatus() {
+        return mStatus;
+    }
+
     // 获取当前的章节位置
     public int getChapterPos() {
         return mCurChapterPos;

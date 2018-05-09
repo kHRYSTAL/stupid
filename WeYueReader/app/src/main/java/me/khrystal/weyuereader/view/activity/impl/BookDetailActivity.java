@@ -241,11 +241,10 @@ public class BookDetailActivity extends BaseActivity implements IBookDetail {
                 }
                 break;
             case R.id.crl_start_read:
-                // TODO: 18/5/7 跳转到阅读页
                 Bundle bundle = new Bundle();
-//                bundle.putSerializable(ReadActivity.EXTRA_COLL_BOOK, mCollBookBean);
-//                bundle.putBoolean(ReadActivity.EXTRA_IS_COLLECTED, false);
-//                startActivity(ReadActivity.class, bundle);
+                bundle.putSerializable(ReadActivity.EXTRA_COLL_BOOK, mCollBookBean);
+                bundle.putBoolean(ReadActivity.EXTRA_IS_COLLECTED, false);
+                startActivity(ReadActivity.class, bundle);
                 break;
         }
     }

@@ -34,6 +34,7 @@ import me.khrystal.weyuereader.utils.LoadingHelper;
 import me.khrystal.weyuereader.utils.ToastUtils;
 import me.khrystal.weyuereader.utils.rxhelper.RxBus;
 import me.khrystal.weyuereader.utils.rxhelper.RxUtils;
+import me.khrystal.weyuereader.view.activity.impl.ReadActivity;
 import me.khrystal.weyuereader.view.adapter.BookShelfAdapter;
 import me.khrystal.weyuereader.view.base.BaseFragment;
 import me.khrystal.weyuereader.view.fragment.IBookShelf;
@@ -100,10 +101,9 @@ public class BookShelfFragment extends BaseFragment implements IBookShelf {
                 // 判断这个本地文件是否存在
                 if (file.exists()) {
                     Bundle bundle = new Bundle();
-                    // TODO: 18/5/7 跳转至阅读页
-//                    bundle.putSerializable(ReadActivity.EXTRA_COLL_BOOK, collBook);
-//                    bundle.putBoolean(ReadActivity.EXTRA_IS_COLLECTED, true);
-//                    startActivity(ReadActivity.class, bundle);
+                    bundle.putSerializable(ReadActivity.EXTRA_COLL_BOOK, collBookBean);
+                    bundle.putBoolean(ReadActivity.EXTRA_IS_COLLECTED, true);
+                    startActivity(ReadActivity.class, bundle);
                 } else {
                     //提示(从目录中移除这个文件)
                     new MaterialDialog.Builder(mContext)
@@ -289,10 +289,9 @@ public class BookShelfFragment extends BaseFragment implements IBookShelf {
     @Override
     public void bookInfo(CollBookBean bean) {
         Bundle bundle = new Bundle();
-        // TODO: 18/5/7 跳转至阅读页 读取网络书籍
-//        bundle.putSerializable(ReadActivity.EXTRA_COLL_BOOK, bean);
-//        bundle.putBoolean(ReadActivity.EXTRA_IS_COLLECTED, true);
-//        startActivity(ReadActivity.class, bundle);
+        bundle.putSerializable(ReadActivity.EXTRA_COLL_BOOK, bean);
+        bundle.putBoolean(ReadActivity.EXTRA_IS_COLLECTED, true);
+        startActivity(ReadActivity.class, bundle);
     }
 
     @Override

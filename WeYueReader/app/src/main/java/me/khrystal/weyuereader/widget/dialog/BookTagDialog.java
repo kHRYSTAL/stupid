@@ -29,6 +29,7 @@ import me.khrystal.weyuereader.api.BookService;
 import me.khrystal.weyuereader.model.BookBean;
 import me.khrystal.weyuereader.utils.SharedPreUtils;
 import me.khrystal.weyuereader.utils.rxhelper.RxObserver;
+import me.khrystal.weyuereader.view.activity.impl.BookDetailActivity;
 import me.khrystal.weyuereader.view.adapter.BookTagsAdapter;
 
 /**
@@ -80,10 +81,9 @@ public class BookTagDialog extends Dialog {
         mBookTagsAdapter = new BookTagsAdapter(mBeans);
         mRvBooks.setAdapter(mBookTagsAdapter);
         mBookTagsAdapter.setOnItemClickListener(((adapter, view1, position) -> {
-            // TODO: 18/5/4
-//            Intent intent = new Intent(mConext, BookDetailActivity.class);
-//            intent.putExtra("bookid", mBeans.get(position).get_id());
-//            mConext.startActivity(intent);
+            Intent intent = new Intent(mConext, BookDetailActivity.class);
+            intent.putExtra("bookid", mBeans.get(position).get_id());
+            mConext.startActivity(intent);
         }));
 
         mRefreshLayout.setOnLoadmoreListener(refreshlayout -> {

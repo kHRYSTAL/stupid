@@ -174,8 +174,8 @@ public class ReadActivity extends BaseActivity implements IBookChapters {
     };
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mVmContentInfo = new VMBookContentInfo(mContext, this);
         setBinddingView(R.layout.activity_read, NO_BINDDING, mVmContentInfo);
     }
@@ -213,7 +213,7 @@ public class ReadActivity extends BaseActivity implements IBookChapters {
         }
         // 初始化屏幕常量类
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "keep bright");
+//        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "keep bright");
         // 隐藏Status bar
         pvReadPage.post(() -> {
             hideSystemBar();
@@ -529,7 +529,6 @@ public class ReadActivity extends BaseActivity implements IBookChapters {
         if (mCollBook.isUpdate() && isCollected) {
             mPageLoader.setChapterList(bookChapterList);
             //异步下载更新的内容存到数据库
-            //TODO
             BookChapterHelper.getsInstance().saveBookChaptersWithAsync(bookChapterList);
 
         } else {
@@ -620,7 +619,7 @@ public class ReadActivity extends BaseActivity implements IBookChapters {
     @Override
     protected void onResume() {
         super.onResume();
-        mWakeLock.acquire();
+//        mWakeLock.acquire();
     }
 
     @Override
@@ -628,7 +627,7 @@ public class ReadActivity extends BaseActivity implements IBookChapters {
         super.onPause();
         mWakeLock.release();
         if (isCollected) {
-            mPageLoader.saveRecord();
+//            mPageLoader.saveRecord();
         }
     }
 

@@ -10,6 +10,7 @@ import com.allen.library.utils.ToastUtils;
 import io.reactivex.disposables.Disposable;
 import me.khrystal.weyuereader.WYApplication;
 import me.khrystal.weyuereader.utils.LoadingHelper;
+import me.khrystal.weyuereader.view.activity.impl.LoginActivity;
 
 /**
  * usage: 网络请求处理基类
@@ -63,10 +64,9 @@ public abstract class RxObserver<T> extends BaseDataObserver<T> {
             case 60001:
             case 60002:
                 ToastUtils.showToast(data.getMsg());
-                // TODO 跳转至登录页面
-//                Intent intent = new Intent(WYApplication.getAppContext(), LoginActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                WYApplication.getAppContext().startActivity(intent);
+                Intent intent = new Intent(WYApplication.getAppContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                WYApplication.getAppContext().startActivity(intent);
                 break;
             case 10005:
             case 40000:

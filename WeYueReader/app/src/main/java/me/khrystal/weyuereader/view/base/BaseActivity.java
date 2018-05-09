@@ -39,14 +39,15 @@ import me.khrystal.weyuereader.widget.theme.Theme;
  */
 
 public class BaseActivity extends AppCompatActivity {
-    protected static int NO_BINDDING = -1; // 不用绑定布局
+    protected static int NO_BINDDING = -1;//不用绑定布局
 
     protected Context mContext;
     private Toolbar mToolbar;
     protected BaseViewModel mModel;
     private Unbinder mUnbinder;
-    protected boolean isSlideBack = true; // 是否设置滑动返回
-    protected ColorView mStatusBar;
+    private boolean isSlideBack = true;//是否设置滑动返回
+    private ColorView mStatusBar;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +58,13 @@ public class BaseActivity extends AppCompatActivity {
         onPreCreate();
     }
 
+    /**
+     * Databinding设置布局绑定
+     *
+     * @param resId      布局layout
+     * @param brVariavle BR或者不用绑定
+     * @param mModel     viewmodel
+     */
     public void setBinddingView(@LayoutRes int resId, int brVariavle, BaseViewModel mModel) {
         if (brVariavle == NO_BINDDING) {
             setContentView(resId);
@@ -68,7 +76,9 @@ public class BaseActivity extends AppCompatActivity {
         mUnbinder = ButterKnife.bind(this);
         mContext = this;
         initView();
+
     }
+
 
     /**
      * 自定义titlebar 默认带返回按钮
@@ -82,12 +92,15 @@ public class BaseActivity extends AppCompatActivity {
         TextView mTvToolbarTitle = findViewById(R.id.tv_toolbar_title);
         mTvToolbarTitle.setSelected(true);
         mIvToolbarBack.setImageResource(R.drawable.ic_arrow_back_white_24dp);
+//        setIconDrawable(mTvToolbarTitle, R.drawable.ic_arrow_back_white_24dp);
         mIvToolbarMore.setVisibility(View.GONE);
         mTvToolbarTitle.setText(title);
         mIvToolbarBack.setOnClickListener(v -> {
             finish();
         });
+//        onPreCreate();
     }
+
 
     /**
      * 自定义titlebar 自定义图标
@@ -164,7 +177,8 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
+
+    @TargetApi(19)
     private void setTranslucentStatus(boolean on) {
         Window win = getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();
@@ -226,21 +240,35 @@ public class BaseActivity extends AppCompatActivity {
                 setTheme(R.style.BlueGreyTheme);
                 break;
         }
+
     }
 
+
+    /**
+     * activity跳转（无参数）
+     *
+     * @param className
+     */
     public void startActivity(Class<?> className) {
         Intent intent = new Intent(mContext, className);
         startActivity(intent);
     }
 
+    /**
+     * activity跳转（有参数）
+     *
+     * @param className
+     */
     public void startActivity(Class<?> className, Bundle bundle) {
         Intent intent = new Intent(mContext, className);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
+    /**
+     * 初始化view
+     */
     protected void initView() {
-
     }
 
     @Override
@@ -255,3 +283,4 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 }
+

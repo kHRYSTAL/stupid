@@ -23,7 +23,6 @@
             app:nts_inactive_color="#c4c4c4"
             app:nts_size="15sp"
             app:nts_type="line"
-            app:nts_typeface="fonts/typeface.otf"
             app:nts_weight="3dp"/>
     </me.khrystal.weyuereader.widget.theme.ColorRelativeLayout>
 </merge>

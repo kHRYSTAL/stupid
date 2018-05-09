@@ -110,8 +110,7 @@ public class MainActivity extends BaseActivity implements ColorChooserDialog.Col
                     resideLayout.openPane();
                 },
                 view -> {
-                    // TODO: 18/5/7
-//                    startActivity();
+                    startActivity(BookSearchActivity.class);
                 });
         // 检查更新
         mModel.appUpdate(false);
@@ -177,13 +176,16 @@ public class MainActivity extends BaseActivity implements ColorChooserDialog.Col
                     resideLayout.closePane();
                     break;
                 case "缓存列表":
-                    // TODO: 18/5/7 跳转到下载
+                    startActivity(BookDownloadActivity.class);
+                    resideLayout.closePane();
                     break;
                 case "意见反馈":
-                    // TODO: 18/5/7 跳转到意见反馈
+                    startActivity(FeedBackActivity.class);
+                    resideLayout.closePane();
                     break;
                 case "关于作者":
-                    // TODO: 18/5/7 跳转到关于作者
+                    startActivity(AboutMineActivity.class);
+                    resideLayout.closePane();
                     break;
                 default:
                     ToastUtils.show("功能紧急开发中");
@@ -247,15 +249,14 @@ public class MainActivity extends BaseActivity implements ColorChooserDialog.Col
 
     @OnClick({R.id.iv_avatar, R.id.tv_theme, R.id.tv_setting})
     public void onViewClicked(View view) {
-        // TODO: 18/5/7  
         switch (view.getId()) {
             case R.id.iv_avatar:
                 String username = SharedPreUtils.getInstance()
                         .getString("username", "");
                 if (username.equals("")) {
-//                    startActivity(LoginActivity.class);
+                    startActivity(LoginActivity.class);
                 } else {
-//                    startActivity(UserInfoActivity.class);
+                    startActivity(UserInfoActivity.class);
                 }
                 break;
             case R.id.tv_theme:
@@ -270,9 +271,9 @@ public class MainActivity extends BaseActivity implements ColorChooserDialog.Col
             case R.id.tv_setting:
 
                 if (mUsername.equals("")) {
-//                    startActivity(LoginActivity.class);
+                    startActivity(LoginActivity.class);
                 } else {
-//                    startActivity(SettingActivity.class);
+                    startActivity(SettingActivity.class);
                 }
                 break;
         }

@@ -295,7 +295,7 @@ public class BookDownloadService extends BaseService {
                 .subscribe(new Consumer<ChapterContentBean>() {
                     @Override
                     public void accept(ChapterContentBean bean) throws Exception {
-                        //TODO:这里文件的名字用的是BookChapter的title,而不是chapter的title。
+                        //这里文件的名字用的是BookChapter的title,而不是chapter的title。
                         //原因是Chapter的title可能重复，但是BookChapter的title不会重复
                         //BookChapter的title = 卷名 + 章节名 chapter 的 title 就是章节名。。
                         BookSaveUtils.getsInstance()

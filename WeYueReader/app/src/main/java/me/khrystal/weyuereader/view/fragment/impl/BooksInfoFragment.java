@@ -24,6 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.khrystal.weyuereader.R;
 import me.khrystal.weyuereader.model.BookBean;
+import me.khrystal.weyuereader.view.activity.impl.BookDetailActivity;
 import me.khrystal.weyuereader.view.adapter.BookInfoAdapter;
 import me.khrystal.weyuereader.view.base.BaseFragment;
 import me.khrystal.weyuereader.view.fragment.IBookInfo;
@@ -103,8 +104,7 @@ public class BooksInfoFragment extends BaseFragment implements IBookInfo {
 
         mBookInfoAdapter.setOnItemClickListener(((adapter, view, position) -> {
             Intent intent = new Intent();
-            // TODO: 18/5/7 跳转到书籍详情
-//            intent.setClass(mContext, BookDetailActivity.class);
+            intent.setClass(mContext, BookDetailActivity.class);
             intent.putExtra("bookid", mBookBeans.get(position).get_id());
             // 共享元素动画
             if (android.os.Build.VERSION.SDK_INT > 20) {

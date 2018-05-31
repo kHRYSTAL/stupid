@@ -18,8 +18,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
-import java.lang.reflect.Type;
-
 /**
  * usage:
  * author: kHRYSTAL
@@ -30,17 +28,11 @@ import java.lang.reflect.Type;
 
 public class ScoreBarView extends View {
 
-    // 渐变颜色
-    private static final int[][] SECTION_COLORS = {{0xff8380ff, 0xff934cea, 0xffa318d6}
-            , {0xffe9ba00, 0xfff49000, 0xffff6600}, {0xff50afff, 0xff5e57ff, 0xff6c00ff}
-            , {0xff21c8ab, 0xff11c66a, 0xff00c52a}, {0xff00baff, 0xff009aff, 0xff0079ff}};
-
+    public static final int SCORE_STYLE_PERCENT = 0;
     // 动画长度
     private final int DEFAULT_DURATION = 1000;
-    // 配色方案
     private int colorStyle = 0;
-    // 评分方案 可以是进度 50% 也可以是评级 A, B, C
-    private int scoreStyle = 0;
+    private int scoreStyle = SCORE_STYLE_PERCENT;
     // 进度条最大值
     private float maxValue = 100;
     // 进度条当前值
@@ -60,6 +52,10 @@ public class ScoreBarView extends View {
     private int mBarHeight = dp2px(32);
     // 控件高度
     private int mViewHeight = mBarHeight;
+    // 颜色
+    private int backgroundColor;
+    private int startColor;
+    private int endColor;
 
     public ScoreBarView(Context context) {
         super(context);
@@ -87,6 +83,9 @@ public class ScoreBarView extends View {
             mTextSize = ta.getDimensionPixelSize(R.styleable.ScoreBar_barTextSize, dp2px(16));
             mBarHeight = ta.getDimensionPixelSize(R.styleable.ScoreBar_barHeight, dp2px(32));
             mViewHeight = ta.getDimensionPixelSize(R.styleable.ScoreBar_viewHeight, mBarHeight);
+            backgroundColor = ta.getColor(R.styleable.ScoreBar_bgColor, Color.RED);
+            startColor = ta.getColor(R.styleable.ScoreBar_startColor, 0xff8380ff);
+            endColor = ta.getColor(R.styleable.ScoreBar_endColor, 0xffa318d6);
         } finally {
             ta.recycle();
         }
@@ -100,14 +99,19 @@ public class ScoreBarView extends View {
         mPaint.setAntiAlias(true);
         // 进度百分比
         float section = currentValue / maxValue;
+        // 背景
+        RectF bgRect = new RectF(0, (mHeight - mBarHeight) / 2, mWidth, (mHeight + mBarHeight) / 2);
+        mPaint.setColor(backgroundColor);
+        canvas.drawRoundRect(bgRect, mHeight / 2, mWidth / 2, mPaint);
+
         // 进度条
         RectF progressRect = new RectF(0, (mHeight - mBarHeight) / 2, mWidth * section,
                 (mHeight + mBarHeight) / 2);
         // 渐变色
         LinearGradient shader = new LinearGradient(0, (mHeight - mBarHeight) / 2, mWidth,
-                (mHeight + mBarHeight) / 2, SECTION_COLORS[colorStyle], null, Shader.TileMode.MIRROR);
+                (mHeight + mBarHeight) / 2, new int[]{startColor, endColor}, null, Shader.TileMode.MIRROR);
         mPaint.setShader(shader);
-        canvas.drawRect(progressRect, mPaint);
+        canvas.drawRoundRect(progressRect, mHeight / 2, mWidth / 2, mPaint);
         // 设置文字画笔
         TextPaint textPaint = new TextPaint();
         textPaint.setColor(Color.WHITE);
@@ -117,38 +121,10 @@ public class ScoreBarView extends View {
         if (!TextUtils.isEmpty(name)) {
             canvas.drawText(name, mBarHeight / 3, (mHeight + mTextSize) / 2 - 4, textPaint);
         }
-        if (scoreStyle == 0) {
-            score = String.valueOf((int) currentValue);
+        if (scoreStyle == SCORE_STYLE_PERCENT) {
+            score = String.valueOf((int) currentValue) + "%";
             float textWidth = Layout.getDesiredWidth(score, textPaint);
-            canvas.drawText(score, progressRect.width() - mBarHeight / 8 - textWidth,
-                    (mHeight + mTextSize) / 2 - 4, textPaint);
-        } else if (scoreStyle == 1) {
-            // 画 A, B, C
-            String grade;
-            switch ((int) finalValue / 10) {
-                case 10:
-                case 9:
-                    grade = "A++";
-                    break;
-                case 8:
-                case 7:
-                    grade = "A+";
-                    break;
-                case 6:
-                case 5:
-                    grade = "A";
-                    break;
-                case 4:
-                case 3:
-                    grade = "B";
-                    break;
-                default:
-                    grade = "C";
-                    break;
-            }
-
-            float textWidth = Layout.getDesiredWidth(grade, textPaint);
-            canvas.drawText(grade, progressRect.width() - mBarHeight / 8 - textWidth,
+            canvas.drawText(score, progressRect.width() / 2 - textWidth,
                     (mHeight + mTextSize) / 2 - 4, textPaint);
         }
     }
@@ -238,8 +214,6 @@ public class ScoreBarView extends View {
     }
 
     public ValueAnimator createValueChangeAnimation(int value, int duration) {
-        if (scoreStyle == 1)
-            value = (6 - value) * 20;
         finalValue = value;
         ValueAnimator animator = ValueAnimator.ofFloat(currentValue, value).setDuration(duration);
         animator.setInterpolator(new DecelerateInterpolator());

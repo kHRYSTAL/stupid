@@ -5,6 +5,9 @@
         <attr name="barHeight" format="dimension"/>
         <attr name="barTextSize" format="dimension"/>
         <attr name="viewHeight" format="dimension"/>
+        <attr name="bgColor" format="color"/>
+        <attr name="startColor" format="color"/>
+        <attr name="endColor" format="color"/>
     </declare-styleable>
 
     <!--ScoreBarChart params-->

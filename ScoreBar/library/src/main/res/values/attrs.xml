@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--ScoreBar params-->
+    <declare-styleable name="ScoreBar">
+        <attr name="barHeight" format="dimension"/>
+        <attr name="barTextSize" format="dimension"/>
+        <attr name="viewHeight" format="dimension"/>
+    </declare-styleable>
+
+    <!--ScoreBarChart params-->
+    <declare-styleable name="ScoreBarChat">
+        <attr name="lineSpace" format="dimension"/>
+    </declare-styleable>
+</resources>

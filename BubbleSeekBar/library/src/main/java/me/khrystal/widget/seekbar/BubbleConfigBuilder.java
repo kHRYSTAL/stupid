@@ -121,7 +121,7 @@ public class BubbleConfigBuilder {
         return this;
     }
 
-    public BubbleConfigBuilder sectionColor(@IntRange(from = 1) int count) {
+    public BubbleConfigBuilder sectionCount(@IntRange(from = 1) int count) {
         this.sectionCount = count;
         return this;
     }

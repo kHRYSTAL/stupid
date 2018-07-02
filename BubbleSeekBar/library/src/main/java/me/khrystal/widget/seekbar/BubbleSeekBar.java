@@ -54,16 +54,7 @@ import static me.khrystal.widget.seekbar.BubbleUtils.sp2px;
 
 public class BubbleSeekBar extends View {
 
-    rabbitmq
-
-ha-sync-batch-size
-
-
-ha-promote-on-shutdown
-
-
-
-static final int NONE = -1;
+    static final int NONE = -1;
 
     @IntDef({NONE, SIDES, BOTTOM_SIDES, BELOW_SECTION_MARK})
     @Retention(RetentionPolicy.SOURCE)

@@ -1,0 +1,30 @@
+{
+    "extends": "standard",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "ecmaFeatures": {
+            "impliedStrict": true
+        }
+    },
+    "rules": {
+        "semi": [
+            "error",
+            "always"
+        ],
+        "indent": [
+            "error",
+            4
+        ]
+    },
+    "globals": {
+        "describe": true,
+        "expect": true,
+        "it": true,
+        "wx": true,
+        "getApp": true,
+        "App": true,
+        "Page": true,
+        "Component": true,
+        "Behavior": true
+    }
+}

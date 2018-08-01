@@ -8,6 +8,7 @@
 
     <me.khrystal.widget.progress.HiveProgressView
         android:id="@+id/progressView"
+        app:hiveRadius="100dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:startColor="#bce28f"

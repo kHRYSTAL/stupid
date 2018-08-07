@@ -216,6 +216,32 @@ public class WaveView extends View {
                     (DEFAULT_WATER_LEVEL_RATIO - mWaterLevelRatio) * getHeight());
             // assign matrix to invalidate the shader
             mWaveShader.setLocalMatrix(mShaderMatrix);
+
+            float borderWidth = mBorderPaint == null ? 0f : mBorderPaint.getStrokeWidth();
+            switch (mShapeType) {
+                case CIRCLE:
+                    if (borderWidth > 0) {
+                        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f,
+                                (getWidth() - borderWidth) / 2f - 1f, mBorderPaint);
+                    }
+                    float radius = getWidth() / 2f - borderWidth;
+                    canvas.drawCircle(getWidth() / 2f, getHeight() / 2F, radius, mViewPaint);
+                    break;
+                case SQUARE:
+                    if (borderWidth > 0) {
+                        canvas.drawRect(
+                                borderWidth / 2f,
+                                borderWidth / 2f,
+                                getWidth() - borderWidth / 2f - 0.5f,
+                                getHeight() - borderWidth / 2f - 0.5f,
+                                mBorderPaint);
+                    }
+                    canvas.drawRect(borderWidth, borderWidth, getWidth() - borderWidth,
+                            getHeight() - borderWidth, mViewPaint);
+                    break;
+            }
+        } else {
+            mViewPaint.setShader(null);
         }
     }
 }

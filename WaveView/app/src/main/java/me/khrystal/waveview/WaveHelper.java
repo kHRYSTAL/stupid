@@ -30,7 +30,7 @@ public class WaveHelper {
         initAnimation();
     }
 
-    private void start() {
+    public void start() {
         mWaveView.setShowWave(true);
         if (mAnimatorSet != null) {
             mAnimatorSet.start();
@@ -68,6 +68,13 @@ public class WaveHelper {
 
         mAnimatorSet = new AnimatorSet();
         mAnimatorSet.playTogether(animators);
+    }
+
+    public void cancel() {
+        if (mAnimatorSet != null) {
+//            mAnimatorSet.cancel();
+            mAnimatorSet.end();
+        }
     }
 
 }

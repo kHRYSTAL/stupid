@@ -14,7 +14,7 @@
         android:alpha="0"
         android:contentDescription="@string/app_name"
         android:src="@drawable/merchant_search_shape"
-        app:layout_cinstraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/vBack"
         app:layout_constraintRight_toRightOf="@id/vCollection" />

@@ -9,6 +9,7 @@ import android.support.constraint.ConstraintLayout
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import jp.wasabeef.glide.transformations.BitmapTransformation
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.merchant_content_layout.view.*
 import me.khrystal.meituandetailpage.R
@@ -34,7 +35,7 @@ class MerchantContentLayout(context: Context, attrs: AttributeSet?) : Constraint
 
     init {
         LayoutInflater.from(context).inflate(R.layout.merchant_content_layout, this)
-        vCover.load(R.mipmap.cover, listOf(BlurTransformation()))
+        vCover.load(R.mipmap.cover, listOf(BlurTransformation()) as List<BitmapTransformation>?)
         layScroll.setOnTouchListener { _, _ -> !isExpanded }
         vTicket1.set(3, 27, "2018.06.12")
         vTicket2.set(5, 40, "2018.06.12")

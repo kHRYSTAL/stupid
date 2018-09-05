@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#fff"
+    android:layout_width="wrap_content"
+    android:layout_height="160dp">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvJob"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadingEdgeLength="0dip"
+        android:paddingLeft="1dip"
+        android:paddingRight="1dip"
+        android:paddingStart="1dip" />
+
+</RelativeLayout>

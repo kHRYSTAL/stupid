@@ -208,6 +208,15 @@ public class SpinnerEditText<T> extends AppCompatEditText {
         initOrUpdateListPopupWindow();
     }
 
+    /**
+     * @param charSequence
+     * @param canCallTextChangeCallback 是否引起控件内部的onTextChange 弹出popup window 浮层
+     */
+    public void setText(CharSequence charSequence, boolean canCallTextChangeCallback) {
+        this.isItemClickCauseChange = !canCallTextChangeCallback;
+        setText(charSequence);
+    }
+
     //显示当前文本下的列表
     private void showPopupWindow() {
         if (!itemList.isEmpty()) {

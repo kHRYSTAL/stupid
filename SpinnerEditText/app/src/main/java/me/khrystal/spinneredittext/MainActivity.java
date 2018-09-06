@@ -1,11 +1,8 @@
 package me.khrystal.spinneredittext;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -14,22 +11,24 @@ import java.util.List;
 
 import me.khrystal.widget.edittext.SpinnerEditText;
 
+/**
+ * 注意 该demo 页面移动与软键盘是否显示正相关 与其他焦点, 文字输入无关
+ */
 public class MainActivity extends AppCompatActivity {
 
     private SpinnerEditText<BaseBean> spinnerEditText;
     private RelativeLayout rlContainer;
-    private int distance;
+    private boolean hasMove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         initDIYAttSpinnerEditText();
     }
 
-    private void initDIYAttSpinnerEditText(){
-        spinnerEditText = (SpinnerEditText<BaseBean>) findViewById(R.id.set_div_att);
+    private void initDIYAttSpinnerEditText() {
+        spinnerEditText = findViewById(R.id.set_div_att);
         rlContainer = findViewById(R.id.rlContainer);
         spinnerEditText.setOnItemClickListener(new SpinnerEditText.OnItemClickListener<BaseBean>() {
             @Override
@@ -37,19 +36,46 @@ public class MainActivity extends AppCompatActivity {
                 showToast("名称:" + baseBean.Name + " Id:" + baseBean.Id);
             }
         });
-        // 设置假数据 模拟网络请求
-        spinnerEditText.setList(getFakeList());
+        // 设置默认展示位置在edit text下方
+        spinnerEditText.setShowType(SpinnerEditText.TYPE_DOWN);
+        // 设置远程请求数据监听器
+        spinnerEditText.setRemoteDataAdapter(new SpinnerEditText.RemoteDataAdapter() {
+            @Override
+            public void doOnRemote() {
+                // 获取网络数据设置到列表上展示
+                List remoteData = getFakeList();
+                if (remoteData != null && !remoteData.isEmpty()) {
+                    spinnerEditText.setList(remoteData);
+                    spinnerEditText.showPopup();
+                } else {
+                    spinnerEditText.hidePopup();
+                }
+            }
+        });
 
-        spinnerEditText.setShowType(SpinnerEditText.TYPE_DOWN); // 设置默认展示位置在edittext下方
-        // 获取页面container高度 整体进行scrollto移动
-        // 根据是否获取到焦点进行页面的整体滑动 将整个页面滑动至edittext正好显示在屏幕的顶部
-        // 当失去焦点时复原
         spinnerEditText.addOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
+                if (hasFocus && !hasMove) {
+                    hasMove = true;
                     rlContainer.scrollBy(0, 600);
-                } else {
+                }
+            }
+        });
+
+        SoftKeyBoardListener.setListener(MainActivity.this, new SoftKeyBoardListener.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                if (spinnerEditText.hasFocus() && !hasMove) {
+                    hasMove = true;
+                    rlContainer.scrollBy(0, 600);
+                }
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                if (hasMove) {
+                    hasMove = false;
                     rlContainer.scrollBy(0, -600);
                 }
             }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleProgressView">
+        <attr name="duration" format="integer"/>
+        <attr name="strokeWidth" format="dimension"/>
+        <attr name="strokeColor" format="color"/>
+        <attr name="progressColor" format="color"/>
+        <attr name="secondaryProgressColor" format="color"/>
+        <attr name="animRepeatCount" format="integer"/>
+        <attr name="centerTextSize" format="dimension"/>
+        <attr name="strokeAlpha" format="integer"/>
+        <attr name="startAngle" format="float"/>
+        <attr name="endAngle" format="float"/>
+        <attr name="totalAngle" format="float"/>
+    </declare-styleable>
+</resources>

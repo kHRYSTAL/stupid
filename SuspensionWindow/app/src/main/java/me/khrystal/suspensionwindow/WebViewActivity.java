@@ -1,5 +1,7 @@
 package me.khrystal.suspensionwindow;
 
+import android.support.v4.app.FragmentActivity;
+
 /**
  * usage:
  * author: kHRYSTAL
@@ -7,7 +9,7 @@ package me.khrystal.suspensionwindow;
  * update time:
  * email: 723526676@qq.com
  */
-public class WebViewActivity {
+public class WebViewActivity extends FragmentActivity {
     public static final String ARTICLE_ID = "article_id";
     public static final String ARTICLE_JUMP_URL = "article_jump_url";
     public static final String ARTICLE_IMAGE_URL = "article_image_url";

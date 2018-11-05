@@ -26,6 +26,46 @@ public class ArticleBean implements Parcelable {
         this.jumpUrl = jumpUrl;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public String getJumpUrl() {
+        return jumpUrl;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setJumpUrl(String jumpUrl) {
+        this.jumpUrl = jumpUrl;
+    }
+
     protected ArticleBean(Parcel souce) {
         this(souce.readInt(), souce.readString(), souce.readString(), souce.readString(),
                 souce.readString());

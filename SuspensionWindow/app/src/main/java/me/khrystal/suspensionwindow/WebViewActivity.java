@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebSettings;
@@ -96,55 +97,47 @@ public class WebViewActivity extends FragmentActivity {
     }
 
     private void initListener() {
-        tvBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mWebView.canGoBack()) {
-                    mWebView.goBack();
-                } else {
-                    finish();
-                }
+        tvBack.setOnClickListener(view -> {
+            if (mWebView.canGoBack()) {
+                mWebView.goBack();
+            } else {
+                finish();
             }
         });
 
-        tvRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new FRDialog.CommonBuilder(WebViewActivity.this)
-                        .setContentView(R.layout.article_dialog_bottom)
-                        .setFromBottom()
-                        .setFullWidth()
-                        .setHeight(400)
-                        .setText(R.id.adb_tv_window, isShowWindow ? "关闭悬浮" : "开启悬浮")
-                        .setOnClickListener(R.id.adb_tv_window, new FRDialogClickListener() {
-                            @Override
-                            public boolean onDialogClick(View view) {
-                                if (isShowWindow) {
-                                    //需要关闭悬浮
-                                    isShowWindow = false;
-                                    SPUtil.setIntDefault(ARTICLE_ID, -1);
-                                    stopService(new Intent(WebViewActivity.this, WindowShowService.class));
-                                } else {
-                                    //需要开启悬浮并退出WebView
-                                    if (WindowUtil.getInstance().checkPermission(WebViewActivity.this)) {
-                                        //有权限，直接保存文章信息
-                                        isShowWindow = true;
-                                        SPUtil.setIntDefault(ARTICLE_ID, mArticleBean.getId());
-                                        SPUtil.setStringDefault(ARTICLE_JUMP_URL, mArticleBean.getJumpUrl());
-                                        SPUtil.setStringDefault(ARTICLE_IMAGE_URL, mArticleBean.getImageUrl());
-                                        startService(new Intent(WebViewActivity.this, WindowShowService.class));
-                                        finish();
-                                    } else {
-                                        //无权限，直接启动，后面会通过广播进行通知
-                                        startService(new Intent(WebViewActivity.this, WindowShowService.class));
-                                    }
-                                }
-                                return true;
-                            }
-                        })
-                        .show();
-            }
-        });
+        tvRight.setOnClickListener(view -> new FRDialog.CommonBuilder(WebViewActivity.this)
+                .setContentView(R.layout.article_dialog_bottom)
+                .setFromBottom()
+                .setFullWidth()
+                .setHeight(400)
+                .setText(R.id.adb_tv_window, isShowWindow ? "关闭悬浮" : "开启悬浮")
+                .setOnClickListener(R.id.adb_tv_window, view1 -> {
+                    if (isShowWindow) {
+                        //需要关闭悬浮
+                        isShowWindow = false;
+                        SPUtil.setIntDefault(ARTICLE_ID, -1);
+                        stopService(new Intent(WebViewActivity.this, WindowShowService.class));
+                    } else {
+                        //需要开启悬浮并退出WebView
+                        if (WindowUtil.getInstance().checkPermission(WebViewActivity.this)) {
+                            Log.e("ABCD", "//有权限，直接保存文章信息");
+
+                            isShowWindow = true;
+                            SPUtil.setIntDefault(ARTICLE_ID, mArticleBean.getId());
+                            SPUtil.setStringDefault(ARTICLE_JUMP_URL, mArticleBean.getJumpUrl());
+                            SPUtil.setStringDefault(ARTICLE_IMAGE_URL, mArticleBean.getImageUrl());
+                            startService(new Intent(WebViewActivity.this, WindowShowService.class));
+                            finish();
+                        } else {
+
+                            Log.e("ABCD", "//无权限，直接启动，后面会通过广播进行通知");
+
+                            startService(new Intent(WebViewActivity.this, WindowShowService.class));
+                        }
+                    }
+                    return true;
+                })
+                .show());
     }
 
     @Override
@@ -195,6 +188,7 @@ public class WebViewActivity extends FragmentActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.e("ABCD","接收到广播");
             String action = intent.getAction();//得到Service发送的广播
             if (BROAD_CAST_NAME.equals(action)) {
                 boolean isSuccess = intent.getBooleanExtra("permission", false);

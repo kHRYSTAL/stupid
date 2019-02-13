@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,7 +26,7 @@ import java.util.Timer;
  * email: 723526676@qq.com
  */
 public class CircularLayout<T> extends ViewGroup {
-    
+
     private static final String TAG = CircularLayout.class.getSimpleName();
     private static final float DEFAULT_ANGLE_OFFSET = 90f;
     private static final float DEFAULT_ANGLE_RANGE = 360f;
@@ -65,11 +70,6 @@ public class CircularLayout<T> extends ViewGroup {
         }
     }
 
-    @Override
-    protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
-
-    }
-
     public void init() {
         pinnedChildsRotationAngle = 0;
         this.removeAllViews();
@@ -96,14 +96,13 @@ public class CircularLayout<T> extends ViewGroup {
                 item.setParent(this);
                 this.addView(item);
             }
-            
+
             final int childs = getChildCount();
             float totalWeight = 0f;
             for (int i = 0; i < childs; i++) {
                 final View child = getChildAt(i);
-                // TODO: 19/2/13  
-//                LinearLayout.LayoutParams lp = layoutParams(child);
-//                totalWeight += lp.weight;
+                LinearLayout.LayoutParams lp = layoutParams(child);
+                totalWeight += lp.weight;
             }
             shiftAngle = mAngleRange / totalWeight;
         } catch (Exception e) {
@@ -119,8 +118,118 @@ public class CircularLayout<T> extends ViewGroup {
         return childsIsPinned;
     }
 
+    public boolean isRotatingHappening() {
+        return isRotatingHappening;
+    }
+
+    public void setChildsIsPinned(boolean pinned) {
+        childsIsPinned = pinned;
+        final int childs = getChildCount();
+        for (int i = 0; i < childs; i++) {
+            final CircularLayoutItem child = (CircularLayoutItem) getChildAt(i);
+            child.invalidate();
+        }
+    }
+
+    public int getRadius() {
+        final int width = getWidth();
+        final int height = getHeight();
+        final float minDimen = width > height ? height : width;
+        float radius = (minDimen) / 2f;
+        return (int) radius;
+    }
+    
+    public  void getCenter(PointF p) {
+        p.set(getWidth() / 2f, getHeight() / 2f);
+    }
+    
+    public void setAngleOffset(float offset) {
+        mAngleOffset = offset;
+        requestLayout();
+        invalidate();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        init();
+    }
+    
+    public float getAngleOffset() {
+        return mAngleOffset;
+    }
+
     public int getCurrentStep() {
         return currentStep;
+    }
+    
+    public void setAdapter(CircularLayoutAdapter adapter) {
+        adapter.setContext(getContext());
+        this.adapter = adapter;
+        this.adapter.setParent(this);
+    }
+    
+    public void setOffsetY(int y) {
+        centerHeightParameter = (int) dp2px(getContext(), y);
+    }
+    
+    public void setRadius(int r) {
+        radiusParameter = (int) dp2px(getContext(), r);
+    }
+    
+    public void setChildrenCount(int count) {
+        childCount = count;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        final int count = getChildCount();
+        int maxHeight = 0;
+        int maxWidth = 0;
+        
+        // find rightmost and bottommost child
+        for (int i = 0; i < count; i++) {
+            final View child = getChildAt(i);
+            if (child.getVisibility() != View.GONE) {
+                measureChild(child, widthMeasureSpec, heightMeasureSpec);
+                maxWidth = Math.max(maxWidth, child.getMeasuredWidth());
+                maxHeight = Math.max(maxHeight, child.getMeasuredHeight());
+            }
+        }
+        // check against our minimum height and width
+        maxHeight = Math.max(maxHeight / 2, getSuggestedMinimumHeight());
+        maxWidth  = Math.max(maxWidth / 2, getSuggestedMinimumWidth());
+        
+        int width = resolveSize(maxWidth, widthMeasureSpec);
+        int height = resolveSize(maxHeight, heightMeasureSpec);
+        
+        setMeasuredDimension(width, height);
+    }
+    
+    private LinearLayout.LayoutParams layoutParams(View child) {
+        return (LinearLayout.LayoutParams) child.getLayoutParams();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        final int width = getWidth();
+        final int height = getHeight();
+        
+        final float minDimen = width > height ? height : width;
+        float radius = (minDimen) / 2f;
+        
+        radius = (float) (width / 2) + radiusParameter;
+        
+        int x = width / 2 + centerWidthParameter;
+        int y = height / 3 + (int) radius + centerHeightParameter;
+
+        Paint paint = new Paint();
+        paint.setStrokeWidth(dp / 10f);
+        paint.setColor(Color.GRAY);
+        paint.setAlpha(60);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawCircle(x, y - radius, dp / 2 + 2, paint);
+        super.onDraw(canvas);
     }
 
     private static float dp2px(Context context, float dp) {
@@ -128,5 +237,10 @@ public class CircularLayout<T> extends ViewGroup {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
         return px;
+    }
+
+    @Override
+    protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
+        // TODO: 19/2/13  
     }
 }

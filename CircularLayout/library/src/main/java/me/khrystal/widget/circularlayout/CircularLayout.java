@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -481,7 +483,24 @@ public class CircularLayout<T> extends ViewGroup {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-        // TODO: 19/2/14  
+        if (isCenteredImageVisible) {
+            final int width = getWidth();
+            final int height = getHeight();
+
+            final float minDimen = width > height ? height : width;
+            float radius = (minDimen) / 2f;
+            radius = (float) (width / 2) + radiusParameter;
+            int x = width / 2 + centerWidthParameter;
+            int y = height / 3 + centerHeightParameter;
+            Paint paint = new Paint();
+            paint.setStrokeWidth(25f);
+            paint.setColor(Color.rgb(10, 10, 10));
+            paint.setAlpha(150);
+            canvas.drawCircle(x, y - radius, dp / 2 + 2, paint);
+            paint = new Paint();
+            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.mute);
+            canvas.drawBitmap(b, x - b.getWidth() / 2, y - b.getHeight() / 2 - radius, paint);
+        }
     }
 
     public static class LayoutParams extends ViewGroup.LayoutParams {

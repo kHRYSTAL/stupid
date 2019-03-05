@@ -1,11 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Radius" />
+
+            <SeekBar
+                android:id="@+id/skRad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:max="3000"
+                android:progress="20"
+                android:secondaryProgress="20"></SeekBar>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Child Count" />
+
+            <SeekBar
+                android:id="@+id/skChildCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:max="30"
+                android:progress="20"
+                android:secondaryProgress="20"></SeekBar>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Offset X" />
+
+            <SeekBar
+                android:id="@+id/skOffsetX"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:max="180"
+                android:progress="90"
+                android:secondaryProgress="90"
+
+                ></SeekBar>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Offset Y" />
+
+            <SeekBar
+                android:id="@+id/skOffsetY"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:max="120"
+                android:progress="60"
+                android:secondaryProgress="60"
+
+                ></SeekBar>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Items Pinned/Fixed" />
+
+            <ToggleButton
+                android:id="@+id/tglBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:onClick="tglClick"
+                android:text="Items Pinned" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <me.khrystal.widget.circularlayout.CircularLayout
+        android:id="@+id/circularLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="220dp"
+        android:layout_gravity="bottom"
+        android:background="@android:color/transparent"
+        android:paddingBottom="0dp"
+        app:angleOffset="0"
+        app:angleRange="360">
+
+    </me.khrystal.widget.circularlayout.CircularLayout>
+</FrameLayout>

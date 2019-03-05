@@ -29,7 +29,7 @@ public abstract class CircularLayoutItem<T> extends LinearLayout {
     private boolean isPressed;
     private int index;
 
-    protected CircularLayout<T> parent;
+    protected CircularLayout parent;
     private ImageView background;
     private ImageView foreground;
     private OnClickListener clickListener;
@@ -131,7 +131,7 @@ public abstract class CircularLayoutItem<T> extends LinearLayout {
 
     // make item balance in horizontal
     public void balance() {
-        Animation animation = new RotateAnimation(0, -1 * parent.getPinnedChildsRotationAngle(), getHeight() / 2, getWidth() / 2);
+        Animation animation = new RotateAnimation(0, -1 * parent.getPinndedChildsRotationAngle(), getHeight() / 2, getWidth() / 2);
         animation.setDuration(300);
         animation.setRepeatCount(0); // -1 = infinite repeated;
         animation.setRepeatMode(Animation.REVERSE); // reverses each repeat
@@ -141,17 +141,17 @@ public abstract class CircularLayoutItem<T> extends LinearLayout {
 
     private void rotate() {
         if (background != null) {
-            if (!parent.isChildsIsPinned()) {
+            if (!parent.getIsPinnedChilds()) {
                 background.setRotation(rotationAngle % 360);
             } else {
-                background.setRotation(parent.getPinnedChildsRotationAngle());
+                background.setRotation(parent.getPinndedChildsRotationAngle());
             }
         }
         if (foreground != null) {
-            if (!parent.isChildsIsPinned()) {
+            if (!parent.getIsPinnedChilds()) {
                 foreground.setRotation(rotationAngle % 360);
             } else {
-                foreground.setRotation(parent.getPinnedChildsRotationAngle());
+                foreground.setRotation(parent.getPinndedChildsRotationAngle());
             }
         }
     }

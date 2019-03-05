@@ -226,8 +226,6 @@ public class CircularLayout extends ViewGroup {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // TODO Auto-generated method stub
-
         final int width = getWidth();
         final int height = getHeight();
 

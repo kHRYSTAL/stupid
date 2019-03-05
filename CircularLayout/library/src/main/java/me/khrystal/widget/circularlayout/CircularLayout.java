@@ -229,8 +229,6 @@ public class CircularLayout extends ViewGroup {
         final int width = getWidth();
         final int height = getHeight();
 
-
-        final float minDimen = width > height ? height : width;
         float radius = (float) (width / 2) + radiusParameter;
         int x = width / 2 + centerWidthParameter;
         int y = height / 3 + (int) radius + centerHeightParameter;

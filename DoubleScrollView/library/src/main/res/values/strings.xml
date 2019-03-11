@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">library</string>
+    <string name="app_name">page</string>
+    <string name="pageBehavior" translatable="false">me.khrystal.widget.doublescrollview.PageBehavior</string>
 </resources>

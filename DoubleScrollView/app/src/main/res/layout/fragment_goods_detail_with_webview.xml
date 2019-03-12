@@ -1,0 +1,46 @@
+<me.khrystal.widget.doublescrollview.PageContainer xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <me.khrystal.widget.doublescrollview.Page
+        android:id="@+id/pageOne"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ripple_material_dark"
+        android:scrollbars="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.youth.banner.Banner
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:src="@mipmap/a" />
+
+        </LinearLayout>
+    </me.khrystal.widget.doublescrollview.Page>
+
+    <me.khrystal.widget.doublescrollview.Page
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/pageBehavior">
+
+        <WebView
+            android:id="@+id/webview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </WebView>
+    </me.khrystal.widget.doublescrollview.Page>
+
+</me.khrystal.widget.doublescrollview.PageContainer>

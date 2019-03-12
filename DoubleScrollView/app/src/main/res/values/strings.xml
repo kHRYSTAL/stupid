@@ -5,7 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="action_toggle">toggle</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="detail">图文详情</string>
     <string name="comment">评论列表</string>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">YsnowsSlidingMenu</string>
+    <string name="app_name">DoubleScrollView</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

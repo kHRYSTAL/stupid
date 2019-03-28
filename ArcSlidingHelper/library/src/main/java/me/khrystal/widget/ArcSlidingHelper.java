@@ -161,6 +161,7 @@ public class ArcSlidingHelper {
 
     /**
      * 设置惯性滑动利用率
+     *
      * @param ratio
      */
     public void setScrollAvailabilityRatio(@FloatRange(from = 0, to = 1) float ratio) {
@@ -182,7 +183,54 @@ public class ArcSlidingHelper {
      * 计算滑动的角度
      */
     private void handleActionMove(float x, float y) {
-        // TODO: 19/3/27
+        float l, t, r, b;
+        if (mStartX > x) {
+            r = mStartX;
+            l = x;
+        } else {
+            r = x;
+            l = mStartX;
+        }
+        if (mStartY > y) {
+            b = mStartY;
+            t = y;
+        } else {
+            b = y;
+            t = mStartY;
+        }
+
+        float pA1 = Math.abs(mStartX - mPivotX);
+        float pA2 = Math.abs(mStartY - mPivotY);
+        float pB1 = Math.abs(x - mPivotX);
+        float pB2 = Math.abs(y - mPivotY);
+        float hypotenuse = (float) Math.sqrt(Math.pow(r - l, 2) + Math.pow(b - t, 2));
+        float lineA = (float) Math.sqrt(Math.pow(pA1, 2) + Math.pow(pA2, 2));
+        float lineB = (float) Math.sqrt(Math.pow(pB1, 2) + Math.pow(pB2, 2));
+        if (hypotenuse > 0 && lineA > 0 && lineB > 0) {
+            float angle = fixAngle((float) Math.toDegrees(Math.acos((Math.pow(lineA, 2) + Math.pow(lineB, 2) - Math.pow(hypotenuse, 2)) / (2 * lineA * lineB))));
+            if (!Float.isNaN(angle)) {
+                mSlidingListener.onSliding((isClockwiseScrolling = isClockwise(x, y)) ? angle : -angle);
+            }
+        }
+    }
+
+    /**
+     * 调整角度 使其在360之间
+     */
+    private float fixAngle(float rotation) {
+        float angle = 360F;
+        if (rotation < 0) {
+            rotation += angle;
+        }
+        if (rotation > angle) {
+            rotation = rotation % angle;
+        }
+        return rotation;
+    }
+
+    private boolean isClockwise(float x, float y) {
+        return (isShouldBeGetY = Math.abs(y - mStartY) > Math.abs(x - mStartX)) ?
+                x < mPivotX != y > mStartY : y < mPivotX == x > mStartX;
     }
 
     /**
@@ -190,7 +238,20 @@ public class ArcSlidingHelper {
      */
     private void computeInertialSliding() {
         checkIsRecycled();
-        // TODO: 19/3/27
+        if (mScroller.computeScrollOffset()) {
+            float y = ((isShouldBeGetY ? mScroller.getCurrY() : mScroller.getCurrX()) * mScrollAvailabilityRatio);
+            if (mLastScrollOffset != 0) {
+                float offset = fixAngle(Math.abs(y - mLastScrollOffset));
+                mSlidingListener.onSliding(isClockwiseScrolling ? offset : -offset);
+            }
+            mLastScrollOffset = y;
+            startFling();
+        } else if (mScroller.isFinished()) {
+            mLastScrollOffset = 0;
+            if (mSlideFinishListener != null) {
+                mSlideFinishListener.onSlideFinished();
+            }
+        }
     }
 
     private void startFling() {
@@ -226,7 +287,6 @@ public class ArcSlidingHelper {
         }
         return y;
     }
-
 
 
     public void setOnSlideFinishListener(OnSlideFinishListener listener) {

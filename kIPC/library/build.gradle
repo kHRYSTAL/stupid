@@ -2,9 +2,11 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
-
-
-
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'src/main/aidl']
+        }
+    }
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28

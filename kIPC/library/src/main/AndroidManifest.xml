@@ -1,2 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="me.khrystal.util.ipc" />
+    package="me.khrystal.util.ipc">
+
+    <application>
+        <provider
+            android:name="me.khrystal.util.ipc.service.BinderProvider"
+            android:authorities="${applicationId}.khrystal.service.BinderProvider"
+            android:exported="false"
+            android:process="${V_KIPC_NAME}" />
+
+        <service
+            android:name="me.khrystal.util.ipc.service.DaemonService"
+            android:process="${V_KIPC_NAME}" />
+        <service
+            android:name="me.khrystal.util.ipc.service.DaemonService$InnerService"
+            android:process="${V_KIPC_NAME}" />
+    </application>
+</manifest>

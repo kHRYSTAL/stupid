@@ -18,9 +18,9 @@ import me.khrystal.util.ipc.helper.compat.BundleCompat;
  */
 public class ServiceManagerNative {
 
-    public static final String SERVICE_DEF_AUTH = "kipc.service.BinderProvider";
+    public static final String SERVICE_DEF_AUTH = "khrystal.service.BinderProvider";
     private static final String TAG = ServiceManagerNative.class.getSimpleName();
-    public static String SERVICE_CP_AUTH = "kipc.service.BinderProvider";
+    public static String SERVICE_CP_AUTH = "khrystal.service.BinderProvider";
 
     private static IServiceFetcher sFetcher;
 

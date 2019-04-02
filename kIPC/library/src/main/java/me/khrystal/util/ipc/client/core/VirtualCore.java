@@ -4,10 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Process;
 
 import me.khrystal.util.ipc.client.ipc.ServiceManagerNative;
+import me.khrystal.util.ipc.event.EventReceiver;
 import me.khrystal.util.ipc.helper.ipcbus.IPCBus;
 import me.khrystal.util.ipc.helper.ipcbus.IServerCache;
+import me.khrystal.util.ipc.helper.utils.AppUtil;
+import me.khrystal.util.ipc.service.ServiceCache;
 
 /**
  * usage:
@@ -47,39 +51,41 @@ public final class VirtualCore {
             IPCBus.initialize(new IServerCache() {
                 @Override
                 public void join(String serverName, IBinder binder) {
-
+                    ServiceManagerNative.addService(serverName,  binder);
                 }
 
                 @Override
                 public void joinLocal(String serverName, Object object) {
-
+                    ServiceCache.addLocalService(serverName, object);
                 }
 
                 @Override
                 public void removeService(String serverName) {
-
+                    ServiceManagerNative.removeService(serverName);
                 }
 
                 @Override
                 public void removeLocalService(String serverName) {
-
+                    ServiceCache.removeLocalService(serverName);
                 }
 
                 @Override
                 public IBinder query(String serverName) {
-                    return null;
+                    return ServiceManagerNative.getService(serverName);
                 }
 
                 @Override
                 public Object queryLocal(String serverName) {
-                    return null;
+                    return ServiceCache.getLocalService(serverName);
                 }
 
                 @Override
                 public void post(String key, Bundle bundle) {
-
+                    ServiceManagerNative.post(key, bundle);
                 }
             });
+            ServiceManagerNative.addEventListener(AppUtil.getProcessName(context, Process.myPid()), EventReceiver.getInstance());
+            isStartUp = true;
         }
     }
 

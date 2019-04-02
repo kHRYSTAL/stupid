@@ -5,7 +5,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
 /**
  * usage:
@@ -29,7 +28,6 @@ public class DaemonService extends Service {
         startup(this);
     }
 
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -60,7 +58,6 @@ public class DaemonService extends Service {
             return super.onStartCommand(intent, flags, startId);
         }
 
-        @Nullable
         @Override
         public IBinder onBind(Intent intent) {
             return null;

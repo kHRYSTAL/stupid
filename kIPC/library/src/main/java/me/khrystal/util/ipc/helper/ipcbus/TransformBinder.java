@@ -3,8 +3,6 @@ package me.khrystal.util.ipc.helper.ipcbus;
 import android.os.Binder;
 import android.os.Parcel;
 import android.os.RemoteException;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 /**
  * usage:
@@ -24,7 +22,7 @@ public class TransformBinder extends Binder {
     }
 
     @Override
-    protected boolean onTransact(int code, @NonNull Parcel data, @Nullable Parcel reply, int flags) throws RemoteException {
+    protected boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
         if (code == INTERFACE_TRANSACTION) {
             reply.writeString(serverInterface.getInterfaceName());
             return true;

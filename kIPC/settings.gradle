@@ -1,1 +1,1 @@
-include ':client',':server',':library'
+include ':client',':server',':library', ':pipe'

@@ -37,7 +37,6 @@ public class Audio implements Serializable {
         this.title = title;
         this.path = path;
         this.source = source;
-        int value = Integer.valueOf(Integer.toBinaryString(1000));
     }
 
     public long getId() {

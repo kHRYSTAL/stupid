@@ -5,9 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <me.khrystal.tools.kaudioplayer.KPlayerView
+        android:id="@+id/kPlayer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_alignParentBottom="true"
+        android:gravity="bottom"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="435dp" />
 
 </RelativeLayout>

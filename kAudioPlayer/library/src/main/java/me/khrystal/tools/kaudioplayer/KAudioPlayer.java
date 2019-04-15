@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,6 +21,7 @@ import me.khrystal.tools.kaudioplayer.exceptions.AudioListNullPointerException;
  */
 public class KAudioPlayer {
 
+    private static final String TAG = KAudioPlayer.class.getSimpleName();
     private KPlayerService kPlayerService;
     private KPlayerView.KPlayerViewServiceListener listener;
     private KPlayerView.OnInvalidPathListener invalidPathListener;
@@ -58,7 +60,7 @@ public class KAudioPlayer {
 
     public void registerInvalidPathListener(KPlayerView.OnInvalidPathListener invalidPathListener) {
         this.invalidPathListener = invalidPathListener;
-        if (kNotificationPlayerService != null) {
+        if (kPlayerService != null) {
             kPlayerService.registerInvalidPathListener(invalidPathListener);
         }
     }
@@ -196,6 +198,7 @@ public class KAudioPlayer {
 
     private synchronized void startKPlayerService() {
         if (!mBound) {
+            Log.e(TAG, "startKPlayerService");
             Intent intent = new Intent(context.getApplicationContext(), KPlayerService.class);
             intent.putExtra(KNotificationPlayerService.PLAYLIST, (Serializable) playlist);
             intent.putExtra(KNotificationPlayerService.CURRENT_AUDIO, currentAudio);

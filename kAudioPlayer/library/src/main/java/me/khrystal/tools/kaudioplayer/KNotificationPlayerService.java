@@ -19,6 +19,8 @@ import android.widget.RemoteViews;
  */
 class KNotificationPlayerService implements KPlayerView.KPlayerViewServiceListener {
 
+    private static final String TAG = KNotificationPlayerService.class.getSimpleName();
+
     static final String NEXT = "NEXT";
     static final String PREVIOUS = "PREVIOUS";
     static final String PAUSE = "PAUSE";
@@ -46,6 +48,7 @@ class KNotificationPlayerService implements KPlayerView.KPlayerViewServiceListen
     }
 
     public void createNotificationPlayer(String title, int iconResource) {
+
         this.title = title;
         this.iconResource = iconResource;
         Intent openUI = new Intent(context, context.getClass());

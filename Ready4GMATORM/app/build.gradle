@@ -1,0 +1,35 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
+
+
+android {
+    compileSdkVersion 22
+    defaultConfig {
+        applicationId "me.khrystal.gmatorm"
+        minSdkVersion 17
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+greendao {
+    schemaVersion 1 // 数据库版本号
+    daoPackage 'me.khrystal.gmatorm.greendao' //greenDao 自动生成的代码保存的包名
+    targetGenDir 'src/main/java' //自动生成的代码存储的路径，默认是 build/generated/source/greendao.
+//    generateTests false //true的时候自动生成测试单元
+//    targetGenDirTests: 测试单元的生成目录默认是 src/androidTest/java
+}
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:22.2.1'
+    implementation 'org.greenrobot:greendao:3.2.2' // add library
+}

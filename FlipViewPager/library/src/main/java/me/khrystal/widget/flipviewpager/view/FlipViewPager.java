@@ -11,12 +11,15 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.EdgeEffect;
 import android.widget.FrameLayout;
+import android.widget.ListAdapter;
 import android.widget.Scroller;
 
 import java.util.HashMap;
@@ -156,6 +159,183 @@ public class FlipViewPager extends FrameLayout {
         canvas.restore();
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        // Custom code starts here
+        View view = mCurrent.pageView;
+        if (view instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                final View childView = viewGroup.getChildAt(i);
+                checkIfChildWasClicked(ev, childView);
+            }
+        }
+
+        // Custom code ends here
+        int action = ev.getAction() & MotionEvent.ACTION_MASK;
+        if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
+            toggleFlip(false);
+            mActivePointerId = INVALID_POINTER;
+            recycleVelocity();
+            return false;
+        }
+
+        if (action != MotionEvent.ACTION_DOWN && !flipping)
+            return false;
+        switch (action) {
+            case MotionEvent.ACTION_MOVE:
+                int activePointerId = this.mActivePointerId;
+                if (activePointerId == INVALID_POINTER) break;
+
+                int pointerIndex = ev.findPointerIndex(activePointerId);
+                if (pointerIndex == -1) {
+                    this.mActivePointerId = INVALID_POINTER;
+                    break;
+                }
+                float x = ev.getX(pointerIndex);
+                float dx = x - mLastMotionX;
+                float xDiff = Math.abs(dx);
+                float y = ev.getY(pointerIndex);
+                float dy = y - mLastMotionY;
+                float yDiff = Math.abs(dy);
+
+                if (xDiff > mTouchSlop && xDiff > yDiff) {
+                    toggleFlip(true);
+                    mLastMotionX = x;
+                    mLastMotionY = y;
+                }
+                break;
+
+            case MotionEvent.ACTION_DOWN:
+                this.mActivePointerId = ev.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK;
+                mLastMotionX = ev.getX(this.mActivePointerId);
+                mLastMotionY = ev.getY(this.mActivePointerId);
+                toggleFlip(!mScroller.isFinished());
+                break;
+
+            case MotionEvent.ACTION_POINTER_UP:
+                onSecondaryPointerUp(ev);
+                break;
+        }
+        if (!flipping)
+            trackVelocity(ev);
+        return !flipping;
+    }
+
+    private boolean isLeftClicked(MotionEvent ev) {
+        return mLeftRect.contains((int) ev.getX(), (int) ev.getY());
+    }
+
+    private boolean isRightClicked(MotionEvent ev) {
+        return mRightRect.contains((int) ev.getX(), (int) ev.getY());
+    }
+
+    private void toggleFlip(boolean isFlipping) {
+        this.flipping = isFlipping;
+        // To prevent parent listview from scrolling
+        getParent().requestDisallowInterceptTouchEvent(isFlipping);
+    }
+
+    private void onSecondaryPointerUp(MotionEvent ev) {
+        int pointerIndex = ev.getActionIndex();
+        int pointerId = ev.getPointerId(pointerIndex);
+        if (pointerId == mActivePointerId) {
+            int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+            mLastMotionX = ev.getX(newPointerIndex);
+            mActivePointerId = ev.getPointerId(newPointerIndex);
+            if (mVelocityTracker != null)
+                mVelocityTracker.clear();
+        }
+    }
+
+    private int getFlipDuration(int deltaFlipDistance) {
+        float distance = Math.abs(deltaFlipDistance);
+        return (int) (FLIP_ANIM_DURATION * Math.sqrt(distance / FLIP_DISTANCE));
+    }
+
+    private int getNextPage(int velocity) {
+        int nextPage;
+        if (velocity > mMinimumVelocity) {
+            nextPage = (int) Math.floor(mFlipDistance / FLIP_DISTANCE);
+        } else if (velocity < -mMinimumVelocity) {
+            nextPage = (int) Math.ceil(mFlipDistance / FLIP_DISTANCE);
+        } else
+            nextPage = Math.round(mFlipDistance / FLIP_DISTANCE);
+        return Math.min(Math.max(nextPage, 0), mPageCount - 1);
+    }
+
+    private void endFlip() {
+        toggleFlip(false);
+        recycleVelocity();
+    }
+
+    private void trackVelocity(MotionEvent ev) {
+        if (mVelocityTracker == null) mVelocityTracker = VelocityTracker.obtain();
+        mVelocityTracker.addMovement(ev);
+    }
+
+    private void recycleVelocity() {
+        if (mVelocityTracker != null) {
+            mVelocityTracker.recycle();
+            mVelocityTracker = null;
+        }
+    }
+
+    private ListAdapter adapter;
+
+    public ListAdapter getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(ListAdapter adapter, int activePage, int row, int maxItems) {
+        this.adapter = adapter;
+        removeAllViews();
+        // For case we're showing row with less items than we storing
+        if (pages.size() > adapter.getCount()) pages.clear();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            PageItem item = pages.containsKey(i) ? pages.get(i) : new PageItem();
+            item.pageView = adapter.getView(i, pages.containsKey(i) ? pages.get(i).pageView : null, this);
+            pages.put(i, item);
+        }
+        mPageCount = pages.size();
+        mRow = row;
+        mMaxItems = maxItems;
+        mCurrentPageIndex = -1;
+        mFlipDistance = -1;
+        setFlipDistance(0);
+        mScroller.startScroll(0, (int) mFlipDistance, 0, (int) (activePage * FLIP_DISTANCE - mFlipDistance), getFlipDuration(0));
+    }
+
+    public void flipToPage(int page) {
+        int delta = page * FLIP_DISTANCE - (int) mFlipDistance;
+        endFlip();
+        mScroller.startScroll(0, (int) mFlipDistance, 0, delta, getFlipDuration(delta));
+        invalidate();
+    }
+
+    private void checkIfChildWasClicked(MotionEvent ev, final View childView) {
+        if (childView.isClickable() && isPointInsideView(ev.getRawX(), ev.getRawY(), childView)) {
+            childView.performClick();
+        } else if (childView instanceof ViewGroup) {
+            ViewGroup viewGroup = (ViewGroup) childView;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                View childrenView = viewGroup.getChildAt(i);
+                checkIfChildWasClicked(ev, childrenView);
+            }
+        }
+    }
+
+    private boolean isPointInsideView(float x, float y, View view) {
+        int location[] = new int[2];
+        view.getLocationOnScreen(location);
+        int viewX = location[0];
+        int viewY = location[1];
+
+        // point is inside view bounds
+        return (x > viewX && x < (viewX + view.getWidth())
+                && (y > viewY && y < (viewY + view.getHeight())));
+    }
+
     private void drawFlippingShadeShine(Canvas canvas) {
         if (getDegressDone() < 90) {
             mShinePaint.setAlpha((int) (getDegressDone() / 90) * FLIP_SHADE_ALPHA);
@@ -164,6 +344,12 @@ public class FlipViewPager extends FrameLayout {
             mShinePaint.setAlpha((int) ((Math.abs(getDegressDone() - 180) / 90f) * FLIP_SHADE_ALPHA));
             canvas.drawRect(mLeftRect, mShadePaint);
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // TODO: 19/4/25
+        return super.onTouchEvent(event);
     }
 
     private float getDegressDone() {

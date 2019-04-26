@@ -236,6 +236,24 @@ public class FlipViewPager extends FrameLayout {
         getParent().requestDisallowInterceptTouchEvent(isFlipping);
     }
 
+    public float calculate(float flipDistance, float minFlipDistance, float maxFlipDistance) {
+        float deltaOverFlip = flipDistance - (flipDistance < 0 ? minFlipDistance : maxFlipDistance);
+        if (deltaOverFlip > 0) {
+            mLeftEdgeEffect.onPull(deltaOverFlip / (getWidth()));
+        } else if (deltaOverFlip < 0) {
+            mRightEdgeEffect.onPull(-deltaOverFlip / (getWidth()));
+        }
+        return flipDistance < 0 ? minFlipDistance : maxFlipDistance;
+    }
+
+    private float getDegreesDone() {
+        float flipDistance = mFlipDistance % FLIP_DISTANCE;
+        if (flipDistance < 0)
+            flipDistance += FLIP_DISTANCE;
+        return (flipDistance / FLIP_DISTANCE) * 180;
+    }
+
+
     private void onSecondaryPointerUp(MotionEvent ev) {
         int pointerIndex = ev.getActionIndex();
         int pointerId = ev.getPointerId(pointerIndex);
@@ -348,7 +366,7 @@ public class FlipViewPager extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // TODO: 19/4/25
+        // TODO: 19/4/26
         return super.onTouchEvent(event);
     }
 

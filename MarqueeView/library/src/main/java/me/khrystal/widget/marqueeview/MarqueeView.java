@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -229,12 +230,29 @@ public class MarqueeView extends ViewGroup {
         } else if (!mScroller.computeScrollOffset()) {
             switch (mOrientation) {
                 case ORIENTATION_UP:
+                    if (mCurrentPosition >= mItemCount - 1) {
+                        // 滚动到最后一个时 迅速回到第一个 造成轮播的家乡
+                        fastScroll(-mCurrentPosition * mScrollDistance);
+                        mCurrentPosition = 0;
+                    }
                     break;
                 case ORIENTATION_DOWN:
+                    if (mCurrentPosition <= 0) {
+                        fastScroll((mItemCount - 1) * mScrollDistance);
+                        mCurrentPosition = mItemCount - 1;
+                    }
                     break;
                 case ORIENTATION_LEFT:
+                    if (mCurrentPosition >= mItemCount - 1) {
+                        fastScroll(-mCurrentPosition * mScrollDistance);
+                        mCurrentPosition = 0;
+                    }
                     break;
                 case ORIENTATION_RIGHT:
+                    if (mCurrentPosition <= 0) {
+                        fastScroll((mItemCount - 1) * mScrollDistance);
+                        mCurrentPosition = mItemCount - 1;
+                    }
                     break;
             }
             invalidate();
@@ -242,19 +260,71 @@ public class MarqueeView extends ViewGroup {
     }
 
     private void smoothScroll(int distance) {
-
+        if (mOrientation == ORIENTATION_DOWN || mOrientation == ORIENTATION_UP) {
+            mScroller.startScroll(0, mScroller.getFinalY(), 0, distance, mScrollTime);
+        } else {
+            mScroller.startScroll(mScroller.getFinalX(), 0, distance, 0, mScrollTime);
+        }
     }
 
     private void fastScroll(int distance) {
-
+        if (mOrientation == ORIENTATION_DOWN || mOrientation == ORIENTATION_UP) {
+            mScroller.startScroll(0, mScroller.getFinalY(), 0, distance, 0);
+        } else {
+            mScroller.startScroll(mScroller.getFinalX(), 0, distance, 0);
+        }
     }
 
     private void handleScrollAnim() {
+        if (!mEnableAlphaAnim && !mEnableScaleAnim) {
+            return;
+        }
 
+        float rate = 0;
+        boolean notReachBorder = false;
+        int relativeChildPosition = 0;
+        switch (mOrientation) {
+            case ORIENTATION_UP:
+                rate = (mScroller.getCurrY() - mScroller.getStartY()) * 1.0f / (mScroller.getFinalY() - mScroller.getStartY()) / 2.0f + 0.5f;
+                notReachBorder = mCurrentPosition != 0;
+                relativeChildPosition = mCurrentPosition - 1;
+                break;
+            case ORIENTATION_DOWN:
+                rate = (mScroller.getCurrY() - mScroller.getStartY()) * 1.0f / (mScroller.getFinalY() - mScroller.getStartY()) / 2.0f + 0.5f;
+                notReachBorder = mCurrentPosition != mItemCount - 1;
+                relativeChildPosition = mCurrentPosition + 1;
+                break;
+            case ORIENTATION_LEFT:
+                rate = (mScroller.getCurrX() - mScroller.getStartX()) * 1.0f / (mScroller.getFinalX() - mScroller.getStartX()) / 2.0f + 0.5f;
+                notReachBorder = mCurrentPosition != 0;
+                relativeChildPosition = mCurrentPosition - 1;
+                break;
+            case ORIENTATION_RIGHT:
+                rate = (mScroller.getCurrX() - mScroller.getStartX()) * 1.0f / (mScroller.getFinalX() - mScroller.getStartX()) / 2.0f + 0.5f;
+                notReachBorder = mCurrentPosition != mItemCount - 1;
+                relativeChildPosition = mCurrentPosition + 1;
+                break;
+        }
+
+        if (notReachBorder) {
+            playAnim(getChildAt(mCurrentPosition), mEnableAlphaAnim, mEnableScaleAnim, rate);
+            playAnim(getChildAt(relativeChildPosition), mEnableScaleAnim, mEnableScaleAnim, 1.5f - rate);
+        } else {
+            playAnim(getChildAt(mCurrentPosition), mEnableAlphaAnim, mEnableScaleAnim, 1);
+        }
     }
 
-    private void playAnim(View view, boolean enableAlphaAnim, boolean enableScaleAnim) {
-
+    private void playAnim(View view, boolean enableAlphaAnim, boolean enableScaleAnim, float rate) {
+        if (view == null) {
+            return;
+        }
+        if (enableAlphaAnim) {
+            ViewCompat.setAlpha(view, rate);
+        }
+        if (enableScaleAnim) {
+            ViewCompat.setScaleX(view, rate);
+            ViewCompat.setScaleY(view, rate);
+        }
     }
 
     @Override
@@ -278,19 +348,32 @@ public class MarqueeView extends ViewGroup {
     }
 
     public void start() {
-
+        if (getChildCount() <= 1 || mHandler != null) {
+            return;
+        }
+        mIsStart = true;
+        mHandler = new MarqueeViewHandler(this);
+        mHandler.sendEmptyMessageDelayed(100, mSwitchTime);
     }
 
     public void stop() {
-
+        if (mHandler == null)
+            return;
+        mIsStart = false;
+        mHandler.removeMessages(100);
     }
 
     private void carryOn() {
-
+        if (mIsStart && mHandler != null) {
+            mHandler.removeMessages(100);
+            mHandler.sendEmptyMessageDelayed(100, mSwitchTime);
+        }
     }
 
     private void pause() {
-
+        if (mIsStart && mHandler != null) {
+            mHandler.removeMessages(100);
+        }
     }
 
     private class MarqueeObserver extends DataSetObserver {
@@ -303,11 +386,40 @@ public class MarqueeView extends ViewGroup {
     }
 
     public void setAdapter(MarqueeViewAdapter adapter) {
-
+        adapter.registerDataSetObserver(mMarqueeObserver);
+        addChildView(adapter);
     }
 
     private void addChildView(MarqueeViewAdapter adapter) {
+        mAdapter = adapter;
+        removeAllViews();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            final View child = adapter.getView(i, null, this);
+            addView(child);
+        }
 
+        if (adapter.getCount() > 1) {
+            switch (getOrientation()) {
+                case ORIENTATION_UP:
+                case ORIENTATION_LEFT:
+                    // 首添加到尾
+                    addView(adapter.getView(0, null, this));
+                    break;
+                case ORIENTATION_DOWN:
+                case ORIENTATION_RIGHT:
+                    // 尾添加到首
+                    addView(adapter.getView(getChildCount() - 1, null, this), 0);
+                    break;
+            }
+            mItemCount = adapter.getCount() + 1;
+        } else {
+            mItemCount = adapter.getCount();
+        }
+
+        if (mItemCount <= 1) {
+            mScroller.forceFinished(true);
+            scrollTo(0, 0);
+        }
     }
 
     public int getItemCount() {
@@ -376,12 +488,20 @@ public class MarqueeView extends ViewGroup {
                 if (msg.what == 100) {
                     switch (marqueeView.mOrientation) {
                         case ORIENTATION_UP:
+                            marqueeView.mCurrentPosition++;
+                            marqueeView.smoothScroll(marqueeView.mScrollDistance);
                             break;
                         case ORIENTATION_DOWN:
+                            marqueeView.mCurrentPosition--;
+                            marqueeView.smoothScroll(-marqueeView.mScrollDistance);
                             break;
                         case ORIENTATION_LEFT:
+                            marqueeView.mCurrentPosition++;
+                            marqueeView.smoothScroll(marqueeView.mScrollDistance);
                             break;
                         case ORIENTATION_RIGHT:
+                            marqueeView.mCurrentPosition--;
+                            marqueeView.smoothScroll(-marqueeView.mScrollDistance);
                             break;
                     }
                     marqueeView.postInvalidate();

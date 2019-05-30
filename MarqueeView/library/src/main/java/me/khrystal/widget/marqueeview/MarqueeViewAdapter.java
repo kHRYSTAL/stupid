@@ -54,17 +54,17 @@ public abstract class MarqueeViewAdapter<T> extends BaseAdapter {
                         mItemClickListener.onClick(v, position);
                     }
                 });
-            }
-        } else {
-            for (int id : mClickIds) {
-                final View child = view.findViewById(id);
-                if (child != null) {
-                    child.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mItemClickListener.onClick(v, position);
-                        }
-                    });
+            } else {
+                for (int id : mClickIds) {
+                    final View child = view.findViewById(id);
+                    if (child != null) {
+                        child.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mItemClickListener.onClick(v, position);
+                            }
+                        });
+                    }
                 }
             }
         }
@@ -75,7 +75,7 @@ public abstract class MarqueeViewAdapter<T> extends BaseAdapter {
 
     protected abstract void initView(View view, int position, T item);
 
-    public void setOnItemClickListener(OnItemClickListener itemClickListener, @Nullable int... ids ) {
+    public void setOnItemClickListener(OnItemClickListener itemClickListener, @Nullable int... ids) {
         mItemClickListener = itemClickListener;
         mClickIds = ids;
     }

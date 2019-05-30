@@ -41,11 +41,12 @@ public class MarqueeView extends ViewGroup {
     private Scroller mScroller;
 
     /**
-     * 判断是否手动调用start()的标志位, 用于在onWindowFocusChanged辨识是否进行暂停恢复的操作｀
+     * 判断是否手动调用start()的标志位，用于在onWindowFocusChanged辨识是否进行暂停恢复的操作
      */
     private boolean mIsStart;
-
-    // 是否开启滚动时子View的缩放和透明度动画
+    /**
+     * 是否开启滚动时子View的缩放和透明度动画
+     */
     private boolean mEnableAlphaAnim;
     private boolean mEnableScaleAnim;
 
@@ -55,7 +56,6 @@ public class MarqueeView extends ViewGroup {
 
     private boolean mVisible;
 
-
     public MarqueeView(Context context) {
         super(context);
         init(context, null);
@@ -63,18 +63,18 @@ public class MarqueeView extends ViewGroup {
 
     public MarqueeView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, null);
+        init(context, attrs);
     }
 
     public MarqueeView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, null);
+        init(context, attrs);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public MarqueeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, null);
+        init(context, attrs);
     }
 
     private void init(Context context, AttributeSet attrs) {
@@ -92,8 +92,9 @@ public class MarqueeView extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
         // 声明临时变量存储父容器的期望值
-        int parentDesireHeigth = 0;
+        int parentDesireHeight = 0;
         int parentDesireWidth = 0;
 
         int tmpWidth = 0;
@@ -108,29 +109,29 @@ public class MarqueeView extends ViewGroup {
                 measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);
                 // 计算父容器的期望值
                 parentDesireWidth = child.getMeasuredWidth() + lp.leftMargin + lp.rightMargin;
-                // 取子控件的最大宽度
+                // 取子控件最大宽度
                 tmpWidth = Math.max(tmpWidth, parentDesireWidth);
-                parentDesireHeigth = child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
-                // 取子控件的最大高度
-                tmpHeight = Math.max(tmpHeight, parentDesireHeigth);
+                parentDesireHeight = child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin;
+                // 取子控件最大高度
+                tmpHeight = Math.max(tmpHeight, parentDesireHeight);
             }
             parentDesireWidth = tmpWidth;
-            parentDesireHeigth = tmpHeight;
+            parentDesireHeight = tmpHeight;
             // 考虑父容器内边距
             parentDesireWidth += getPaddingLeft() + getPaddingRight();
-            parentDesireHeigth += getPaddingTop() + getPaddingBottom();
-            // 尝试比较建议最小值和期望值的大小 并取大值
+            parentDesireHeight += getPaddingTop() + getPaddingBottom();
+            // Log.e("TAG", "MarqueeLayout-100行-onMeasure(): " + parentDesireWidth + ";" + parentDesireHeight + ";" + getSuggestedMinimumWidth() + ";" + getSuggestedMinimumHeight());
+            // 尝试比较建议最小值和期望值的大小并取大值
             parentDesireWidth = Math.max(parentDesireWidth, getSuggestedMinimumWidth());
-            parentDesireHeigth = Math.max(parentDesireHeigth, getSuggestedMinimumHeight());
+            parentDesireHeight = Math.max(parentDesireHeight, getSuggestedMinimumHeight());
         }
-//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         // 设置最终测量值
-        setMeasuredDimension(resolveSize(parentDesireWidth, widthMeasureSpec),
-                resolveSize(parentDesireHeigth, heightMeasureSpec));
+        setMeasuredDimension(resolveSize(parentDesireWidth, widthMeasureSpec), resolveSize(parentDesireHeight, heightMeasureSpec));
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
         final int paddingLeft = getPaddingLeft();
         final int paddingTop = getPaddingTop();
 
@@ -147,10 +148,8 @@ public class MarqueeView extends ViewGroup {
                     multiHeight = -height;
                     mCurrentPosition = 1;
                 }
-                // 垂直方向的话 因为布局高度定死为子控件最大的高度, 所以子控件一律位置垂直居中 paddingTop 和marginTop均失效
-                child.layout(paddingLeft + lp.leftMargin,
-                        (height - child.getMeasuredHeight()) / 2 + multiHeight,
-                        child.getMeasuredWidth() + paddingLeft + lp.leftMargin,
+                // 垂直方向的话，因为布局高度定死为子控件最大的高度，所以子控件一律位置垂直居中，paddingTop和marginTop均失效
+                child.layout(paddingLeft + lp.leftMargin, (height - child.getMeasuredHeight()) / 2 + multiHeight, child.getMeasuredWidth() + paddingLeft + lp.leftMargin,
                         (height - child.getMeasuredHeight()) / 2 + child.getMeasuredHeight() + multiHeight);
                 multiHeight += height;
             }
@@ -167,14 +166,13 @@ public class MarqueeView extends ViewGroup {
                     multiWidth = -width;
                     mCurrentPosition = 1;
                 }
-                // 水平方向 因为布局宽度定死为子控件最大的宽度
-                child.layout((width - child.getMeasuredWidth()) / 2 + multiWidth,
-                        paddingTop + lp.topMargin,
-                        (width - child.getMeasuredWidth()) / 2 + child.getMeasuredWidth() + multiWidth,
-                        child.getMeasuredHeight() + paddingTop + lp.topMargin);
+                // 水平方向，因为布局宽度定死为子控件最大的宽度，所以子控件一律位置水平居中，paddingLeft和marginLeft均失效
+                child.layout((width - child.getMeasuredWidth()) / 2 + multiWidth, paddingTop + lp.topMargin,
+                        (width - child.getMeasuredWidth()) / 2 + child.getMeasuredWidth() + multiWidth, child.getMeasuredHeight() + paddingTop + lp.topMargin);
                 multiWidth += width;
             }
         }
+
     }
 
     @Override
@@ -192,6 +190,7 @@ public class MarqueeView extends ViewGroup {
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
         mVisible = visibility == VISIBLE;
+        // Log.e("MarqueeLayout", "191行-onVisibilityChanged(): " + mVisible);
         if (visibility == VISIBLE) {
             carryOn();
         } else {
@@ -216,8 +215,11 @@ public class MarqueeView extends ViewGroup {
 
     @Override
     public void computeScroll() {
-        if (mItemCount == 0)
+
+        if (mItemCount == 0) {
             return;
+        }
+
         if (mScroller.computeScrollOffset()) {
             if (mOrientation == ORIENTATION_DOWN || mOrientation == ORIENTATION_UP) {
                 scrollTo(0, mScroller.getCurrY());
@@ -231,8 +233,9 @@ public class MarqueeView extends ViewGroup {
             switch (mOrientation) {
                 case ORIENTATION_UP:
                     if (mCurrentPosition >= mItemCount - 1) {
-                        // 滚动到最后一个时 迅速回到第一个 造成轮播的家乡
+                        // 滚动到最后一个时，迅速回到第一个，造成轮播的假象
                         fastScroll(-mCurrentPosition * mScrollDistance);
+                        // Log.e("MarqueeLayout", "218行-computeScroll(): " + mCurrentPosition * mScrollDistance);
                         mCurrentPosition = 0;
                     }
                     break;
@@ -262,6 +265,7 @@ public class MarqueeView extends ViewGroup {
     private void smoothScroll(int distance) {
         if (mOrientation == ORIENTATION_DOWN || mOrientation == ORIENTATION_UP) {
             mScroller.startScroll(0, mScroller.getFinalY(), 0, distance, mScrollTime);
+            // Log.e("MarqueeLayout", "246行-smoothScroll(): " + mScroller.getFinalY() + ";" + distance);
         } else {
             mScroller.startScroll(mScroller.getFinalX(), 0, distance, 0, mScrollTime);
         }
@@ -270,8 +274,9 @@ public class MarqueeView extends ViewGroup {
     private void fastScroll(int distance) {
         if (mOrientation == ORIENTATION_DOWN || mOrientation == ORIENTATION_UP) {
             mScroller.startScroll(0, mScroller.getFinalY(), 0, distance, 0);
+            // Log.e("MarqueeLayout", "254行-fastScroll(): " + mScroller.getFinalY() + ";" + distance);
         } else {
-            mScroller.startScroll(mScroller.getFinalX(), 0, distance, 0);
+            mScroller.startScroll(mScroller.getFinalX(), 0, distance, 0, 0);
         }
     }
 
@@ -283,6 +288,7 @@ public class MarqueeView extends ViewGroup {
         float rate = 0;
         boolean notReachBorder = false;
         int relativeChildPosition = 0;
+
         switch (mOrientation) {
             case ORIENTATION_UP:
                 rate = (mScroller.getCurrY() - mScroller.getStartY()) * 1.0f / (mScroller.getFinalY() - mScroller.getStartY()) / 2.0f + 0.5f;
@@ -308,10 +314,11 @@ public class MarqueeView extends ViewGroup {
 
         if (notReachBorder) {
             playAnim(getChildAt(mCurrentPosition), mEnableAlphaAnim, mEnableScaleAnim, rate);
-            playAnim(getChildAt(relativeChildPosition), mEnableScaleAnim, mEnableScaleAnim, 1.5f - rate);
+            playAnim(getChildAt(relativeChildPosition), mEnableAlphaAnim, mEnableScaleAnim, 1.5f - rate);
         } else {
             playAnim(getChildAt(mCurrentPosition), mEnableAlphaAnim, mEnableScaleAnim, 1);
         }
+
     }
 
     private void playAnim(View view, boolean enableAlphaAnim, boolean enableScaleAnim, float rate) {
@@ -327,38 +334,49 @@ public class MarqueeView extends ViewGroup {
         }
     }
 
+    // 生成默认的布局参数
     @Override
     protected LayoutParams generateDefaultLayoutParams() {
         return new MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
     }
 
+    // 生成布局参数,将布局参数包装成我们的
     @Override
     protected LayoutParams generateLayoutParams(LayoutParams p) {
         return new MarginLayoutParams(p);
     }
 
+    // 生成布局参数,从属性配置中生成我们的布局参数
     @Override
     public LayoutParams generateLayoutParams(AttributeSet attrs) {
         return new MarginLayoutParams(getContext(), attrs);
     }
 
+    // 查当前布局参数是否是我们定义的类型这在code声明布局参数时常常用到
     @Override
     protected boolean checkLayoutParams(LayoutParams p) {
         return p instanceof MarginLayoutParams;
     }
 
+    /**
+     * 开始轮播
+     */
     public void start() {
         if (getChildCount() <= 1 || mHandler != null) {
             return;
         }
         mIsStart = true;
-        mHandler = new MarqueeViewHandler(this);
+        mHandler = new MarqueeLayoutHandler(this);
         mHandler.sendEmptyMessageDelayed(100, mSwitchTime);
     }
 
+    /**
+     * 停止轮播
+     */
     public void stop() {
-        if (mHandler == null)
+        if (mHandler == null) {
             return;
+        }
         mIsStart = false;
         mHandler.removeMessages(100);
     }
@@ -367,12 +385,16 @@ public class MarqueeView extends ViewGroup {
         if (mIsStart && mHandler != null) {
             mHandler.removeMessages(100);
             mHandler.sendEmptyMessageDelayed(100, mSwitchTime);
+            // Log.e("MarqueeLayout", "190行-onWindowVisibilityChanged(): " + "carryOn");
         }
     }
 
     private void pause() {
         if (mIsStart && mHandler != null) {
             mHandler.removeMessages(100);
+            // mScroller.abortAnimation();
+
+            // Log.e("MarqueeLayout", "193行-onWindowVisibilityChanged(): " + "pause");
         }
     }
 
@@ -383,15 +405,21 @@ public class MarqueeView extends ViewGroup {
             super.onChanged();
             addChildView(mAdapter);
         }
+
     }
 
     public void setAdapter(MarqueeViewAdapter adapter) {
+
         adapter.registerDataSetObserver(mMarqueeObserver);
+
         addChildView(adapter);
+
     }
 
     private void addChildView(MarqueeViewAdapter adapter) {
+
         mAdapter = adapter;
+
         removeAllViews();
         for (int i = 0; i < adapter.getCount(); i++) {
             final View child = adapter.getView(i, null, this);
@@ -400,13 +428,13 @@ public class MarqueeView extends ViewGroup {
 
         if (adapter.getCount() > 1) {
             switch (getOrientation()) {
-                case ORIENTATION_UP:
-                case ORIENTATION_LEFT:
+                case MarqueeView.ORIENTATION_UP:
+                case MarqueeView.ORIENTATION_LEFT:
                     // 首添加到尾
-                    addView(adapter.getView(0, null, this));
+                    addView(adapter.getView(0, null, this), getChildCount());
                     break;
-                case ORIENTATION_DOWN:
-                case ORIENTATION_RIGHT:
+                case MarqueeView.ORIENTATION_DOWN:
+                case MarqueeView.ORIENTATION_RIGHT:
                     // 尾添加到首
                     addView(adapter.getView(getChildCount() - 1, null, this), 0);
                     break;
@@ -420,6 +448,7 @@ public class MarqueeView extends ViewGroup {
             mScroller.forceFinished(true);
             scrollTo(0, 0);
         }
+
     }
 
     public int getItemCount() {
@@ -470,44 +499,45 @@ public class MarqueeView extends ViewGroup {
         mEnableScaleAnim = enableScaleAnim;
     }
 
-    private MarqueeViewHandler mHandler;
+    private MarqueeLayoutHandler mHandler;
 
-
-    private static class MarqueeViewHandler extends Handler {
+    private static class MarqueeLayoutHandler extends Handler {
 
         private WeakReference<MarqueeView> mReference;
 
-        public MarqueeViewHandler(MarqueeView marqueeView) {
-            mReference = new WeakReference<>(marqueeView);
+        MarqueeLayoutHandler(MarqueeView marqueeLayout) {
+            mReference = new WeakReference<>(marqueeLayout);
         }
 
         @Override
         public void handleMessage(Message msg) {
-            MarqueeView marqueeView = mReference.get();
-            if (marqueeView != null && marqueeView.mVisible) {
+            MarqueeView marqueeLayout = mReference.get();
+            if (marqueeLayout != null && marqueeLayout.mVisible) {
                 if (msg.what == 100) {
-                    switch (marqueeView.mOrientation) {
+                    switch (marqueeLayout.mOrientation) {
                         case ORIENTATION_UP:
-                            marqueeView.mCurrentPosition++;
-                            marqueeView.smoothScroll(marqueeView.mScrollDistance);
+                            marqueeLayout.mCurrentPosition++;
+                            marqueeLayout.smoothScroll(marqueeLayout.mScrollDistance);
                             break;
                         case ORIENTATION_DOWN:
-                            marqueeView.mCurrentPosition--;
-                            marqueeView.smoothScroll(-marqueeView.mScrollDistance);
+                            marqueeLayout.mCurrentPosition--;
+                            marqueeLayout.smoothScroll(-marqueeLayout.mScrollDistance);
                             break;
                         case ORIENTATION_LEFT:
-                            marqueeView.mCurrentPosition++;
-                            marqueeView.smoothScroll(marqueeView.mScrollDistance);
+                            marqueeLayout.mCurrentPosition++;
+                            marqueeLayout.smoothScroll(marqueeLayout.mScrollDistance);
                             break;
                         case ORIENTATION_RIGHT:
-                            marqueeView.mCurrentPosition--;
-                            marqueeView.smoothScroll(-marqueeView.mScrollDistance);
+                            marqueeLayout.mCurrentPosition--;
+                            marqueeLayout.smoothScroll(-marqueeLayout.mScrollDistance);
                             break;
                     }
-                    marqueeView.postInvalidate();
-                    sendEmptyMessageDelayed(100, marqueeView.mSwitchTime);
+                    marqueeLayout.postInvalidate();
+                    sendEmptyMessageDelayed(100, marqueeLayout.mSwitchTime);
                 }
             }
         }
+
     }
+
 }

@@ -1,10 +1,10 @@
 package me.khrystal.widget.viewpager;
 
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
@@ -217,14 +217,63 @@ public abstract class DynamicFragmentStatePagerAdapter<T> extends PagerAdapter {
     @Nullable
     @Override
     public Parcelable saveState() {
-        return super.saveState();
-        // TODO: 19/6/3
+        Bundle state = null;
+        if (mSaveState.size() > 0) {
+            state = new Bundle();
+            Fragment.SavedState[] fss = new Fragment.SavedState[mSaveState.size()];
+            mSaveState.toArray(fss);
+            state.putParcelableArray("states", fss);
+        }
+        for (int i = 0; i < mItemInfos.size(); i++) {
+            ItemInfo info = mItemInfos.get(i);
+            if (info == null) {
+                continue;
+            } else {
+                Fragment f = mItemInfos.get(i).fragment;
+                if (f != null && f.isAdded()) {
+                    if (state == null) {
+                        state = new Bundle();
+                    }
+                    String key = "f" + i;
+                    mFragmentManager.putFragment(state, key, f);
+                }
+            }
+        }
+        return state;
     }
 
     @Override
     public void restoreState(@Nullable Parcelable state, @Nullable ClassLoader loader) {
-        super.restoreState(state, loader);
-        // TODO: 19/6/3
+        if (state != null) {
+            Bundle bundle = (Bundle) state;
+            bundle.setClassLoader(loader);
+            Parcelable[] fss = bundle.getParcelableArray("states");
+            mSaveState.clear();
+            mItemInfos.clear();
+            if (fss != null) {
+                for (int i = 0; i < fss.length; i++) {
+                    mSaveState.add((Fragment.SavedState) fss[i]);
+                }
+            }
+            Iterable<String> keys = bundle.keySet();
+            for (String key : keys) {
+                if (key.startsWith("f")) {
+                    int index = Integer.parseInt(key.substring(1));
+                    Fragment f = mFragmentManager.getFragment(bundle, key);
+
+                    if (f != null) {
+                        while (mItemInfos.size() <= index) {
+                            mItemInfos.add(null);
+                        }
+                        f.setMenuVisibility(false);
+                        ItemInfo<T> iNew = new ItemInfo<>(f, getItemData(index), index);
+                        mItemInfos.set(index, iNew);
+                    } else {
+                        Log.w(TAG, "Bad fragment at key " + key);
+                    }
+                }
+            }
+        }
     }
 
     protected Fragment getCurrentPrimaryItem() {
@@ -232,8 +281,9 @@ public abstract class DynamicFragmentStatePagerAdapter<T> extends PagerAdapter {
     }
 
     protected Fragment getFragmentByPosition(int position) {
-        // TODO: 19/6/3 pass
-        return null;
+        if (position < 0 || position >= mItemInfos.size())
+            return null;
+        return mItemInfos.get(position).fragment;
     }
 
     public abstract T getItemData(int position);

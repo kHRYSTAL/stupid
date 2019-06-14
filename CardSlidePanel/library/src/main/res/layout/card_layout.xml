@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.khrystal.widget.cardslidepanel.CardSlidePanel xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/image_slide_panel"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:clipToPadding="false"
+    android:paddingTop="50dp"
+    card:yOffsetStep="-28dp">
+
+
+    <me.khrystal.widget.cardslidepanel.CardItemView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <me.khrystal.widget.cardslidepanel.CardItemView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <me.khrystal.widget.cardslidepanel.CardItemView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <me.khrystal.widget.cardslidepanel.CardItemView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <me.khrystal.widget.cardslidepanel.CardItemView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" />
+
+    <LinearLayout
+        android:id="@+id/card_bottom_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:background="#f7f7f7"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+</me.khrystal.widget.cardslidepanel.CardSlidePanel>

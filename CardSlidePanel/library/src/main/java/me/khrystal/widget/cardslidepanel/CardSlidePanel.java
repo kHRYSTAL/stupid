@@ -1,6 +1,8 @@
 package me.khrystal.widget.cardslidepanel;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,24 +40,297 @@ public class CardSlidePanel extends ViewGroup {
     private int yOffsetStep = -40; // view叠加垂直偏移量的步长
     private boolean isCyclic = true;
 
+    private static final int[] layerDrawables = new int[]{
+            R.drawable.transparent_shade_layer, R.drawable.first_shade_layer,
+            R.drawable.second_shade_layer, R.drawable.third_shade_layer,
+            R.drawable.third_shade_layer};
 
+    private static final int X_VEL_THRESHOLD = 900;
+    private static final int Y_VEL_THRESHOLD = 900;
+    private static final int X_DISTANCE_THRESHOLD = 300;
+    private static final int Y_DISTANCE_THRESHOLD = 300;
 
+    public static final int VANISH_TYPE_LEFT = 0;
+    public static final int VANISH_TYPE_RIGHT = 1;
+    public static final int VANISH_TYPE_TOP = 2;
 
+    private Object obj1 = new Object();
+
+    private CardSwitchListener cardSwitchListener;
+    private List<CardDataItem> dataList; // 存储的数据列表
+    private int isShowingIndex = 0; // 当前正在显示的index
 
     public CardSlidePanel(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public CardSlidePanel(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public CardSlidePanel(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.CardSlidePanel);
+
+        bottomMarginTop = (int) ta.getDimension(R.styleable.CardSlidePanel_bottomMarginTop, bottomMarginTop);
+        yOffsetStep = (int) ta.getDimension(R.styleable.CardSlidePanel_yOffsetStep, yOffsetStep);
+        isCyclic = ta.getBoolean(R.styleable.CardSlidePanel_cyclic, true);
+        // 滑动相关类
+        mDragHelper = ViewDragHelper.create(this, 0.8f, new DragHelperCallback());
+        mDragHelper.setEdgeTrackingEnabled(ViewDragHelper.EDGE_LEFT);
     }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        // 渲染完成 初始化卡片view 列表
+        viewList.clear();
+        int num = getChildCount();
+        for (int i = num - 1; i >= 0; i--) {
+            View childView = getChildAt(i);
+            if (childView.getId() == R.id.card_bottom_layout) {
+                bottomLayout = childView;
+                initBottomLayout();
+            } else {
+                CardItemView viewItem = (CardItemView) childView;
+                viewItem.setTag(i + 1);
+                viewList.add(viewItem);
+            }
+        }
+    }
+
+    private void initBottomLayout() {
+
+    }
+
+    private class DragHelperCallback extends ViewDragHelper.Callback {
+
+        @Override
+        public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
+            // 调用 offsetLeftAndRight 导致viewPosition改变 会调到此处 所以此处对index做保护处理
+            int index = viewList.indexOf(changedView);
+            if (index > 0) {
+                return;
+            }
+            processLinkageView(changedView);
+        }
+
+        @Override
+        public boolean tryCaptureView(View child, int pointerId) {
+            // 如果数据List为空, 或者子View 不可见 则不处理
+            if (dataList == null || dataList.size() == 0
+                    || child.getVisibility() != VISIBLE || child.getScaleX() <= 1.0f - SCALE_STEP) {
+                // 一般来讲 如果拖动的是第三层 或者第四层的view 则直接禁止
+                // 此处用getScale的用法来巧妙回避
+                return false;
+            }
+            // 只捕获顶部的view(rotation = 0)
+            int childIndex = viewList.indexOf(child);
+            if (childIndex > 0) {
+                return false;
+            } else if (child == bottomLayout) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public int getViewHorizontalDragRange(View child) {
+            // 用来控制拖拽过程中松手后 自行滑动的速度
+            return 128;
+        }
+
+        @Override
+        public void onViewReleased(View releasedChild, float xvel, float yvel) {
+            animToSide(releasedChild, xvel, yvel);
+        }
+
+        @Override
+        public int clampViewPositionHorizontal(View child, int left, int dx) {
+            return left;
+        }
+
+        @Override
+        public int clampViewPositionVertical(View child, int top, int dy) {
+            return top;
+        }
+    }
+
+    // 对view重新排序
+    private void orderViewStack() {
+        if (releasedViewList.size() == 0) {
+            return;
+        }
+
+        synchronized (obj1) {
+            CardItemView changedView = (CardItemView) releasedViewList.get(0);
+            if (changedView.getLeft() == initCenterViewX) {
+                return;
+            }
+
+            // 1. 消失的卡片View位置重置
+            changedView.offsetLeftAndRight(initCenterViewX - changedView.getLeft());
+            changedView.offsetTopAndBottom(initCenterViewY - changedView.getTop() + yOffsetStep * 2);
+
+            float scale = 1.0f - SCALE_STEP * 2;
+            changedView.setScaleX(scale);
+            changedView.setScaleY(scale);
+
+            updateShaderLayer();
+
+            // 2. 卡片View在ViewGroup中的顺次调整
+            int num = viewList.size();
+            for (int i = num - 1; i > 0; i--) {
+                View tempView = viewList.get(i);
+                tempView.bringToFront();
+            }
+            bottomLayout.bringToFront();
+
+            // 3. changedView填充新数据
+            int newIndex = isShowingIndex + viewList.size();
+            if (isCyclic) {
+                CardDataItem dataItem = dataList.get(newIndex % dataList.size());
+                changedView.fillData(dataItem);
+                isShowingIndex++;
+            } else {
+                if (newIndex < dataList.size()) {
+                    CardDataItem dataItem = dataList.get(newIndex);
+                    changedView.fillData(dataItem);
+                } else {
+                    changedView.setVisibility(INVISIBLE);
+                }
+                if (isShowingIndex + 1 < dataList.size()) {
+                    isShowingIndex++;
+                }
+            }
+
+            // 4.viewList中的卡片view的位次调整
+            viewList.remove(changedView);
+            viewList.add(changedView);
+            releasedViewList.remove(0);
+
+            // 接口回调
+            if (null != cardSwitchListener) {
+                cardSwitchListener.onShow(isShowingIndex);
+            }
+        }
+    }
+
+    private void processLinkageView(View changedView) {
+        int changeViewLeft = changedView.getLeft();
+        int changeViewTop = changedView.getTop();
+        int distance = Math.abs(changeViewTop - initCenterViewY)
+                + Math.abs(changeViewLeft - initCenterViewX);
+        float rate = distance / (float) MAX_SLIDE_DISTANCE_LINKAGE;
+
+        float rate1 = rate;
+        float rate2 = rate - 0.2f;
+        float rate3 = rate2 - 0.2f;
+
+        if (rate > 1) {
+            rate1 = 1;
+        }
+
+        if (rate2 < 0) {
+            rate2 = 0;
+        } else if (rate2 > 1) {
+            rate2 = 1;
+        }
+
+        if (rate3 < 0) {
+            rate3 = 0;
+        } else if (rate3 > 1) {
+            rate3 = 1;
+        }
+
+        updateShaderLayer();
+        adjustLinkageViewItem(changedView, rate1, 1);
+        adjustLinkageViewItem(changedView, rate2, 2);
+        adjustLinkageViewItem(changedView, rate3, 3);
+    }
+
+    // 由index对应view变成index - 1对应的view
+    private void adjustLinkageViewItem(View changedView, float rate, int index) {
+        int changeIndex = viewList.indexOf(changedView);
+        int initPosY = yOffsetStep * index;
+        float initScale = 1 - SCALE_STEP * (index - 1);
+
+        int nextPosY = yOffsetStep * (index - 1);
+        float nextScale = 1 - SCALE_STEP * (index - 1);
+
+        int offset = (int) (initPosY + (nextPosY - initPosY) * rate);
+        float scale = initScale + (nextScale - initScale) * rate;
+
+        CardItemView adjustView = viewList.get(changeIndex + index);
+        adjustView.offsetTopAndBottom(offset - adjustView.getTop() + initCenterViewY);
+        adjustView.setScaleX(scale);
+        adjustView.setScaleY(scale);
+    }
+
+    // 松手时处理滑动到边缘的动画
+    private void animToSide(View changedView, float xvel, float yvel) {
+        // TODO: 19/6/13
+    }
+
+    private void drawShaderLayer() {
+        int i = 0;
+        for (CardItemView view : viewList) {
+            view.setShadeLayer(layerDrawables[i++]);
+        }
+    }
+
+    private void updateShaderLayer() {
+        int i = 0;
+        for (CardItemView view : viewList) {
+            if (i == 0) {
+                view.setShadeLayer(layerDrawables[0]);
+            } else {
+                view.setShadeLayer(layerDrawables[i - 1]);
+            }
+            ++i;
+        }
+    }
+
+    private void vanishOnBtnClick(int type) {
+        View animateView = viewList.get(0);
+        if (animateView.getVisibility() != VISIBLE) {
+            return;
+        }
+
+        int finalX = 0;
+        if (type == VANISH_TYPE_LEFT) {
+            finalX = -childWidth;
+        } else if (type == VANISH_TYPE_RIGHT) {
+            finalX = allWidth;
+        }
+
+        if (finalX != 0) {
+            releasedViewList.add(animateView);
+            if (mDragHelper.smoothSlideViewTo(animateView, finalX, initCenterViewX + allHeight)) {
+                ViewCompat.postInvalidateOnAnimation(this);
+            }
+        }
+
+        if (type >= 0 && cardSwitchListener != null) {
+            cardSwitchListener.onCardVanish(isShowingIndex, type);
+        }
+    }
+
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
 
+    }
+
+    /**
+     * 卡片回调接口
+     */
+    public interface CardSwitchListener {
+
+        // 新卡片显示回调
+        public void onShow(int index);
+
+        // 卡片手势操作回调 {@link #VANISH_TYPE_LEFT} 或 {@link #VANISH_TYPE_RIGHT}
+        public void onCardVanish(int index, int type);
     }
 }

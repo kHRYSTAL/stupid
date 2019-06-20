@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -269,7 +270,70 @@ public class CardSlidePanel extends ViewGroup {
 
     // 松手时处理滑动到边缘的动画
     private void animToSide(View changedView, float xvel, float yvel) {
-        // TODO: 19/6/13
+        int finalX = initCenterViewX;
+        int finalY = initCenterViewY;
+        int flyType = -1;
+
+        // 通过数学模型计算finalX 与finalY
+        int dx = changedView.getLeft() - initCenterViewX;
+        int dy = changedView.getTop() - initCenterViewY;
+        if (dx == 0) {
+            // 由于dx作为坟墓 此处保护处理
+            dx = 1;
+        }
+
+        if (dy > 0 || yvel > 0) {
+            finalX = initCenterViewX;
+            finalY = initCenterViewY;
+        } else if (xvel > X_VEL_THRESHOLD || yvel > X_DISTANCE_THRESHOLD) {
+            finalX = allWidth;
+            finalY = dy * (finalX - initCenterViewX) / dx + initCenterViewY;
+            flyType = VANISH_TYPE_RIGHT;
+            if (dx < 0 && dy < 0) {
+                finalX = initCenterViewX;
+                finalY = initCenterViewY;
+                flyType = -1;
+            }
+        } else if (xvel < -X_VEL_THRESHOLD || dx < -X_DISTANCE_THRESHOLD) {
+            finalX = -childWidth;
+            finalY = dy * (childWidth + initCenterViewX) / (-dx) + initCenterViewY;
+            flyType = VANISH_TYPE_LEFT;
+            if (dx > 0 && dy < 0) {
+                finalX = initCenterViewX;
+                finalY = initCenterViewY;
+                flyType = -1;
+            }
+        } else if (yvel < -Y_VEL_THRESHOLD || dy < -Y_DISTANCE_THRESHOLD) {
+            if (dx > 0) {
+                finalX = initCenterViewX + dx;
+            } else {
+                finalX = -initCenterViewX + dx;
+            }
+            finalY = -childHeight - getTop();
+            flyType = VANISH_TYPE_TOP;
+        }
+
+        // 如果斜率太高 就折中处理
+        if (finalY > allHeight) {
+            finalY = allHeight;
+        } else if (finalY < -childHeight - getTop()) {
+            finalY = -childHeight - getTop();
+        }
+
+        // 如果没有飞向两侧 而是回到中间 需要谨慎处理
+        if (finalX != initCenterViewX) {
+            releasedViewList.add(changedView);
+        }
+
+        // 启动动画
+        if (mDragHelper.smoothSlideViewTo(changedView, finalX, finalY)) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        }
+
+        // 消失动画即将进行 listener回调
+        if (flyType >= 0 && cardSwitchListener != null) {
+            cardSwitchListener.onCardVanish(isShowingIndex, flyType);
+        }
     }
 
     private void drawShaderLayer() {
@@ -316,10 +380,60 @@ public class CardSlidePanel extends ViewGroup {
         }
     }
 
+    @Override
+    public void computeScroll() {
+        if (mDragHelper.continueSettling(true)) {
+            ViewCompat.postInvalidateOnAnimation(this);
+        } else {
+            // 动画结束
+            if (mDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
+                orderViewStack();
+            }
+        }
+    }
+
+    // touch事件的拦截与处理都交给mDragHelper处理
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        boolean shouldIntercept = mDragHelper.shouldInterceptTouchEvent(ev);
+        int action = ev.getActionMasked();
+        if (action == MotionEvent.ACTION_DOWN) {
+            // 保存初次按下时arrowFlagView的Y坐标
+            // action_down时就让mDragHelper开始工作 否则有时会导致异常
+            if (ev.getPointerCount() <= 1) {
+                mDragHelper.processTouchEvent(ev);
+                orderViewStack();
+            }
+        }
+        return shouldIntercept;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // 统一交给mDragHelper处理, 由DragHelperCallback实现拖动效果
+        try {
+            // 该行代码可能会导致一场, 正式发布时请将这行代码加上try catch
+            mDragHelper.processTouchEvent(event);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return true;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        // TODO: 19/6/20
+    }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        // TODO: 19/6/20
+    }
 
+
+    public void setCardSwitchListener(CardSwitchListener cardSwitchListener) {
+        this.cardSwitchListener = cardSwitchListener;
     }
 
     /**

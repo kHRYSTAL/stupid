@@ -422,13 +422,97 @@ public class CardSlidePanel extends ViewGroup {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        // TODO: 19/6/20
+        measureChildren(widthMeasureSpec, heightMeasureSpec);
+        int maxWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int maxHeight = MeasureSpec.getSize(heightMeasureSpec);
+        setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, 0),
+                resolveSizeAndState(maxHeight, heightMeasureSpec, 0));
+        allWidth = getMeasuredWidth();
+        allHeight = getMeasuredHeight();
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        // TODO: 19/6/20
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        // 布局底部按钮的view
+        if (null != bottomLayout) {
+            bottomLayout.layout(left, top, bottom, right);
+        }
+        // 布局卡片view
+        int size = viewList.size();
+        for (int i = 0; i < size; i++) {
+            CardItemView viewItem = viewList.get(i);
+            int childHeight = viewItem.getMeasuredHeight();
+            left = (getMeasuredWidth() - viewItem.getMeasuredWidth()) / 2;
+            viewItem.layout(left, getPaddingTop(), left + viewItem.getMeasuredWidth(), getPaddingTop() + childHeight);
+            int offset = yOffsetStep * i;
+            float scale = 1 - SCALE_STEP * i;
+            if (i > size - 2) {
+                // 备用的view
+                offset = yOffsetStep * (size - 2);
+                scale = 1 - SCALE_STEP * (size - 2);
+            }
+
+            viewItem.offsetTopAndBottom(offset);
+            viewItem.setScaleX(scale);
+            viewItem.setScaleY(scale);
+        }
+
+        // 初始化一些中间参数
+        initCenterViewX = viewList.get(0).getLeft();
+        initCenterViewY = viewList.get(0).getTop();
+        childWidth = viewList.get(0).getMeasuredWidth();
+        childHeight = viewList.get(0).getMeasuredHeight();
+    }
+
+    public static int resolveSizeAndState(int size, int measureSpec, int childMeasuredState) {
+        int result = size;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+
+        switch (specMode) {
+            case MeasureSpec.UNSPECIFIED:
+                result = size;
+                break;
+            case MeasureSpec.AT_MOST:
+                if (specSize < size) {
+                    result = specSize | MEASURED_STATE_TOO_SMALL;
+                } else {
+                    result = size;
+                }
+                break;
+            case MeasureSpec.EXACTLY:
+                result = specSize;
+                break;
+        }
+        return result | (childMeasuredState & MEASURED_STATE_MASK);
+    }
+
+
+    public void fillData(List<CardDataItem> dataList) {
+        this.dataList = dataList;
+
+        int num = viewList.size();
+        for (int i = 0; i < num; i++) {
+            CardItemView itemView = viewList.get(i);
+            itemView.fillData(dataList.get(i));
+            itemView.setVisibility(VISIBLE);
+        }
+        drawShaderLayer();
+        if (null != cardSwitchListener) {
+            cardSwitchListener.onShow(0);
+        }
+    }
+
+    public void appendData(List<CardDataItem> appendList) {
+        // TODO: 19/6/21 appendData
+        dataList.addAll(appendList);
+        int currentIndex = isShowingIndex;
+        int num = viewList.size();
+        for (int i = 0; i < num; i++) {
+            CardItemView itemView = viewList.get(i);
+            itemView.setVisibility(View.VISIBLE);
+            itemView.fillData(dataList.get(currentIndex++));
+        }
     }
 
 

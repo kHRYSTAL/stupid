@@ -37,7 +37,7 @@
     <LinearLayout
         android:id="@+id/card_bottom_layout"
         android:layout_width="fill_parent"
-        android:layout_height="180dp"
+        android:layout_height="0dp"
         android:background="#f7f7f7"
         android:gravity="center"
         android:orientation="horizontal">

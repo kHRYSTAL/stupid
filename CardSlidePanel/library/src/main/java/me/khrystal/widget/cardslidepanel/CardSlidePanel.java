@@ -157,7 +157,6 @@ public class CardSlidePanel extends ViewGroup {
         }
     }
 
-    // 对view重新排序
     private void orderViewStack() {
         if (releasedViewList.size() == 0) {
             return;
@@ -170,13 +169,13 @@ public class CardSlidePanel extends ViewGroup {
             }
 
             // 1. 消失的卡片View位置重置
-            changedView.offsetLeftAndRight(initCenterViewX - changedView.getLeft());
-            changedView.offsetTopAndBottom(initCenterViewY - changedView.getTop() + yOffsetStep * 2);
-
+            changedView.offsetLeftAndRight(initCenterViewX
+                    - changedView.getLeft());
+            changedView.offsetTopAndBottom(initCenterViewY
+                    - changedView.getTop() + yOffsetStep * 2);
             float scale = 1.0f - SCALE_STEP * 2;
             changedView.setScaleX(scale);
             changedView.setScaleY(scale);
-
             updateShaderLayer();
 
             // 2. 卡片View在ViewGroup中的顺次调整
@@ -198,19 +197,19 @@ public class CardSlidePanel extends ViewGroup {
                     CardDataItem dataItem = dataList.get(newIndex);
                     changedView.fillData(dataItem);
                 } else {
-                    changedView.setVisibility(INVISIBLE);
+                    changedView.setVisibility(View.INVISIBLE);
                 }
                 if (isShowingIndex + 1 < dataList.size()) {
                     isShowingIndex++;
                 }
             }
 
-            // 4.viewList中的卡片view的位次调整
+            // 4. viewList中的卡片view的位次调整
             viewList.remove(changedView);
             viewList.add(changedView);
             releasedViewList.remove(0);
 
-            // 接口回调
+            // 5. 接口回调
             if (null != cardSwitchListener) {
                 cardSwitchListener.onShow(isShowingIndex);
             }
@@ -243,7 +242,6 @@ public class CardSlidePanel extends ViewGroup {
         } else if (rate3 > 1) {
             rate3 = 1;
         }
-
         updateShaderLayer();
         adjustLinkageViewItem(changedView, rate1, 1);
         adjustLinkageViewItem(changedView, rate2, 2);
@@ -254,7 +252,7 @@ public class CardSlidePanel extends ViewGroup {
     private void adjustLinkageViewItem(View changedView, float rate, int index) {
         int changeIndex = viewList.indexOf(changedView);
         int initPosY = yOffsetStep * index;
-        float initScale = 1 - SCALE_STEP * (index - 1);
+        float initScale = 1 - SCALE_STEP * index;
 
         int nextPosY = yOffsetStep * (index - 1);
         float nextScale = 1 - SCALE_STEP * (index - 1);
@@ -274,18 +272,17 @@ public class CardSlidePanel extends ViewGroup {
         int finalY = initCenterViewY;
         int flyType = -1;
 
-        // 通过数学模型计算finalX 与finalY
+        // 1. 下面这一坨计算finalX和finalY，要读懂代码需要建立一个比较清晰的数学模型才能理解，不信拉倒
         int dx = changedView.getLeft() - initCenterViewX;
         int dy = changedView.getTop() - initCenterViewY;
         if (dx == 0) {
-            // 由于dx作为坟墓 此处保护处理
+            // 由于dx作为分母，此处保护处理
             dx = 1;
         }
-
         if (dy > 0 || yvel > 0) {
             finalX = initCenterViewX;
             finalY = initCenterViewY;
-        } else if (xvel > X_VEL_THRESHOLD || yvel > X_DISTANCE_THRESHOLD) {
+        } else if (xvel > X_VEL_THRESHOLD || dx > X_DISTANCE_THRESHOLD) {
             finalX = allWidth;
             finalY = dy * (finalX - initCenterViewX) / dx + initCenterViewY;
             flyType = VANISH_TYPE_RIGHT;
@@ -313,24 +310,25 @@ public class CardSlidePanel extends ViewGroup {
             flyType = VANISH_TYPE_TOP;
         }
 
-        // 如果斜率太高 就折中处理
+        // 如果斜率太高，就折中处理
         if (finalY > allHeight) {
             finalY = allHeight;
         } else if (finalY < -childHeight - getTop()) {
             finalY = -childHeight - getTop();
         }
 
-        // 如果没有飞向两侧 而是回到中间 需要谨慎处理
+        // 如果没有飞向两侧，而是回到了中间，需要谨慎处理
         if (finalX != initCenterViewX) {
             releasedViewList.add(changedView);
         }
 
-        // 启动动画
+        // 2. 启动动画
         if (mDragHelper.smoothSlideViewTo(changedView, finalX, finalY)) {
             ViewCompat.postInvalidateOnAnimation(this);
         }
 
-        // 消失动画即将进行 listener回调
+
+        // 3. 消失动画即将进行，listener回调
         if (flyType >= 0 && cardSwitchListener != null) {
             cardSwitchListener.onCardVanish(isShowingIndex, flyType);
         }
@@ -433,10 +431,11 @@ public class CardSlidePanel extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        // 布局底部按钮的view
+        // 布局底部按钮的View
         if (null != bottomLayout) {
-            bottomLayout.layout(left, top, bottom, right);
+            bottomLayout.layout(left, bottom - bottomLayout.getMeasuredHeight(), right, bottom);
         }
+
         // 布局卡片view
         int size = viewList.size();
         for (int i = 0; i < size; i++) {
@@ -468,7 +467,6 @@ public class CardSlidePanel extends ViewGroup {
         int result = size;
         int specMode = MeasureSpec.getMode(measureSpec);
         int specSize = MeasureSpec.getSize(measureSpec);
-
         switch (specMode) {
             case MeasureSpec.UNSPECIFIED:
                 result = size;

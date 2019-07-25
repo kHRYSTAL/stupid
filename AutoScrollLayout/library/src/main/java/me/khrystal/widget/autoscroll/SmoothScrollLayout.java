@@ -45,6 +45,7 @@ public class SmoothScrollLayout extends FrameLayout {
         super(context, attrs, defStyleAttr);
         recyclerView = new RecyclerView(getContext());
         recyclerView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        addView(recyclerView);
         handler = new ScrollHandler(this);
         adapter = new Adapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));

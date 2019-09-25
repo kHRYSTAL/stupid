@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="微信APPID" />
+
+            <EditText
+                android:id="@+id/et_app_id"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入微信appid"
+                android:inputType="text"
+                android:text="wx515a9a1287395c48" />
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="商户号" />
+
+            <EditText
+                android:id="@+id/et_merchant_id"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入商户号"
+                android:inputType="number"
+                android:text="100000000071531" />
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="会员号" />
+
+            <EditText
+                android:id="@+id/et_member_id"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入会员号"
+                android:text="200100000006109" />
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="分账参数" />
+
+            <EditText
+                android:id="@+id/et_leger"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入分账参数"
+                android:text="1,100000000071531,2,1" />
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="是否支持信用卡" />
+
+            <EditText
+                android:id="@+id/et_credit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入YES或者NO"
+                android:text="NO" />
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="商户订单号" />
+
+            <EditText
+                android:id="@+id/et_order_no"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入商户订单号"
+                android:inputType="number" />
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="金额（分为单位）" />
+
+            <EditText
+                android:id="@+id/et_money"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入金额"
+                android:inputType="number"
+                android:maxLength="8"
+                android:text="2" />
+
+            <CheckBox
+                android:checked="true"
+                android:id="@+id/cb_isProd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="勾选走生产环境,不勾选走测试环境" />
+
+            <Button
+                android:id="@+id/submitPay"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dip"
+                android:layout_marginBottom="32dip"
+                android:background="@color/colorPrimary"
+                android:onClick="openApp"
+                android:text="去支付"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
+
+

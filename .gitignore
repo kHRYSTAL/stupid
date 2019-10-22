@@ -1,0 +1,6 @@
+*/.idea
+*/.idea/*
+/build/*
+/.idea/
+/.idea/*
+*.iml

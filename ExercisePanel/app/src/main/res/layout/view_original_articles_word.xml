@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.khrystal.exercisepanel.WordView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvOriginalArticles"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="4dp"
+    android:layout_weight="1"
+    android:fadeScrollbars="false"
+    android:lineSpacingMultiplier="1.5"
+    android:paddingLeft="16dp"
+    android:text="@string/temp_text_1"
+    android:paddingRight="12dp"
+    android:scrollbarSize="3dp"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbars="vertical"
+    android:textColor="#00f"
+    android:textSize="16sp" />

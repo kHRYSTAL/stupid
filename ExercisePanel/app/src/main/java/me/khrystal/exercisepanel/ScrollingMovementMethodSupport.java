@@ -16,12 +16,13 @@ import android.widget.TextView;
 public class ScrollingMovementMethodSupport extends ScrollingMovementMethod {
 
     private long lastClickTime;
-    private static final long CLICK_DELAY = 2000L;
+    private static final long CLICK_DELAY = 1000L;
     private boolean isOutSideTouchEvent;
     private ExercisePanel panel;
 
     @Override
     public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
+        Log.e("ExercisePanel", "" + event.getAction());
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             lastClickTime = System.currentTimeMillis();
         }

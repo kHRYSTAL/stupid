@@ -1,11 +1,14 @@
 package me.khrystal.exercisepanel;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.text.TextUtils;
@@ -25,22 +28,19 @@ import android.widget.RelativeLayout;
 public class ExercisePanel extends RelativeLayout implements View.OnLongClickListener,
         WordView.OnWordSelectListener {
 
-    private static final String TAG = "ExercisePanel";
+    private static final String TAG = "ExercisePanelNew";
     private static final float SCALE_FACTOR = 2.0f;
+    GlassPopupWindow mGlassPopupWindow;
 
     public boolean mMagnifierAdded = false;
-    private volatile MotionEvent mCurrentMotionEvent;
-    private View mGlassView;
-    private View mZoomView;
+    private MotionEvent mCurrentMotionEvent;
     private int mGlassWidth;
     private int mGlassHeight;
-    private int mGlassHeight2;
     private Bitmap mContentBitmap;
     private WordView mWordView;
     private OnWordSelectUpListener upListener;
     private ViewPager viewPager;
     private NestedScrollView nestedScrollView;
-    private boolean isShowGlassView;
 
     public ExercisePanel(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -59,18 +59,16 @@ public class ExercisePanel extends RelativeLayout implements View.OnLongClickLis
         initView();
         mGlassWidth = getResources().getDimensionPixelOffset(R.dimen.glass_view_width);
         mGlassHeight = getResources().getDimensionPixelOffset(R.dimen.glass_view_height);
-        mGlassHeight2 = getResources().getDimensionPixelOffset(R.dimen.glass_view_height3);
-        initMagnifierView(context);
         setOnLongClickListener(this);
         setOnTouchListener(mTouchListener);
     }
 
     private void initView() {
-        mWordView = findExercisePanel();
+        mWordView = findExercisePanelNew();
         mWordView.setOnWordSelectListener(this);
     }
 
-    private WordView findExercisePanel() {
+    private WordView findExercisePanelNew() {
         int allCount = getChildCount();
         for (int i = 0; i < allCount; i++) {
             if (getChildAt(i) instanceof WordView || getChildAt(i) instanceof ExpandableTextView) {
@@ -78,13 +76,6 @@ public class ExercisePanel extends RelativeLayout implements View.OnLongClickLis
             }
         }
         return null;
-    }
-
-    private void initMagnifierView(Context context) {
-        LayoutInflater.from(context).inflate(R.layout.view_word_magnifier, this, true);
-        mGlassView = findViewById(R.id.glass_view);
-        mZoomView = findViewById(R.id.zoom_view);
-        mGlassView.setVisibility(INVISIBLE);
     }
 
     /**
@@ -109,6 +100,7 @@ public class ExercisePanel extends RelativeLayout implements View.OnLongClickLis
         return mTouchListener;
     }
 
+
     /**
      * 在WordView中
      * ScrollingMovementMethodSupport方法后, 以下所有手势处理都被拦截掉了 因此是无用的 需要在{@ScrollingMovementMethodSupport中去处理}
@@ -124,7 +116,10 @@ public class ExercisePanel extends RelativeLayout implements View.OnLongClickLis
                     break;
                 case MotionEvent.ACTION_MOVE:
                     if (mMagnifierAdded) {
-                        mGlassView.setVisibility(INVISIBLE);
+                        if (nestedScrollView != null)
+                            nestedScrollView.requestDisallowInterceptTouchEvent(true);
+                        if (viewPager != null)
+                            viewPager.requestDisallowInterceptTouchEvent(true);
                         mCurrentMotionEvent = MotionEvent.obtain(event);
                         performSelectWord(event);
                         Log.e(TAG, "选中文字并显示放大镜");
@@ -134,6 +129,7 @@ public class ExercisePanel extends RelativeLayout implements View.OnLongClickLis
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     if (mMagnifierAdded) {
+
                         if (TextUtils.isEmpty(mWordView.getmSelectedWord())) {
                             mWordView.clearSelectedWord();
                         } else if (upListener != null) {
@@ -177,18 +173,9 @@ public class ExercisePanel extends RelativeLayout implements View.OnLongClickLis
 
     private void tryShowMagnifier(MotionEvent event) {
         if (mMagnifierAdded) {
-            mGlassView.setVisibility(INVISIBLE);
             updateGlassViewPosition(event);
             showTouchRegion(event);
         }
-    }
-
-    private int getMagnifierLeft(int touchedX) {
-        return (touchedX - mGlassWidth / 2);
-    }
-
-    private int getMagnifierTop(int touchedY) {
-        return (touchedY - mGlassHeight2 * 3);
     }
 
     private int getDisplayRegionLeft(int touchedX) {
@@ -200,31 +187,33 @@ public class ExercisePanel extends RelativeLayout implements View.OnLongClickLis
     }
 
     private void tryHideMagnifier() {
-        mGlassView.setVisibility(GONE);
+        if (mGlassPopupWindow != null) {
+            mGlassPopupWindow.hideGlass();
+            mGlassPopupWindow = null;
+        }
         mWordView.clearSelectedWord();
-        isShowGlassView = false;
         mMagnifierAdded = false;
     }
 
 
     private void updateGlassViewPosition(MotionEvent motionEvent) {
         if (motionEvent != null) {
-            int x = getMagnifierLeft((int) motionEvent.getX());
-            int y = getMagnifierTop((int) motionEvent.getY());
-            mGlassView.setVisibility(VISIBLE);
-            isShowGlassView = true;
-            mGlassView.setX(x);
-            mGlassView.setY(y);
+            if (mGlassPopupWindow != null) {
+                mGlassPopupWindow.moveGlass((int) motionEvent.getRawX(), (int) motionEvent.getRawY());
+            } else {
+                mGlassPopupWindow = new GlassPopupWindow(getContext());
+                mGlassPopupWindow.showGlass(((Activity) getContext()).getWindow().getDecorView(), (int) motionEvent.getRawX(), (int) motionEvent.getRawY());
+            }
         }
     }
 
     private Bitmap wordViewBtimap = null;
 
     private Bitmap takeScreenShot(View noeView) {
-        wordViewBtimap = Bitmap.createBitmap(((View) noeView.getParent()).getWidth(), ((View) noeView.getParent()).getHeight(),
+        wordViewBtimap = Bitmap.createBitmap(((View) noeView).getWidth(), ((View) noeView).getHeight(),
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(wordViewBtimap);
-        ((View) noeView.getParent()).draw(canvas);
+        ((View) noeView).draw(canvas);
         return wordViewBtimap;
     }
 
@@ -232,12 +221,15 @@ public class ExercisePanel extends RelativeLayout implements View.OnLongClickLis
         if (wordViewBtimap != null && event != null) {
             int x = getDisplayRegionLeft((int) event.getX());
             int y = getDisplayRegionTop((int) event.getY());
-            mZoomView.setBackgroundDrawable(getCurrentImage(x, y));
+            if (mGlassPopupWindow != null) {
+                mGlassPopupWindow.setZoomImage(getCurrentImage(x, y));
+            }
             wordViewBtimap.recycle();
             wordViewBtimap = null;
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.DONUT)
     private BitmapDrawable getCurrentImage(int x, int y) {
         Bitmap magnifierBitmap = Bitmap.createBitmap(mGlassWidth, mGlassHeight, mContentBitmap.getConfig());
         Paint paint = new Paint();
@@ -262,7 +254,7 @@ public class ExercisePanel extends RelativeLayout implements View.OnLongClickLis
 
     public void supportScroll(final ViewGroup viewGroup) {
         mWordView.supportScroll(this);
-        mWordView.setOnTouchListener(new View.OnTouchListener() {
+        mWordView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {

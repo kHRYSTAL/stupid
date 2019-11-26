@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<me.khrystal.exercisepanel.WordView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvBelowArticles"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginRight="4dp"
+    android:layout_weight="1"
+    android:paddingLeft="16dp"
+    android:text="@string/temp_text_2"
+    android:paddingRight="12dp"
+    android:textColor="#0f0"
+    android:textSize="16sp" />

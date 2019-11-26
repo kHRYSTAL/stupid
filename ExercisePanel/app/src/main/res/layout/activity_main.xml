@@ -28,10 +28,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <TextView
-                android:text="@string/temp_text_2"
+            <me.khrystal.exercisepanel.ExercisePanel
+                android:id="@+id/belowPanel"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:g_textview="@layout/view_below_articles_word" />
+
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </RelativeLayout>

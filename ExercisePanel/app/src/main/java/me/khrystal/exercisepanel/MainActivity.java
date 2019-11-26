@@ -10,7 +10,9 @@ public class MainActivity extends AppCompatActivity {
 
     NestedScrollView nestedScrollView;
     ExercisePanel exercisePanel;
+    ExercisePanel belowPanel;
     WordView wordView;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -19,7 +21,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         wordView = findViewById(R.id.tvOriginalArticles);
         exercisePanel = findViewById(R.id.exercisePanel);
+        belowPanel = findViewById(R.id.belowPanel);
         nestedScrollView = findViewById(R.id.nestedScrollView);
-        exercisePanel.supportScroll(nestedScrollView);
+
+        exercisePanel.supportScroll(nestedScrollView); // 设置textView是否支持滚动
+        belowPanel.setNestedScrollView(nestedScrollView); // 设置显示放大镜时 可滑动布局不可滑动
     }
 }

@@ -39,6 +39,8 @@
         <attr name="shape_point_blur_width" format="dimension"/>
         <attr name="shape_point_color" format="color"/>
 
+        <attr name="radar_radius" format="dimension"/>
+
 
         //Deprecated
         <attr name="radar_line_color" format="color" />

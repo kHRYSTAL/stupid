@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -105,6 +106,8 @@ public class RadarView extends View {
     private int mPointColor;
     private int mShapePointColor;
 
+    private boolean isMatchParent;
+    private boolean isCustomSettingRadius;
 
     public RadarView(Context context) {
         this(context, null);
@@ -151,8 +154,20 @@ public class RadarView extends View {
         mShapeBlurWidth = typedArray.getDimension(R.styleable.RadarView_shape_point_blur_width, dp2px(2));
         mShapePointColor = typedArray.getColor(R.styleable.RadarView_shape_point_color, 0xFF9E9E9E);
 
+        // 自定义半径
+        mRadius = typedArray.getDimension(R.styleable.RadarView_radar_radius, 0);
+        if (mRadius > 0)
+            isCustomSettingRadius = true;
+
         int vertexTextResid = typedArray.getResourceId(R.styleable.RadarView_vertex_text, 0);
         typedArray.recycle();
+
+        TypedArray ta = mContext.obtainStyledAttributes(attrs, new int[]{android.R.attr.layout_width});
+        String w = ta.getString(0);
+        if (w != null && w.equals("-1")) {
+            isMatchParent = true;
+        }
+
         initVertexText(vertexTextResid);
     }
 
@@ -200,6 +215,7 @@ public class RadarView extends View {
         mShapePointPaint = new Paint();
         mShapePointPaint.setStyle(Paint.Style.FILL);
         mShapePointPaint.setAntiAlias(true);
+
 
         matrix = new Matrix();
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_circle);
@@ -806,6 +822,8 @@ public class RadarView extends View {
     }
 
     private void calcRadius() {
+        if (isCustomSettingRadius)
+            return;
         if (mVertexText == null || mVertexText.size() == 0) {
             mRadius = Math.min(mPointCenter.x, mPointCenter.y) - mVertexTextOffset;
         } else {
@@ -815,7 +833,7 @@ public class RadarView extends View {
             } else {
                 maxWidth = Math.max(mVertexTextPaint.measureText(mMaxLengthVertexText), mVertexIconSize) / 2;
             }
-            mRadius = Math.min(mPointCenter.x, mPointCenter.y) - (maxWidth + mVertexTextOffset);
+            mRadius = Math.min(mPointCenter.x, mPointCenter.y) - (mVertexTextOffset + (isMatchParent ? 0 : maxWidth));
             mPerimeter = 2 * Math.PI * mRadius;
         }
     }

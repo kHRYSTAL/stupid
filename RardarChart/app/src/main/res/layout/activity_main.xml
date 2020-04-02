@@ -28,5 +28,7 @@
         app:shape_point_color="#ef643d"
         app:shape_point_blur_width="2dp"
 
+        app:radar_radius="60dp"
+
         app:web_mode="circle" />
 </RelativeLayout>

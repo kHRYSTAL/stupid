@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="#666666">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <me.khrystal.widget.radarchart.RadarView
+        android:id="@+id/radarView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="33dp"
+        app:layer_line_color="#4dffffff"
+        app:radar_layer="4"
+        app:layer_line_width="1dp"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:vertex_line_color="#ffffff"
+        app:vertex_line_width="0.5dp"
+        app:vertex_text_color="#ffffff"
+        app:vertex_text_offset="20dp"
+        app:vertex_text_size="14sp"
+
+        app:layer_out_line_width="2dp"
+        app:line_point_radius="4dp"
+        app:line_point_color="#aaffffff"
+        app:line_point_blur_width="0dp"
+
+        app:shape_point_color="#ef643d"
+        app:shape_point_blur_width="2dp"
+
+        app:web_mode="circle" />
+</RelativeLayout>

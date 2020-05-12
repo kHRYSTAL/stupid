@@ -167,6 +167,7 @@ public class RadarView extends View {
         if (w != null && w.equals("-1")) {
             isMatchParent = true;
         }
+        ta.recycle();
 
         initVertexText(vertexTextResid);
     }

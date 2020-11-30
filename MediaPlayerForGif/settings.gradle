@@ -1,0 +1,3 @@
+include ':gifbuilder'
+include ':app'
+rootProject.name = "MediaPlayerForGif"

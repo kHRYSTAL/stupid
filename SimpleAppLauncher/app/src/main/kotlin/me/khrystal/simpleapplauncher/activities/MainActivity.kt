@@ -8,3 +8,6 @@ package me.khrystal.simpleapplauncher.activities
  * update time:
  * email: 723526676@qq.com
  */
+class MainActivity : SimpleActivity() {
+
+}

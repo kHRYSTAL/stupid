@@ -4,11 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.FrameLayout;
-import android.widget.Scroller;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
+import me.khrystal.dianpinghomemenu.util.DensityUtil;
 
 /**
  * usage:
@@ -37,8 +37,10 @@ public class OutSideDownFrameLayout extends FrameLayout {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (positionOffsetPixels == 0)
                     return;
-                // TODO: 2020/12/16 需要解决问题: 向下滑动的数值应该以 viewpager内容最多的一页的高度去计算 应该与positionOffsetPixels是成比例的
-                scrollTo(0, -(int) (positionOffsetPixels * 0.2f));
+                // item 高度是60dp 两行是120dp
+                // 假设第二页有4行item 那应该是240dp
+                // 此布局滑动距离为 viewpager最大展示高度 - 最小展示两行高度 / 屏幕宽度 * viewpager滑动距离
+                scrollTo(0, -(DensityUtil.dp2px(getContext(), 120)) * positionOffsetPixels / DensityUtil.getWidth(getContext()) );
             }
 
             @Override

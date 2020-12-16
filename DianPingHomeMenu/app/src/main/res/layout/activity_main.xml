@@ -9,7 +9,7 @@
         android:id="@+id/insideHeader"
         android:background="#F00"
         android:layout_width="match_parent"
-        android:layout_height="400dp" />
+        android:layout_height="wrap_content" />
 
     <me.khrystal.dianpinghomemenu.view.OutSideDownFrameLayout
         android:id="@+id/outSideLayout"
@@ -23,7 +23,7 @@
 
             <View
                 android:layout_width="wrap_content"
-                android:layout_height="100dp" />
+                android:layout_height="120dp" />
 
             <RelativeLayout
                 android:background="#F0F"

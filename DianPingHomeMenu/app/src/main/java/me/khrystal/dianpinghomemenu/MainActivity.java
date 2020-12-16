@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         Menu menu2 = new Menu();
         List<String> items2 = new ArrayList<>();
-        for (int i = 0; i < 18; i++) {
+        for (int i = 0; i < 15; i++) {
             items2.add("" + i);
         }
         menu2.setItems(items2);

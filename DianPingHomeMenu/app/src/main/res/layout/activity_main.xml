@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <me.khrystal.dianpinghomemenu.view.InsideHeaderLayout
+        android:id="@+id/insideHeader"
+        android:background="#F00"
+        android:layout_width="match_parent"
+        android:layout_height="400dp" />
+
+    <me.khrystal.dianpinghomemenu.view.OutSideDownFrameLayout
+        android:id="@+id/outSideLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="100dp" />
+
+            <RelativeLayout
+                android:background="#F0F"
+                android:onClick="onContentClick"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </me.khrystal.dianpinghomemenu.view.OutSideDownFrameLayout>
+
+</RelativeLayout>
